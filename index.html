@@ -339,6 +339,32 @@
             font-weight: 500;
         }
         
+        .progress-container {
+            width: 100%;
+            max-width: 300px;
+            margin: 16px auto;
+            background: #e5e5ea;
+            border-radius: 10px;
+            overflow: hidden;
+            height: 8px;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #007aff, #5ac8fa);
+            border-radius: 10px;
+            transition: width 0.3s ease;
+            width: 0%;
+        }
+        
+        .progress-text {
+            text-align: center;
+            color: #007aff;
+            font-size: 15px;
+            margin: 8px 0;
+            font-weight: 500;
+        }
+        
         .empty-state {
             text-align: center;
             color: #8e8e93;
@@ -472,6 +498,17 @@
         
         <button class="refresh-btn" onclick="refreshData()">Refresh Data</button>
         
+        <div id="loadingMessage" class="loading" style="display: none;">
+            Loading latest data...
+        </div>
+        
+        <div id="loadingProgress" style="display: none;">
+            <div class="progress-container">
+                <div class="progress-bar" id="progressBar"></div>
+            </div>
+            <div class="progress-text" id="progressText">0%</div>
+        </div>
+        
         <div class="section">
             <div class="section-title">📅 Next 7 Days</div>
             <div id="upcomingMatches"></div>
@@ -480,14 +517,6 @@
         <div class="separator"></div>
         
         <div id="teamsContainer"></div>
-        
-        <div id="loadingMessage" class="loading" style="display: none;">
-            Loading latest data...
-        </div>
-        
-        <div id="loadingProgress" class="loading-progress" style="display: none;">
-            Processing sheets: 0/23
-        </div>
         
         <!-- PWA Install Banner -->
         <div id="installBanner" class="install-banner">
@@ -990,7 +1019,9 @@
                     const sheetId = SHEET_IDS[i];
                     
                     try {
-                        progressElement.textContent = `Loading ${i + 1}/${SHEET_IDS.length} (${successCount} teams)`;
+                        const percentage = Math.round(((i + 1) / SHEET_IDS.length) * 100);
+                        document.getElementById('progressBar').style.width = `${percentage}%`;
+                        document.getElementById('progressText').textContent = `${percentage}%`;
                         
                         // Get document info and sheet data in parallel
                         const [documentInfo, sheetData] = await Promise.all([
@@ -1037,11 +1068,14 @@
                 
                 updateDashboard(); // Show final data
                 
-                progressElement.textContent = `✅ Loaded ${allTeams.length} teams in ${Math.ceil(performance.now() / 1000)}s!`;
+                progressElement.textContent = `✅ Loaded ${allTeams.length} teams successfully!`;
                 progressElement.style.color = '#34c759';
                 setTimeout(() => {
                     progressElement.style.display = 'none';
                     progressElement.style.color = '#007aff';
+                    // Reset progress bar
+                    document.getElementById('progressBar').style.width = '0%';
+                    document.getElementById('progressText').textContent = '0%';
                 }, 2000);
                 
             } catch (error) {
