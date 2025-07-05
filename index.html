@@ -365,6 +365,18 @@
             font-weight: 500;
         }
         
+        .success-message {
+            text-align: center;
+            color: #34c759;
+            font-size: 15px;
+            font-weight: 500;
+            margin: 16px 0 24px 0;
+            padding: 12px;
+            background: rgba(52, 199, 89, 0.1);
+            border-radius: 12px;
+            border: 1px solid rgba(52, 199, 89, 0.2);
+        }
+        
         .empty-state {
             text-align: center;
             color: #8e8e93;
@@ -1069,10 +1081,10 @@
                 updateDashboard(); // Show final data
                 
                 progressElement.textContent = `✅ Loaded ${allTeams.length} teams successfully!`;
-                progressElement.style.color = '#34c759';
+                progressElement.className = 'success-message';
                 setTimeout(() => {
                     progressElement.style.display = 'none';
-                    progressElement.style.color = '#007aff';
+                    progressElement.className = 'progress-text';
                     // Reset progress bar
                     document.getElementById('progressBar').style.width = '0%';
                     document.getElementById('progressText').textContent = '0%';
