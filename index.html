@@ -1713,23 +1713,72 @@
             try {
                 const allTeams = [];
                 let successCount = 0;
+                let errorCount = 0;
                 
-                // Process sheets one by one for maximum reliability but keep it fast
+                console.log(`🚀 Starting to load ${SHEET_IDS.length} sheets...`);
+                
+                // Process sheets one by one with detailed logging
                 for (let i = 0; i < SHEET_IDS.length; i++) {
                     const sheetId = SHEET_IDS[i];
                     
                     try {
+                        console.log(`\n📊 Processing sheet ${i + 1}/${SHEET_IDS.length}`);
+                        console.log(`🔗 Sheet ID: ${sheetId}`);
+                        
+                        // Update progress bar
                         const percentage = Math.round(((i + 1) / SHEET_IDS.length) * 100);
                         document.getElementById('progressBar').style.width = `${percentage}%`;
-                        document.getElementById('progressText').textContent = `${percentage}%`;
+                        document.getElementById('progressText').textContent = `${percentage}% (${i + 1}/${SHEET_IDS.length})`;
                         
-                        // Get document info and sheet data in parallel
-                        const [documentInfo, sheetData] = await Promise.all([
-                            getDocumentInfo(sheetId),
-                            fetchSheetData(sheetId, 'DASHBOARD!A1:H50')
-                        ]);
+                        // Step 1: Get document info with retry logic
+                        console.log(`📋 Step 1: Getting document info...`);
+                        let documentInfo;
+                        let retryCount = 0;
+                        const maxRetries = 3;
                         
-                        const documentTitle = documentInfo.title;
+                        while (retryCount < maxRetries) {
+                            try {
+                                documentInfo = await fastFetch(
+                                    `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}?key=${API_KEY}&fields=properties.title,sheets.properties.title`,
+                                    6000,
+                                    1
+                                );
+                                console.log(`✅ Document title: "${documentInfo.properties.title}"`);
+                                break;
+                            } catch (error) {
+                                retryCount++;
+                                console.log(`❌ Retry ${retryCount}/${maxRetries} for document info: ${error.message}`);
+                                if (retryCount >= maxRetries) throw error;
+                                await new Promise(resolve => setTimeout(resolve, 1000 * retryCount));
+                            }
+                        }
+                        
+                        // Step 2: Get sheet data with retry logic
+                        console.log(`📊 Step 2: Getting dashboard data...`);
+                        let sheetData;
+                        retryCount = 0;
+                        
+                        while (retryCount < maxRetries) {
+                            try {
+                                const response = await fastFetch(
+                                    `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/DASHBOARD!A1:H50?key=${API_KEY}&valueRenderOption=UNFORMATTED_VALUE&dateTimeRenderOption=FORMATTED_STRING`,
+                                    6000,
+                                    1
+                                );
+                                sheetData = response.values || [];
+                                console.log(`✅ Retrieved ${sheetData.length} rows of data`);
+                                break;
+                            } catch (error) {
+                                retryCount++;
+                                console.log(`❌ Retry ${retryCount}/${maxRetries} for sheet data: ${error.message}`);
+                                if (retryCount >= maxRetries) throw error;
+                                await new Promise(resolve => setTimeout(resolve, 1000 * retryCount));
+                            }
+                        }
+                        
+                        // Step 3: Parse the data
+                        console.log(`🔍 Step 3: Parsing team data...`);
+                        const documentTitle = documentInfo.properties.title;
                         
                         if (sheetData && sheetData.length > 0) {
                             const teamData = parseSheetData(sheetData, 'DASHBOARD', documentTitle);
@@ -1737,23 +1786,45 @@
                             if (teamData && teamData.totalTickets > 0) {
                                 allTeams.push(teamData);
                                 successCount++;
+                                console.log(`✅ Successfully loaded: "${teamData.name}" (${teamData.totalTickets} tickets, £${teamData.totalSpent} spent)`);
+                                
+                                // Cache the sheet ID for this team
+                                teamSheetCache.set(teamData.name, sheetId);
+                            } else {
+                                console.log(`⚠️ No valid team data found (no tickets or spending)`);
                             }
+                        } else {
+                            console.log(`⚠️ No data found in DASHBOARD sheet`);
                         }
                         
                     } catch (error) {
+                        errorCount++;
                         console.log(`❌ Failed processing sheet ${i + 1}: ${error.message}`);
+                        
+                        // Log more details about the error
+                        if (error.message.includes('HTTP 403')) {
+                            console.log(`🔒 Access denied - sheet may be private`);
+                        } else if (error.message.includes('HTTP 404')) {
+                            console.log(`📄 Sheet not found - may have been deleted`);
+                        } else if (error.message.includes('timeout')) {
+                            console.log(`⏰ Connection timeout - slow internet or server issue`);
+                        }
                     }
                     
-                    // Slightly longer delay between requests to ensure reliability
+                    // Delay between requests to avoid rate limiting
                     if (i < SHEET_IDS.length - 1) {
-                        await new Promise(resolve => setTimeout(resolve, 300));
+                        console.log(`⏳ Waiting 400ms before next sheet...`);
+                        await new Promise(resolve => setTimeout(resolve, 400));
                     }
                 }
                 
-                console.log(`📊 FINAL RESULT: ${allTeams.length} teams loaded`);
+                console.log(`\n📊 FINAL RESULTS:`);
+                console.log(`✅ Successfully loaded: ${successCount} teams`);
+                console.log(`❌ Failed to load: ${errorCount} sheets`);
+                console.log(`📋 Teams loaded: ${allTeams.map(t => t.name).join(', ')}`);
                 
                 if (allTeams.length === 0) {
-                    throw new Error('No teams loaded. Please try again.');
+                    throw new Error(`No teams loaded successfully. Checked ${SHEET_IDS.length} sheets, ${errorCount} failed. Please check your internet connection and try again.`);
                 }
                 
                 // Update dashboard with final data
@@ -1768,24 +1839,27 @@
                 
                 updateDashboard(); // Show final data
                 
-                progressElement.textContent = `✅ Loaded ${allTeams.length} teams successfully!`;
+                // Show success message with details
+                const successMessage = `✅ Loaded ${allTeams.length} teams successfully!${errorCount > 0 ? ` (${errorCount} sheets had issues)` : ''}`;
+                progressElement.textContent = successMessage;
                 progressElement.className = 'success-message';
+                
                 setTimeout(() => {
                     progressElement.style.display = 'none';
                     progressElement.className = 'progress-text';
                     // Reset progress bar
                     document.getElementById('progressBar').style.width = '0%';
                     document.getElementById('progressText').textContent = '0%';
-                }, 2000);
+                }, 3000);
                 
             } catch (error) {
-                console.error('Error:', error);
+                console.error('❌ Critical error during refresh:', error);
                 progressElement.textContent = `❌ ${error.message}`;
                 progressElement.style.color = '#ff3b30';
                 setTimeout(() => {
                     progressElement.style.display = 'none';
                     progressElement.style.color = '#007aff';
-                }, 3000);
+                }, 5000);
             } finally {
                 loadingElement.style.display = 'none';
                 refreshBtn.disabled = false;
