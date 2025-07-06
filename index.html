@@ -397,6 +397,202 @@
             margin: 32px 0;
         }
         
+        /* Match Popup Modal */
+        .match-popup-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.4);
+            z-index: 1000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .match-popup {
+            background: #ffffff;
+            border-radius: 20px;
+            width: 100%;
+            max-width: 800px;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+        
+        .match-popup-header {
+            padding: 24px 24px 16px 24px;
+            border-bottom: 0.5px solid #c7c7cc;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+        
+        .match-popup-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: #000000;
+            letter-spacing: -0.29px;
+            margin-bottom: 4px;
+        }
+        
+        .match-popup-date {
+            font-size: 17px;
+            color: #8e8e93;
+            font-weight: 400;
+        }
+        
+        .close-btn {
+            background: #f2f2f7;
+            border: none;
+            border-radius: 20px;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: #8e8e93;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            flex-shrink: 0;
+            margin-left: 16px;
+        }
+        
+        .close-btn:hover {
+            background: #e5e5ea;
+            color: #000000;
+        }
+        
+        .match-popup-content {
+            padding: 24px;
+        }
+        
+        .match-stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 16px;
+            margin-bottom: 32px;
+        }
+        
+        .match-stat-card {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 16px;
+            text-align: center;
+            border: 1px solid #e9ecef;
+        }
+        
+        .match-stat-value {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 4px;
+            letter-spacing: -0.29px;
+        }
+        
+        .match-stat-label {
+            font-size: 13px;
+            color: #6d6d70;
+            font-weight: 500;
+            letter-spacing: -0.08px;
+        }
+        
+        .tickets-chart-container {
+            background: #f8f9fa;
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 24px;
+        }
+        
+        .chart-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: #000000;
+            letter-spacing: -0.24px;
+        }
+        
+        .tickets-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+            background: #ffffff;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+        }
+        
+        .tickets-table th {
+            background: #f8f9fa;
+            padding: 12px 8px;
+            text-align: center;
+            font-weight: 600;
+            color: #495057;
+            border-bottom: 1px solid #dee2e6;
+            font-size: 12px;
+            letter-spacing: -0.08px;
+        }
+        
+        .tickets-table td {
+            padding: 10px 8px;
+            border-bottom: 1px solid #f1f3f4;
+            color: #000000;
+            text-align: center;
+            font-size: 13px;
+        }
+        
+        .tickets-table tr:last-child td {
+            border-bottom: none;
+        }
+        
+        .tickets-table tr:hover {
+            background: #f8f9fa;
+        }
+        
+        .status-sold {
+            color: #34c759;
+            font-weight: 600;
+        }
+        
+        .status-available {
+            color: #007aff;
+            font-weight: 600;
+        }
+        
+        .match-loading {
+            text-align: center;
+            padding: 40px;
+            color: #8e8e93;
+            font-size: 17px;
+        }
+        
+        .match-loading-spinner {
+            width: 24px;
+            height: 24px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #007aff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 16px auto;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .clickable-match {
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+        
+        .clickable-match:hover {
+            background: #f8f9fa;
+        }
+        
         /* PWA Installation Banner */
         .install-banner {
             position: fixed;
@@ -535,6 +731,25 @@
             Add Ticket Father to your home screen for quick access!
             <button class="install-btn" onclick="installPWA()">Install</button>
         </div>
+        
+        <!-- Match Popup Modal -->
+        <div id="matchPopupOverlay" class="match-popup-overlay" onclick="closeMatchPopup(event)">
+            <div class="match-popup" onclick="event.stopPropagation()">
+                <div class="match-popup-header">
+                    <div>
+                        <div class="match-popup-title" id="popupMatchTitle">Loading...</div>
+                        <div class="match-popup-date" id="popupMatchDate"></div>
+                    </div>
+                    <button class="close-btn" onclick="closeMatchPopup()">×</button>
+                </div>
+                <div class="match-popup-content" id="matchPopupContent">
+                    <div class="match-loading">
+                        <div class="match-loading-spinner"></div>
+                        Loading match details...
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
     
     <script>
@@ -576,6 +791,7 @@
         setTimeout(() => {
             installBanner.classList.remove('show');
         }, 10000);
+        
         let dashboardData = {
             totalTickets: 0,
             availableTickets: 0,
@@ -654,7 +870,8 @@
                     if (isWithinNextWeek(match.date)) {
                         allUpcomingMatches.push({
                             ...match,
-                            teamEmoji: team.emoji
+                            teamEmoji: team.emoji,
+                            teamName: team.name
                         });
                     }
                 });
@@ -670,8 +887,8 @@
             if (allUpcomingMatches.length === 0) {
                 upcomingContainer.innerHTML = '<div class="empty-state">No matches in the next 7 days</div>';
             } else {
-                upcomingContainer.innerHTML = allUpcomingMatches.map(match => `
-                    <div class="match-item">
+                upcomingContainer.innerHTML = allUpcomingMatches.map((match, index) => `
+                    <div class="match-item clickable-match" onclick="openMatchPopup('${match.teamName}', '${match.name}', '${match.date}')">
                         <div class="match-header">
                             <div class="match-info">
                                 <h3>${match.teamEmoji} ${match.name}</h3>
@@ -715,8 +932,8 @@
                     </button>
                     
                     <div class="team-details collapsed" id="team-details-${sortedIndex}">
-                        ${team.matches.map(match => `
-                            <div class="match-item">
+                        ${team.matches.map((match, matchIndex) => `
+                            <div class="match-item clickable-match" onclick="openMatchPopup('${team.name}', '${match.name}', '${match.date}')">
                                 <div class="match-header">
                                     <div class="match-info">
                                         <h3>${match.name}</h3>
@@ -999,6 +1216,341 @@
             }
             
             return '⚽'; // Default football emoji
+        }
+        
+        // Match Popup Functions
+        async function openMatchPopup(teamName, matchName, matchDate) {
+            const overlay = document.getElementById('matchPopupOverlay');
+            const popupTitle = document.getElementById('popupMatchTitle');
+            const popupDate = document.getElementById('popupMatchDate');
+            const popupContent = document.getElementById('matchPopupContent');
+            
+            // Show popup with loading state
+            popupTitle.textContent = matchName;
+            popupDate.textContent = formatDate(matchDate);
+            popupContent.innerHTML = `
+                <div class="match-loading">
+                    <div class="match-loading-spinner"></div>
+                    Loading match details...
+                </div>
+            `;
+            overlay.style.display = 'flex';
+            
+            try {
+                // Find the team's sheet ID
+                const team = dashboardData.teams.find(t => t.name === teamName);
+                if (!team) {
+                    throw new Error('Team not found');
+                }
+                
+                // Get the sheet ID for this team (find it from our SHEET_IDS array)
+                const teamSheetId = await findTeamSheetId(teamName);
+                if (!teamSheetId) {
+                    throw new Error('Sheet not found for this team');
+                }
+                
+                // Load the specific match sheet
+                const matchData = await loadMatchDetails(teamSheetId, matchName);
+                
+                // Display the match data
+                displayMatchDetails(matchData, matchName);
+                
+            } catch (error) {
+                console.error('Error loading match details:', error);
+                popupContent.innerHTML = `
+                    <div class="match-loading">
+                        ❌ Failed to load match details: ${error.message}
+                    </div>
+                `;
+            }
+        }
+        
+        function closeMatchPopup(event) {
+            if (event && event.target !== event.currentTarget) return;
+            document.getElementById('matchPopupOverlay').style.display = 'none';
+        }
+        
+        async function findTeamSheetId(teamName) {
+            // Try to find the sheet ID by checking each one for the team name
+            for (const sheetId of SHEET_IDS) {
+                try {
+                    const documentInfo = await getDocumentInfo(sheetId);
+                    const formattedTitle = formatTeamName(documentInfo.title);
+                    if (formattedTitle === teamName) {
+                        return sheetId;
+                    }
+                } catch (error) {
+                    continue;
+                }
+            }
+            return null;
+        }
+        
+        async function loadMatchDetails(sheetId, matchName) {
+            try {
+                // Get all sheet names first
+                const documentInfo = await getDocumentInfo(sheetId);
+                const sheets = documentInfo.sheets || [];
+                
+                // Find the sheet that matches the match name (case insensitive, partial match)
+                let matchSheetName = null;
+                for (const sheet of sheets) {
+                    const sheetTitle = sheet.properties.title.toLowerCase();
+                    const searchName = matchName.toLowerCase();
+                    
+                    // Try various matching strategies
+                    if (sheetTitle === searchName || 
+                        sheetTitle.includes(searchName) || 
+                        searchName.includes(sheetTitle) ||
+                        sheetTitle.replace(/\s+/g, '').includes(searchName.replace(/\s+/g, '')) ||
+                        searchName.replace(/\s+/g, '').includes(sheetTitle.replace(/\s+/g, ''))) {
+                        matchSheetName = sheet.properties.title;
+                        break;
+                    }
+                }
+                
+                if (!matchSheetName) {
+                    // If no direct match, try first non-dashboard sheet
+                    for (const sheet of sheets) {
+                        const sheetTitle = sheet.properties.title.toLowerCase();
+                        if (!sheetTitle.includes('dashboard') && !sheetTitle.includes('summary')) {
+                            matchSheetName = sheet.properties.title;
+                            break;
+                        }
+                    }
+                }
+                
+                if (!matchSheetName) {
+                    throw new Error('No match sheet found');
+                }
+                
+                console.log(`Loading match sheet: ${matchSheetName}`);
+                
+                // Fetch the match sheet data with proper range
+                const range = `'${matchSheetName}'!A1:L100`;
+                const sheetData = await fetchSheetData(sheetId, range);
+                
+                return parseMatchSheetData(sheetData);
+                
+            } catch (error) {
+                console.error('Load match details error:', error);
+                throw new Error(`Failed to load match details: ${error.message}`);
+            }
+        }
+        
+        function parseMatchSheetData(rows) {
+            if (!rows || rows.length === 0) {
+                throw new Error('No data found in match sheet');
+            }
+            
+            console.log('=== PARSING MATCH SHEET ===');
+            console.log('Total rows:', rows.length);
+            
+            const tickets = [];
+            let totalFV = 0;
+            let totalSales = 0;
+            
+            // Track merged cell values
+            let currentBoughtBy = '';
+            let currentPaidVia = '';
+            let currentNumTickets = '';
+            let currentNameEmail = '';
+            let currentBlock = '';
+            let currentRow = '';
+            
+            // Start from row 4 (index 3) as specified
+            for (let i = 3; i < rows.length; i++) {
+                const row = rows[i];
+                if (!row || row.length < 8) {
+                    console.log(`Row ${i + 1}: Too short, skipping`);
+                    continue;
+                }
+                
+                console.log(`\n--- Row ${i + 1} ---`);
+                console.log('Raw data:', row);
+                
+                // Extract cell values - CORRECTED COLUMN MAPPING
+                const boughtBy = row[0] ? row[0].toString().trim() : '';
+                const fvRaw = row[2] ? row[2].toString().trim() : ''; // FV is in column C (index 2)
+                const paidVia = row[3] ? row[3].toString().trim() : '';
+                const numTickets = row[4] ? row[4].toString().trim() : '';
+                const nameEmail = row[5] ? row[5].toString().trim() : '';
+                const block = row[6] ? row[6].toString().trim() : '';
+                const rowNum = row[7] ? row[7].toString().trim() : '';
+                const seat = row[8] ? row[8].toString().trim() : '';
+                const soldForRaw = row[11] ? row[11].toString().trim() : ''; // SOLD FOR is in column L (index 11)
+                
+                console.log(`FV Raw: "${fvRaw}"`);
+                console.log(`Seat: "${seat}"`);
+                console.log(`Sold For Raw: "${soldForRaw}"`);
+                
+                // Update merged cell values when present
+                if (boughtBy) currentBoughtBy = boughtBy;
+                if (paidVia) currentPaidVia = paidVia;
+                if (numTickets) currentNumTickets = numTickets;
+                if (nameEmail) currentNameEmail = nameEmail;
+                if (block) currentBlock = block;
+                if (rowNum) currentRow = rowNum;
+                
+                // Parse FV - much simpler approach
+                let fv = 0;
+                if (fvRaw) {
+                    // Just try to parse the number directly, handling the long decimals
+                    const numValue = parseFloat(fvRaw.replace(/[£,\s]/g, ''));
+                    console.log(`Parsed number: ${numValue}`);
+                    
+                    if (!isNaN(numValue) && numValue > 0) {
+                        // Round to 2 decimal places
+                        fv = Math.round(numValue * 100) / 100;
+                        console.log(`✅ Final FV: £${fv}`);
+                    } else {
+                        console.log(`❌ Invalid number: ${numValue}`);
+                    }
+                }
+                
+                // Skip if no valid FV
+                if (fv === 0) {
+                    console.log('❌ No valid FV, skipping');
+                    continue;
+                }
+                
+                // Parse sold for amount
+                let soldFor = 0;
+                if (soldForRaw) {
+                    const soldValue = parseFloat(soldForRaw.replace(/[£,\s]/g, ''));
+                    if (!isNaN(soldValue) && soldValue > 0) {
+                        soldFor = Math.round(soldValue * 100) / 100;
+                        console.log(`💰 Sold for: £${soldFor}`);
+                    }
+                }
+                
+                // Determine status
+                let status = 'Available';
+                if (soldFor > 0) {
+                    status = 'Sold';
+                }
+                
+                // Create ticket
+                const ticket = {
+                    boughtBy: currentBoughtBy || 'Unknown',
+                    fv: fv,
+                    paidVia: currentPaidVia,
+                    nameEmail: currentNameEmail,
+                    block: currentBlock,
+                    row: currentRow,
+                    seat: seat,
+                    status: status,
+                    soldFor: soldFor
+                };
+                
+                console.log('🎫 Created ticket:', ticket);
+                
+                tickets.push(ticket);
+                totalFV += fv;
+                totalSales += soldFor;
+                
+                console.log(`✅ Added! Total tickets: ${tickets.length}`);
+            }
+            
+            console.log('\n=== FINAL RESULT ===');
+            console.log(`Tickets found: ${tickets.length}`);
+            console.log(`Total FV: £${totalFV}`);
+            console.log(`Total Sales: £${totalSales}`);
+            
+            if (tickets.length === 0) {
+                console.log('\n❌ NO TICKETS CREATED - Let me check why...');
+                
+                // Let's see what we got in rows 4-10
+                for (let i = 3; i < Math.min(rows.length, 10); i++) {
+                    const row = rows[i];
+                    console.log(`Row ${i + 1} detail check:`);
+                    console.log(`  - Raw FV (col C): "${row[2]}"`); // Changed from row[1] to row[2]
+                    console.log(`  - Type: ${typeof row[2]}`);
+                    console.log(`  - parseFloat result: ${parseFloat(row[2])}`);
+                    console.log(`  - isNaN check: ${isNaN(parseFloat(row[2]))}`);
+                }
+                
+                throw new Error('No ticket data found. Check console for detailed analysis.');
+            }
+            
+            return {
+                tickets,
+                summary: {
+                    totalTickets: tickets.length,
+                    totalFV,
+                    totalSales,
+                    profit: totalSales - totalFV,
+                    soldTickets: tickets.filter(t => t.status === 'Sold').length,
+                    availableTickets: tickets.filter(t => t.status === 'Available').length,
+                    listedTickets: tickets.filter(t => t.status === 'Listed').length
+                }
+            };
+        }
+        
+        function displayMatchDetails(matchData, matchName) {
+            const popupContent = document.getElementById('matchPopupContent');
+            const { tickets, summary } = matchData;
+            
+            popupContent.innerHTML = `
+                <div class="match-stats-grid">
+                    <div class="match-stat-card">
+                        <div class="match-stat-value">${summary.totalTickets}</div>
+                        <div class="match-stat-label">Total Tickets</div>
+                    </div>
+                    <div class="match-stat-card">
+                        <div class="match-stat-value">${summary.soldTickets}</div>
+                        <div class="match-stat-label">Sold</div>
+                    </div>
+                    <div class="match-stat-card">
+                        <div class="match-stat-value">${summary.availableTickets}</div>
+                        <div class="match-stat-label">Available</div>
+                    </div>
+                    <div class="match-stat-card">
+                        <div class="match-stat-value">${formatCurrency(summary.totalFV)}</div>
+                        <div class="match-stat-label">Total FV</div>
+                    </div>
+                    <div class="match-stat-card">
+                        <div class="match-stat-value">${formatCurrency(summary.totalSales)}</div>
+                        <div class="match-stat-label">Total Sales</div>
+                    </div>
+                    <div class="match-stat-card">
+                        <div class="match-stat-value ${summary.profit >= 0 ? 'profit-positive' : 'profit-negative'}">
+                            ${summary.profit >= 0 ? '+' : ''}${formatCurrency(summary.profit)}
+                        </div>
+                        <div class="match-stat-label">Profit</div>
+                    </div>
+                </div>
+                
+                <div class="tickets-chart-container">
+                    <div class="chart-title">Ticket Details</div>
+                    <div style="overflow-x: auto;">
+                        <table class="tickets-table">
+                            <thead>
+                                <tr>
+                                    <th>FV</th>
+                                    <th>Block</th>
+                                    <th>Row</th>
+                                    <th>Seat</th>
+                                    <th>Status</th>
+                                    <th>Sold For</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${tickets.map(ticket => `
+                                    <tr>
+                                        <td>${formatCurrency(ticket.fv)}</td>
+                                        <td>${ticket.block}</td>
+                                        <td>${ticket.row}</td>
+                                        <td>${ticket.seat}</td>
+                                        <td class="status-${ticket.status.toLowerCase()}">${ticket.status}</td>
+                                        <td>${ticket.soldFor > 0 ? formatCurrency(ticket.soldFor) : '-'}</td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            `;
         }
         
         async function refreshData() {
