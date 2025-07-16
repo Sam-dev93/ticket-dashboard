@@ -28,8 +28,8 @@
         
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, sans-serif;
-            background: #f2f2f7;
-            color: #000000;
+            background: #181818;
+            color: #E6E6E6;
             line-height: 1.47;
             padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
             -webkit-font-smoothing: antialiased;
@@ -59,14 +59,14 @@
         .header h1 {
             font-size: 34px;
             font-weight: 700;
-            color: #000000;
+            color: #F5F5F5;
             margin-bottom: 6px;
             letter-spacing: -0.41px;
         }
         
         .header p {
             font-size: 17px;
-            color: #6d6d70;
+            color: #B8B8B8;
             font-weight: 400;
         }
         
@@ -78,11 +78,11 @@
         }
         
         .stat-card {
-            background: #ffffff;
+            background: #1F1F1F;
             border-radius: 16px;
             padding: 20px 16px;
-            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
-            border: 0.5px solid rgba(0, 0, 0, 0.04);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+            border: 1px solid #2E2E2E;
             text-align: center;
         }
         
@@ -92,29 +92,38 @@
             margin-bottom: 6px;
             line-height: 1.2;
             letter-spacing: -0.34px;
+            color: #F5F5F5;
         }
         
         .stat-label {
             font-size: 13px;
-            color: #6d6d70;
+            color: #B8B8B8;
             font-weight: 400;
             letter-spacing: -0.08px;
         }
         
+        .stat-card.available-tickets .stat-value {
+            color: #5A9FD4;
+        }
+        
+        .stat-card.total-tickets .stat-value {
+            color: #5A9FD4;
+        }
+        
         .profit-negative {
-            color: #ff3b30;
+            color: #FF4444;
         }
         
         .profit-positive {
-            color: #34c759;
+            color: #10A37F;
         }
         
         .section {
-            background: #ffffff;
+            background: #1F1F1F;
             border-radius: 16px;
             margin-bottom: 16px;
-            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
-            border: 0.5px solid rgba(0, 0, 0, 0.04);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+            border: 1px solid #2E2E2E;
             overflow: hidden;
         }
         
@@ -122,16 +131,16 @@
             font-size: 20px;
             font-weight: 600;
             padding: 20px 20px 16px 20px;
-            border-bottom: 0.5px solid #c7c7cc;
-            color: #000000;
+            border-bottom: 1px solid #2E2E2E;
+            color: #F5F5F5;
             letter-spacing: -0.24px;
             text-align: center;
         }
         
         .match-item {
             padding: 16px 20px;
-            border-bottom: 0.5px solid #c7c7cc;
-            background: #ffffff;
+            border-bottom: 1px solid #2E2E2E;
+            background: #1F1F1F;
         }
         
         .match-item:last-child {
@@ -145,10 +154,10 @@
             margin-bottom: 8px;
         }
         
-        .match-info h3 {
+        .match-details-info h3 {
             font-size: 17px;
             font-weight: 600;
-            color: #000000;
+            color: #F5F5F5;
             line-height: 1.29;
             letter-spacing: -0.41px;
             margin-bottom: 2px;
@@ -156,7 +165,7 @@
         
         .match-date {
             font-size: 15px;
-            color: #8e8e93;
+            color: #B8B8B8;
             font-weight: 400;
             letter-spacing: -0.24px;
         }
@@ -170,14 +179,14 @@
         .tickets-count {
             font-size: 20px;
             font-weight: 700;
-            color: #007aff;
+            color: #5A9FD4;
             line-height: 1.2;
             letter-spacing: -0.24px;
         }
         
         .tickets-label {
             font-size: 13px;
-            color: #8e8e93;
+            color: #B8B8B8;
             font-weight: 400;
             letter-spacing: -0.08px;
         }
@@ -188,7 +197,7 @@
             align-items: center;
             margin-top: 12px;
             padding-top: 12px;
-            border-top: 0.5px solid #f0f0f0;
+            border-top: 1px solid #2E2E2E;
         }
         
         .detail-item {
@@ -199,7 +208,7 @@
         }
         
         .detail-label {
-            color: #8e8e93;
+            color: #B8B8B8;
             font-size: 12px;
             font-weight: 400;
             margin-bottom: 4px;
@@ -210,10 +219,19 @@
             font-weight: 600;
             font-size: 15px;
             letter-spacing: -0.24px;
+            color: #E6E6E6;
+        }
+        
+        .detail-value.profit-positive {
+            color: #10A37F;
+        }
+        
+        .detail-value.profit-negative {
+            color: #FF4444;
         }
         
         .refresh-btn {
-            background: #007aff;
+            background: #10A37F;
             border: none;
             color: #ffffff;
             padding: 16px 24px;
@@ -224,7 +242,7 @@
             width: 100%;
             margin: 24px 0;
             transition: all 0.2s ease;
-            box-shadow: 0 2px 12px rgba(0, 122, 255, 0.25);
+            box-shadow: 0 2px 12px rgba(16, 163, 127, 0.25);
             letter-spacing: -0.41px;
             /* Mobile touch improvements */
             -webkit-tap-highlight-color: transparent;
@@ -232,18 +250,18 @@
         }
         
         .refresh-btn:hover {
-            background: #0056cc;
+            background: #0D8B6F;
             transform: translateY(-1px);
-            box-shadow: 0 4px 20px rgba(0, 122, 255, 0.35);
+            box-shadow: 0 4px 20px rgba(16, 163, 127, 0.35);
         }
         
         .refresh-btn:active {
             transform: translateY(0);
-            box-shadow: 0 1px 8px rgba(0, 122, 255, 0.2);
+            box-shadow: 0 1px 8px rgba(16, 163, 127, 0.2);
         }
         
         .refresh-btn:disabled {
-            background: #c7c7cc;
+            background: #3A3A3A;
             transform: none;
             box-shadow: none;
             cursor: not-allowed;
@@ -254,7 +272,7 @@
             justify-content: space-between;
             align-items: center;
             padding: 20px;
-            border-bottom: 0.5px solid #c7c7cc;
+            border-bottom: 1px solid #2E2E2E;
         }
         
         .team-name {
@@ -263,8 +281,21 @@
             display: flex;
             align-items: center;
             gap: 10px;
-            color: #000000;
+            color: #F5F5F5;
             letter-spacing: -0.24px;
+        }
+        
+        .team-emoji {
+            width: 32px;
+            height: 32px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            flex-shrink: 0;
         }
         
         .team-summary {
@@ -275,13 +306,13 @@
         
         .team-tickets {
             font-weight: 600;
-            color: #007aff;
+            color: #5A9FD4;
             margin-bottom: 2px;
             letter-spacing: -0.08px;
         }
         
         .team-spent {
-            color: #8e8e93;
+            color: #B8B8B8;
             margin-bottom: 2px;
             letter-spacing: -0.08px;
         }
@@ -292,10 +323,18 @@
             letter-spacing: -0.24px;
         }
         
+        .team-profit.profit-positive {
+            color: #10A37F;
+        }
+        
+        .team-profit.profit-negative {
+            color: #FF4444;
+        }
+        
         .expand-btn {
-            background: #f2f2f7;
+            background: #2A2A2A;
             border: none;
-            color: #007aff;
+            color: #10A37F;
             padding: 12px 20px;
             border-radius: 12px;
             font-size: 17px;
@@ -304,19 +343,20 @@
             margin: 16px 20px;
             transition: all 0.2s ease;
             letter-spacing: -0.41px;
+            border: 1px solid #3A3A3A;
             /* Mobile touch improvements */
             -webkit-tap-highlight-color: transparent;
             touch-action: manipulation;
         }
         
         .expand-btn:hover {
-            background: #e5e5ea;
+            background: #353535;
             transform: translateY(-1px);
         }
         
         .expand-btn:active {
             transform: translateY(0);
-            background: #d1d1d6;
+            background: #404040;
         }
         
         .team-details.collapsed {
@@ -325,7 +365,7 @@
         
         .loading {
             text-align: center;
-            color: #8e8e93;
+            color: #B8B8B8;
             font-size: 17px;
             margin: 20px 0;
             font-weight: 400;
@@ -333,7 +373,7 @@
         
         .loading-progress {
             text-align: center;
-            color: #007aff;
+            color: #10A37F;
             font-size: 15px;
             margin: 10px 0;
             font-weight: 500;
@@ -343,7 +383,7 @@
             width: 100%;
             max-width: 300px;
             margin: 16px auto;
-            background: #e5e5ea;
+            background: #2A2A2A;
             border-radius: 10px;
             overflow: hidden;
             height: 8px;
@@ -351,7 +391,7 @@
         
         .progress-bar {
             height: 100%;
-            background: linear-gradient(90deg, #007aff, #5ac8fa);
+            background: linear-gradient(90deg, #10A37F, #0D8B6F);
             border-radius: 10px;
             transition: width 0.3s ease;
             width: 0%;
@@ -359,7 +399,7 @@
         
         .progress-text {
             text-align: center;
-            color: #007aff;
+            color: #10A37F;
             font-size: 15px;
             margin: 8px 0;
             font-weight: 500;
@@ -367,19 +407,19 @@
         
         .success-message {
             text-align: center;
-            color: #34c759;
+            color: #10A37F;
             font-size: 15px;
             font-weight: 500;
             margin: 16px 0 24px 0;
             padding: 12px;
-            background: rgba(52, 199, 89, 0.1);
+            background: rgba(16, 163, 127, 0.1);
             border-radius: 12px;
-            border: 1px solid rgba(52, 199, 89, 0.2);
+            border: 1px solid rgba(16, 163, 127, 0.2);
         }
         
         .empty-state {
             text-align: center;
-            color: #8e8e93;
+            color: #B8B8B8;
             padding: 40px 20px;
             font-size: 17px;
             font-weight: 400;
@@ -389,8 +429,8 @@
             height: 1px;
             background: repeating-linear-gradient(
                 to right,
-                #c7c7cc 0px,
-                #c7c7cc 8px,
+                #2E2E2E 0px,
+                #2E2E2E 8px,
                 transparent 8px,
                 transparent 16px
             );
@@ -413,19 +453,20 @@
         }
         
         .match-popup {
-            background: #ffffff;
+            background: #1F1F1F;
             border-radius: 20px;
             width: 100%;
             max-width: 800px;
             max-height: 90vh;
             overflow-y: auto;
             position: relative;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            border: 1px solid #2E2E2E;
         }
         
         .match-popup-header {
             padding: 24px 24px 16px 24px;
-            border-bottom: 0.5px solid #c7c7cc;
+            border-bottom: 1px solid #2E2E2E;
             display: flex;
             justify-content: space-between;
             align-items: flex-start;
@@ -434,19 +475,19 @@
         .match-popup-title {
             font-size: 24px;
             font-weight: 700;
-            color: #000000;
+            color: #F5F5F5;
             letter-spacing: -0.29px;
             margin-bottom: 4px;
         }
         
         .match-popup-date {
             font-size: 17px;
-            color: #8e8e93;
+            color: #B8B8B8;
             font-weight: 400;
         }
         
         .close-btn {
-            background: #f2f2f7;
+            background: #2A2A2A;
             border: none;
             border-radius: 20px;
             width: 40px;
@@ -455,16 +496,17 @@
             align-items: center;
             justify-content: center;
             font-size: 24px;
-            color: #8e8e93;
+            color: #B8B8B8;
             cursor: pointer;
             transition: all 0.2s ease;
             flex-shrink: 0;
             margin-left: 16px;
+            border: 1px solid #3A3A3A;
         }
         
         .close-btn:hover {
-            background: #e5e5ea;
-            color: #000000;
+            background: #353535;
+            color: #F5F5F5;
         }
         
         .match-popup-content {
@@ -479,11 +521,11 @@
         }
         
         .match-stat-card {
-            background: #f8f9fa;
+            background: #2A2A2A;
             border-radius: 12px;
             padding: 16px;
             text-align: center;
-            border: 1px solid #e9ecef;
+            border: 1px solid #3A3A3A;
         }
         
         .match-stat-value {
@@ -492,13 +534,23 @@
             margin-bottom: 4px;
             letter-spacing: -0.29px;
             word-break: break-word;
+            color: #F5F5F5;
+        }
+        
+        .match-stat-value.profit-positive {
+            color: #10A37F;
+        }
+        
+        .match-stat-value.profit-negative {
+            color: #FF4444;
         }
         
         .match-stat-label {
             font-size: 11px;
-            color: #6d6d70;
+            color: #B8B8B8;
             font-weight: 500;
             letter-spacing: -0.08px;
+        }: -0.08px;
         }
         
         .tickets-chart-container {
@@ -512,7 +564,7 @@
             font-size: 18px;
             font-weight: 600;
             margin-bottom: 16px;
-            color: #000000;
+            color: #F5F5F5;
             letter-spacing: -0.24px;
             text-align: center;
         }
@@ -521,27 +573,27 @@
             width: 100%;
             border-collapse: collapse;
             font-size: 12px;
-            background: #ffffff;
+            background: #1F1F1F;
             border-radius: 12px;
             overflow: hidden;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
         }
         
         .tickets-table th {
-            background: #f8f9fa;
+            background: #2A2A2A;
             padding: 10px 6px;
             text-align: center;
             font-weight: 600;
-            color: #495057;
-            border-bottom: 1px solid #dee2e6;
+            color: #E6E6E6;
+            border-bottom: 1px solid #3A3A3A;
             font-size: 11px;
             letter-spacing: -0.08px;
         }
         
         .tickets-table td {
             padding: 8px 6px;
-            border-bottom: 1px solid #f1f3f4;
-            color: #000000;
+            border-bottom: 1px solid #2E2E2E;
+            color: #E6E6E6;
             text-align: center;
             font-size: 12px;
             word-break: break-word;
@@ -552,31 +604,31 @@
         }
         
         .tickets-table tr:hover {
-            background: #f8f9fa;
+            background: #2A2A2A;
         }
         
         .status-sold {
-            color: #ff3b30 !important;
+            color: #FF4444 !important;
             font-weight: 600;
         }
         
         .status-available {
-            color: #34c759 !important;
+            color: #10A37F !important;
             font-weight: 600;
         }
         
         .match-loading {
             text-align: center;
             padding: 40px;
-            color: #8e8e93;
+            color: #B8B8B8;
             font-size: 17px;
         }
         
         .match-loading-spinner {
             width: 24px;
             height: 24px;
-            border: 3px solid #f3f3f3;
-            border-top: 3px solid #007aff;
+            border: 3px solid #3A3A3A;
+            border-top: 3px solid #10A37F;
             border-radius: 50%;
             animation: spin 1s linear infinite;
             margin: 0 auto 16px auto;
@@ -593,7 +645,7 @@
         }
         
         .clickable-match:hover {
-            background: #f8f9fa;
+            background: #2A2A2A;
         }
         
         /* PWA Installation Banner */
@@ -602,7 +654,7 @@
             bottom: 0;
             left: 0;
             right: 0;
-            background: #007aff;
+            background: #10A37F;
             color: white;
             padding: 16px;
             text-align: center;
@@ -617,7 +669,7 @@
         
         .install-btn {
             background: white;
-            color: #007aff;
+            color: #10A37F;
             border: none;
             padding: 8px 16px;
             border-radius: 8px;
@@ -693,7 +745,7 @@
                 <div class="stat-value" id="totalTickets">0</div>
                 <div class="stat-label">Total Tickets</div>
             </div>
-            <div class="stat-card">
+            <div class="stat-card available-tickets">
                 <div class="stat-value" id="availableTickets">0</div>
                 <div class="stat-label">Available Tickets</div>
             </div>
@@ -874,8 +926,10 @@
             document.getElementById('totalSpent').textContent = formatCurrency(dashboardData.totalSpent);
             
             const profitElement = document.getElementById('netProfit');
-            profitElement.textContent = (dashboardData.netProfit >= 0 ? '+' : '-') + formatCurrency(dashboardData.netProfit);
-            profitElement.className = dashboardData.netProfit >= 0 ? 'stat-value profit-positive' : 'stat-value profit-negative';
+            const profitValue = dashboardData.netProfit;
+            const profitText = profitValue >= 0 ? `+${formatCurrency(profitValue)}` : `-${formatCurrency(profitValue)}`;
+            profitElement.textContent = profitText;
+            profitElement.className = profitValue >= 0 ? 'stat-value profit-positive' : 'stat-value profit-negative';
             
             const allUpcomingMatches = [];
             dashboardData.teams.forEach(team => {
@@ -904,8 +958,10 @@
                     <div class="match-item clickable-match" onclick="openMatchPopup('${match.teamName}', '${match.name}', '${match.date}')">
                         <div class="match-header">
                             <div class="match-info">
-                                <h3>${match.teamEmoji} ${match.name}</h3>
-                                <div class="match-date">${formatDate(match.date)}</div>
+                                <div class="match-details-info">
+                                    <h3>${match.name}</h3>
+                                    <div class="match-date">${formatDate(match.date)}</div>
+                                </div>
                             </div>
                             <div class="tickets-status">
                                 <div class="tickets-count">${match.tickets}/${match.total}</div>
@@ -929,13 +985,14 @@
                 <div class="section">
                     <div class="team-header">
                         <div class="team-name">
-                            ${team.emoji} ${team.name}
+                            <div class="team-emoji">${team.emoji}</div>
+                            <span>${team.name}</span>
                         </div>
                         <div class="team-summary">
                             <div class="team-tickets">${team.totalTickets} tickets</div>
                             <div class="team-spent">${formatCurrency(team.totalSpent)} spent</div>
                             <div class="team-profit ${team.netProfit >= 0 ? 'profit-positive' : 'profit-negative'}">
-                                ${team.netProfit >= 0 ? '+' : ''}${formatCurrency(team.netProfit)}
+                                ${team.netProfit >= 0 ? '+' : '-'}${formatCurrency(team.netProfit)}
                             </div>
                         </div>
                     </div>
@@ -949,8 +1006,10 @@
                             <div class="match-item clickable-match" onclick="openMatchPopup('${team.name}', '${match.name}', '${match.date}')">
                                 <div class="match-header">
                                     <div class="match-info">
-                                        <h3>${match.name}</h3>
-                                        <div class="match-date">${formatDate(match.date)}</div>
+                                        <div class="match-details-info">
+                                            <h3>${match.name}</h3>
+                                            <div class="match-date">${formatDate(match.date)}</div>
+                                        </div>
                                     </div>
                                     <div class="tickets-status">
                                         <div class="tickets-count">${match.tickets}/${match.total}</div>
@@ -1653,7 +1712,7 @@
                     </div>
                     <div class="match-stat-card">
                         <div class="match-stat-value ${summary.profit >= 0 ? 'profit-positive' : 'profit-negative'}">
-                            ${summary.profit >= 0 ? '+' : ''}${formatCurrency(summary.profit)}
+                            ${summary.profit >= 0 ? '+' : '-'}${formatCurrency(summary.profit)}
                         </div>
                         <div class="match-stat-label">Profit</div>
                     </div>
