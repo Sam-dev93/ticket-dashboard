@@ -6,11 +6,10 @@
     <title>Ticket Father Dashboard</title>
     
     <!-- PWA Meta Tags -->
-    <meta name="theme-color" content="#f2f2f7">
+    <meta name="theme-color" content="#181818">
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="default">
-    <meta name="apple-mobile-web-app-title" content="Ticket Father">
-    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="viewport-fit" content="cover">
     
     <!-- PWA Icons -->
     <link rel="icon" type="image/png" sizes="192x192" href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTkyIiBoZWlnaHQ9IjE5MiIgdmlld0JveD0iMCAwIDE5MiAxOTIiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxOTIiIGhlaWdodD0iMTkyIiBmaWxsPSIjZjJmMmY3Ii8+CjwhLS0gSGF0IC0tPgo8ZWxsaXBzZSBjeD0iOTYiIGN5PSI3MCIgcng9IjY1IiByeT0iMTUiIGZpbGw9IiNkNGJhOWUiLz4KPGVsbGlwc2UgY3g9Ijk2IiBjeT0iNjAiIHJ4PSI1NSIgcnk9IjMwIiBmaWxsPSIjZDRiYTllIi8+CjxyZWN0IHg9IjUwIiB5PSI1NSIgd2lkdGg9IjkyIiBoZWlnaHQ9IjEwIiBmaWxsPSIjYjI5MDZjIi8+CjwhLS0gRm9vdGJhbGwgLS0+CjxjaXJjbGUgY3g9Ijk2IiBjeT0iMTMwIiByPSIzNSIgZmlsbD0iIzMzMzMzMyIvPgo8cG9seWdvbiBwb2ludHM9Ijk2LDEwNSA4MSwxMTcgODcsMTM1IDk2LDE0MiAxMDUsMTM1IDExMSwxMTcgOTYsMTA1IiBmaWxsPSJ3aGl0ZSIvPgo8cG9seWdvbiBwb2ludHM9Ijk2LDE0MiAxMDUsMTM1IDExMSwxMTcgMTI2LDEyOSAxMjAsMTQ3IDk2LDE0MiIgZmlsbD0id2hpdGUiLz4KPHA+bHlnb24gcG9pbnRzPSI5NiwxNDIgODcsMTM1IDgxLDExNyA2NiwxMjkgNzIsMTQ3IDk2LDE0MiIgZmlsbD0id2hpdGUiLz4KPC9zdmc+">
@@ -45,9 +44,13 @@
             max-width: 100%;
             margin: 0 auto;
             padding: 16px;
+            min-height: 100vh;
+            background: #181818;
             /* PWA safe area */
             padding-top: max(16px, env(safe-area-inset-top));
             padding-bottom: max(16px, env(safe-area-inset-bottom));
+            padding-left: max(16px, env(safe-area-inset-left));
+            padding-right: max(16px, env(safe-area-inset-right));
         }
         
         .header {
@@ -106,12 +109,8 @@
             color: #5A9FD4;
         }
         
-        .stat-card.total-tickets .stat-value {
-            color: #5A9FD4;
-        }
-        
         .profit-negative {
-            color: #FF4444;
+            color: #E85A5A;
         }
         
         .profit-positive {
@@ -227,7 +226,7 @@
         }
         
         .detail-value.profit-negative {
-            color: #FF4444;
+            color: #E85A5A;
         }
         
         .refresh-btn {
@@ -328,7 +327,7 @@
         }
         
         .team-profit.profit-negative {
-            color: #FF4444;
+            color: #E85A5A;
         }
         
         .expand-btn {
@@ -347,6 +346,10 @@
             /* Mobile touch improvements */
             -webkit-tap-highlight-color: transparent;
             touch-action: manipulation;
+        }
+        
+        .expand-btn.hide-matches {
+            color: #E85A5A;
         }
         
         .expand-btn:hover {
@@ -542,7 +545,7 @@
         }
         
         .match-stat-value.profit-negative {
-            color: #FF4444;
+            color: #E85A5A;
         }
         
         .match-stat-label {
@@ -608,7 +611,7 @@
         }
         
         .status-sold {
-            color: #FF4444 !important;
+            color: #E85A5A !important;
             font-weight: 600;
         }
         
@@ -1049,13 +1052,16 @@
         function toggleTeamDetails(teamIndex) {
             const detailsElement = document.getElementById(`team-details-${teamIndex}`);
             const expandText = document.getElementById(`expand-text-${teamIndex}`);
+            const expandBtn = expandText.closest('.expand-btn');
             
             if (detailsElement.classList.contains('collapsed')) {
                 detailsElement.classList.remove('collapsed');
                 expandText.textContent = 'Hide Matches';
+                expandBtn.classList.add('hide-matches');
             } else {
                 detailsElement.classList.add('collapsed');
                 expandText.textContent = 'Show Matches';
+                expandBtn.classList.remove('hide-matches');
             }
         }
         
