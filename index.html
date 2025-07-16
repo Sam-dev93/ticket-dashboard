@@ -1067,12 +1067,12 @@
         
         function parseSheetData(rows, sheetName, documentTitle) {
             if (!rows || rows.length === 0) return null;
-            
+
             let totalTickets = 0;
             let totalSpent = 0;
             let totalSales = 0;
             let netProfit = 0;
-            
+
             // Look for dashboard data in the sheet (first 10 rows for speed)
             for (let i = 0; i < Math.min(rows.length, 10); i++) {
                 const row = rows[i];
@@ -1096,10 +1096,10 @@
             if (totalTickets === 0 && totalSpent === 0) {
                 return null;
             }
-            
+
             const matches = [];
             
-            // Start from row 12 (index 11) and go through all rows - FIXED COLUMN REFERENCES
+            // Start from row 12 (index 11) and go through all rows
             for (let i = 11; i < rows.length; i++) {
                 const row = rows[i];
                 if (!row || !row[1]) continue; // Check column B for match names
@@ -1113,19 +1113,21 @@
                 if (matchName.length > 3) {
                     const matchDate = row[2] ? row[2].toString().trim() : '01/08/2025'; // Column C (DATE)
                     
-                    // Column D - "AVAILABLE / TICKETS" 
+                    // Column D - "AVAILABLE / TICKETS" - FIXED PARSING
                     const ticketsCell = row[3] ? row[3].toString().trim() : '';
                     let availableTickets = 0;
                     let totalMatchTickets = 0;
                     
                     if (ticketsCell.includes('/')) {
+                        // Format like "9/9" or "78/84"
                         const parts = ticketsCell.split('/');
                         availableTickets = parseInt(parts[0]) || 0;
                         totalMatchTickets = parseInt(parts[1]) || 0;
                     } else {
-                        // Just a number
-                        availableTickets = parseInt(ticketsCell.replace(/[^\d]/g, '')) || 0;
-                        totalMatchTickets = availableTickets;
+                        // Just a number - treat as available tickets
+                        const num = parseInt(ticketsCell.replace(/[^\d]/g, '')) || 0;
+                        availableTickets = num;
+                        totalMatchTickets = num;
                     }
                     
                     const spent = parseFloat(row[4]?.toString().replace(/[£,]/g, '')) || 0; // Column E - "SPENT (FV)"
@@ -1139,9 +1141,9 @@
                         matches.push({
                             name: matchName,
                             date: matchDate,
-                            tickets: availableTickets,      // Available tickets
-                            total: totalMatchTickets,       // Total tickets
-                            sold: soldTickets,              // Sold tickets
+                            tickets: availableTickets,      // Available tickets (the number BEFORE the slash)
+                            total: totalMatchTickets,       // Total tickets (the number AFTER the slash)
+                            sold: soldTickets,              // Sold tickets (total - available)
                             spent: spent,
                             sales: sales,
                             profit: profit
