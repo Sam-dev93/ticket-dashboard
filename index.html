@@ -1031,7 +1031,7 @@
         }
         
         async function fetchSheetData(sheetId) {
-            const url = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/DASHBOARD!A1:H25?key=${API_KEY}&valueRenderOption=UNFORMATTED_VALUE`;
+            const url = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/DASHBOARD!A1:H35?key=${API_KEY}&valueRenderOption=UNFORMATTED_VALUE`;
             const data = await ultraFastFetch(url);
             return data.values || [];
         }
@@ -1729,7 +1729,7 @@
                         // ULTRA-FAST: Get sheet data
                         console.log(`⚡ ULTRA-FAST: Getting dashboard data...`);
                         const response = await ultraFastFetch(
-                            `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/DASHBOARD!A1:H25?key=${API_KEY}&valueRenderOption=UNFORMATTED_VALUE`
+                            `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/DASHBOARD!A1:H35?key=${API_KEY}&valueRenderOption=UNFORMATTED_VALUE`
                         );
                         const sheetData = response.values || [];
                         console.log(`✅ Retrieved ${sheetData.length} rows of data`);
