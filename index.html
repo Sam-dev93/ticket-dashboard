@@ -999,40 +999,67 @@
                 expandText.textContent = 'Show Matches';
             }
         }
-        
-        // ULTRA-FAST request function - MAXIMUM SPEED, NO DELAYS
-        async function ultraFastFetch(url, timeout = 2000) {
-            const controller = new AbortController();
-            const timeoutId = setTimeout(() => controller.abort(), timeout);
-            
-            try {
-                const response = await fetch(url, { 
-                    signal: controller.signal,
-                    cache: 'force-cache', // Use cache aggressively
-                    mode: 'cors',
-                    priority: 'high' // High priority requests
-                });
-                clearTimeout(timeoutId);
+
+        // OPTIMIZED RELIABLE FETCH - BALANCED SPEED AND RELIABILITY
+        async function reliableFetch(url, maxRetries = 2) {
+            for (let attempt = 1; attempt <= maxRetries; attempt++) {
+                const controller = new AbortController();
                 
-                if (!response.ok) {
-                    throw new Error(`HTTP ${response.status}`);
+                // Dynamic timeout - shorter for first attempt, longer for retries
+                const timeout = attempt === 1 ? 4000 : 8000;
+                const timeoutId = setTimeout(() => controller.abort(), timeout);
+                
+                try {
+                    console.log(`🌐 Attempt ${attempt}/${maxRetries} - Timeout: ${timeout}ms`);
+                    
+                    const response = await fetch(url, { 
+                        signal: controller.signal,
+                        cache: 'default', // Use browser cache when available
+                        mode: 'cors'
+                    });
+                    
+                    clearTimeout(timeoutId);
+                    
+                    if (!response.ok) {
+                        // Handle rate limiting specifically
+                        if (response.status === 429) {
+                            console.log(`⏳ Rate limited (429), waiting before retry...`);
+                            await new Promise(resolve => setTimeout(resolve, 2000));
+                            continue;
+                        }
+                        throw new Error(`HTTP ${response.status}`);
+                    }
+                    
+                    const data = await response.json();
+                    console.log(`✅ Success on attempt ${attempt}`);
+                    return data;
+                    
+                } catch (error) {
+                    clearTimeout(timeoutId);
+                    
+                    console.log(`❌ Attempt ${attempt} failed: ${error.message}`);
+                    
+                    // If it's the last attempt, throw the error
+                    if (attempt === maxRetries) {
+                        throw error;
+                    }
+                    
+                    // Wait between retries - exponential backoff
+                    const delay = Math.min(1000 * Math.pow(2, attempt - 1), 3000);
+                    console.log(`⏳ Waiting ${delay}ms before retry...`);
+                    await new Promise(resolve => setTimeout(resolve, delay));
                 }
-                
-                return await response.json();
-            } catch (error) {
-                clearTimeout(timeoutId);
-                throw error;
             }
         }
         
         async function getDocumentInfo(sheetId) {
             const url = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}?key=${API_KEY}&fields=properties.title`;
-            return await ultraFastFetch(url);
+            return await reliableFetch(url);
         }
         
         async function fetchSheetData(sheetId) {
             const url = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/DASHBOARD!A1:H35?key=${API_KEY}&valueRenderOption=UNFORMATTED_VALUE`;
-            const data = await ultraFastFetch(url);
+            const data = await reliableFetch(url);
             return data.values || [];
         }
         
@@ -1319,7 +1346,7 @@
                 try {
                     console.log(`📋 Checking sheet ${i + 1}/${SHEET_IDS.length}: ${sheetId}`);
                     
-                    const documentInfo = await ultraFastFetch(
+                    const documentInfo = await reliableFetch(
                         `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}?key=${API_KEY}&fields=properties.title`
                     );
                     
@@ -1353,7 +1380,7 @@
                 console.log(`🔍 Loading match details for: "${matchName}"`);
                 
                 // Get all sheet names first - faster request
-                const documentInfo = await ultraFastFetch(
+                const documentInfo = await reliableFetch(
                     `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}?key=${API_KEY}&fields=sheets.properties.title`
                 );
                 const sheets = documentInfo.sheets || [];
@@ -1433,9 +1460,9 @@
                 
                 console.log(`📊 Loading data from sheet: "${matchSheetName}"`);
                 
-                // Fetch the match sheet data with ultra-fast settings
+                // Fetch the match sheet data with reliable settings
                 const range = `'${matchSheetName}'!A1:L100`;
-                const sheetData = await ultraFastFetch(
+                const sheetData = await reliableFetch(
                     `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/${range}?key=${API_KEY}&valueRenderOption=UNFORMATTED_VALUE`
                 );
                 
@@ -1678,6 +1705,7 @@
             `;
         }
         
+        // OPTIMIZED REFRESH WITH CONTROLLED CONCURRENCY - NO BATCH PROCESSING
         async function refreshData() {
             const loadingElement = document.getElementById('loadingMessage');
             const progressElement = document.getElementById('loadingProgress');
@@ -1704,38 +1732,33 @@
                 let successCount = 0;
                 let errorCount = 0;
                 
-                console.log(`🚀 ULTRA-FAST MODE: Loading ${SHEET_IDS.length} sheets with maximum speed...`);
+                console.log(`🚀 OPTIMIZED PROCESSING: Loading ${SHEET_IDS.length} sheets with controlled speed...`);
                 
-                // Process sheets one by one with ULTRA-FAST processing
+                // OPTIMIZED: Process sheets with small delays to prevent overwhelming the API
                 for (let i = 0; i < SHEET_IDS.length; i++) {
                     const sheetId = SHEET_IDS[i];
                     
                     try {
-                        console.log(`\n⚡ ULTRA-FAST processing sheet ${i + 1}/${SHEET_IDS.length}`);
+                        console.log(`\n⚡ Processing sheet ${i + 1}/${SHEET_IDS.length} (${Math.round(((i + 1) / SHEET_IDS.length) * 100)}%)`);
                         console.log(`🔗 Sheet ID: ${sheetId}`);
                         
-                        // Update progress bar
+                        // Update progress bar smoothly
                         const percentage = Math.round(((i + 1) / SHEET_IDS.length) * 100);
                         document.getElementById('progressBar').style.width = `${percentage}%`;
                         document.getElementById('progressText').textContent = `${percentage}% (${i + 1}/${SHEET_IDS.length})`;
                         
-                        // ULTRA-FAST: Get document info
-                        console.log(`⚡ ULTRA-FAST: Getting document info...`);
-                        const documentInfo = await ultraFastFetch(
-                            `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}?key=${API_KEY}&fields=properties.title`
-                        );
+                        // OPTIMIZED: Get document info with retries
+                        console.log(`⚡ Getting document info...`);
+                        const documentInfo = await getDocumentInfo(sheetId);
                         console.log(`✅ Document title: "${documentInfo.properties.title}"`);
                         
-                        // ULTRA-FAST: Get sheet data
-                        console.log(`⚡ ULTRA-FAST: Getting dashboard data...`);
-                        const response = await ultraFastFetch(
-                            `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/DASHBOARD!A1:H35?key=${API_KEY}&valueRenderOption=UNFORMATTED_VALUE`
-                        );
-                        const sheetData = response.values || [];
+                        // OPTIMIZED: Get sheet data with retries
+                        console.log(`⚡ Getting dashboard data...`);
+                        const sheetData = await fetchSheetData(sheetId);
                         console.log(`✅ Retrieved ${sheetData.length} rows of data`);
                         
-                        // ULTRA-FAST: Parse the data
-                        console.log(`⚡ ULTRA-FAST: Parsing team data...`);
+                        // OPTIMIZED: Parse the data
+                        console.log(`⚡ Parsing team data...`);
                         const documentTitle = documentInfo.properties.title;
                         
                         if (sheetData && sheetData.length > 0) {
@@ -1748,11 +1771,19 @@
                                 
                                 // Cache the sheet ID for this team
                                 teamSheetCache.set(teamData.name, sheetId);
+                                
+                                // Update progress with current count
+                                document.getElementById('progressText').textContent = `${percentage}% - Loaded ${successCount} teams`;
                             } else {
                                 console.log(`⚠️ No valid team data found (no tickets or spending)`);
                             }
                         } else {
                             console.log(`⚠️ No data found in DASHBOARD sheet`);
+                        }
+                        
+                        // OPTIMIZED: Small delay to prevent API rate limiting (only between requests)
+                        if (i < SHEET_IDS.length - 1) {
+                            await new Promise(resolve => setTimeout(resolve, 100)); // 100ms delay
                         }
                         
                     } catch (error) {
@@ -1765,14 +1796,16 @@
                         } else if (error.message.includes('HTTP 404')) {
                             console.log(`📄 Sheet not found - may have been deleted`);
                         } else if (error.message.includes('timeout')) {
-                            console.log(`⏰ Connection timeout - slow internet or server issue`);
+                            console.log(`⏰ Connection timeout - retries exhausted`);
+                        } else if (error.message.includes('429')) {
+                            console.log(`🚫 Rate limited - API quota exceeded`);
+                            // Add longer delay after rate limit
+                            await new Promise(resolve => setTimeout(resolve, 2000));
                         }
                     }
-                    
-                    // ULTRA-FAST: No delays at all - maximum speed
                 }
                 
-                console.log(`\n📊 ULTRA-FAST RESULTS:`);
+                console.log(`\n📊 OPTIMIZED RESULTS:`);
                 console.log(`✅ Successfully loaded: ${successCount} teams`);
                 console.log(`❌ Failed to load: ${errorCount} sheets`);
                 console.log(`📋 Teams loaded: ${allTeams.map(t => t.name).join(', ')}`);
@@ -1781,24 +1814,24 @@
                     throw new Error(`No teams loaded successfully. Checked ${SHEET_IDS.length} sheets, ${errorCount} failed. Please check your internet connection and try again.`);
                 }
                 
-                // FIXED: Calculate available tickets correctly - sum up all AVAILABLE tickets from matches
+                // Calculate dashboard totals
                 dashboardData.teams = allTeams;
                 dashboardData.totalTickets = allTeams.reduce((sum, team) => sum + team.totalTickets, 0);
                 dashboardData.totalSpent = allTeams.reduce((sum, team) => sum + team.totalSpent, 0);
                 dashboardData.totalSales = allTeams.reduce((sum, team) => sum + team.totalSales, 0);
                 dashboardData.netProfit = allTeams.reduce((sum, team) => sum + team.netProfit, 0);
                 
-                // FIXED: Available tickets = sum of all available tickets from each match
+                // Available tickets = sum of all available tickets from each match
                 dashboardData.availableTickets = allTeams.reduce((sum, team) => {
                     return sum + team.matches.reduce((matchSum, match) => matchSum + match.tickets, 0);
                 }, 0);
                 
-                console.log(`🎯 FIXED Available Tickets Calculation: ${dashboardData.availableTickets}`);
+                console.log(`🎯 Available Tickets Calculation: ${dashboardData.availableTickets}`);
                 
                 updateDashboard(); // Show final data
                 
                 // Show success message with details
-                const successMessage = `⚡ ULTRA-FAST: Loaded ${allTeams.length} teams successfully!${errorCount > 0 ? ` (${errorCount} sheets had issues)` : ''}`;
+                const successMessage = `⚡ OPTIMIZED: Loaded ${allTeams.length} teams successfully!${errorCount > 0 ? ` (${errorCount} sheets had issues)` : ''}`;
                 progressElement.textContent = successMessage;
                 progressElement.className = 'success-message';
                 
