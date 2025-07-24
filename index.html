@@ -1134,7 +1134,7 @@
         }
         
         // Hyper-optimized fetch with zero delays where possible
-        async function hyperFastFetch(url, timeout = 1000, maxRetries = 5) {
+        async function hyperFastFetch(url, timeout = 1000, maxRetries = 7) {
             let lastError;
             
             // Reset rate limit counter every minute
@@ -1255,7 +1255,7 @@
             }
             
             // If no dashboard data found, this might be a match sheet, skip it
-            if (totalTickets === 0 && totalSpent === 0) {
+            if (totalTickets === 0 && totalSpent === 0 && totalSales === 0) {
                 return null;
             }
             
@@ -1844,6 +1844,7 @@
             
             const loadDataPromise = async () => {
                 const allTeams = [];
+                const failedSheets = [];
                 let successCount = 0;
                 let errorCount = 0;
                 const startTime = Date.now();
@@ -1865,48 +1866,21 @@
                 // Test API connectivity with first sheet
                 try {
                     await Promise.race([
-                        hyperFastFetch(`https://sheets.googleapis.com/v4/spreadsheets/${SHEET_IDS[0]}?key=${API_KEY}&fields=properties.title`, 3000, 1),
-                        new Promise((_, reject) => setTimeout(() => reject(new Error('API test timeout')), 5000))
+                        hyperFastFetch(`https://sheets.googleapis.com/v4/spreadsheets/${SHEET_IDS[0]}?key=${API_KEY}&fields=properties.title`, 2000, 1),
+                        new Promise((_, reject) => setTimeout(() => reject(new Error('API test timeout')), 3000))
                     ]);
                 } catch (testError) {
                     console.error('API connectivity test failed:', testError);
                     throw new Error('Cannot connect to Google Sheets. Please check your internet connection and try again.');
                 }
                 
-                // Skip preloading if it causes issues - go straight to loading
-                let skipPreload = false;
-                
-                try {
-                    // Preload with timeout protection
-                    const preloadTimeout = new Promise((resolve) => {
-                        setTimeout(() => {
-                            skipPreload = true;
-                            resolve();
-                        }, 3000); // 3 second timeout for preload
-                    });
-                    
-                    const preloadTask = async () => {
-                        const batchSize = 8;
-                        for (let i = 0; i < SHEET_IDS.length && !skipPreload; i += batchSize) {
-                            const batch = SHEET_IDS.slice(i, i + batchSize);
-                            const batchPromises = batch.map(sheetId => 
-                                getDocumentInfo(sheetId).catch(() => null)
-                            );
-                            await Promise.all(batchPromises);
-                        }
-                    };
-                    
-                    await Promise.race([preloadTask(), preloadTimeout]);
-                } catch (preloadError) {
-                    console.warn('Preload failed, continuing anyway:', preloadError.message);
-                }
-                
-                // Now process sheets with zero delays between requests
+                // First pass - try all sheets FAST
                 for (let i = 0; i < SHEET_IDS.length; i++) {
                     const sheetId = SHEET_IDS[i];
+                    let success = false;
                     
                     try {
-                        // Update progress bar immediately - ensure it starts from 0
+                        // Update progress bar immediately
                         const percentage = Math.round(((i + 1) / SHEET_IDS.length) * 100);
                         document.getElementById('progressBar').style.width = `${percentage}%`;
                         document.getElementById('progressText').textContent = `${percentage}% (${i + 1}/${SHEET_IDS.length})`;
@@ -1920,24 +1894,25 @@
                         // Force a repaint to ensure progress updates
                         await new Promise(resolve => requestAnimationFrame(resolve));
                         
-                        // Document info with timeout
+                        // Document info with SHORT timeout for speed
                         const documentInfo = await Promise.race([
                             getDocumentInfo(sheetId),
-                            new Promise((_, reject) => setTimeout(() => reject(new Error('Timeout')), 5000))
+                            new Promise((_, reject) => setTimeout(() => reject(new Error('Timeout')), 3000))
                         ]);
                         
-                        // Fetch sheet data with timeout
+                        // Fetch sheet data with SHORT timeout for speed
                         const sheetData = await Promise.race([
                             fetchSheetData(sheetId, 'DASHBOARD!A1:H50'),
-                            new Promise((_, reject) => setTimeout(() => reject(new Error('Timeout')), 5000))
+                            new Promise((_, reject) => setTimeout(() => reject(new Error('Timeout')), 3000))
                         ]);
                         
                         if (sheetData && sheetData.length > 0) {
                             const teamData = parseSheetData(sheetData, 'DASHBOARD', documentInfo.properties.title);
                             
-                            if (teamData && teamData.totalTickets > 0) {
+                            if (teamData) {
                                 allTeams.push(teamData);
                                 successCount++;
+                                success = true;
                                 
                                 // Cache the sheet ID for this team
                                 teamSheetCache.set(teamData.name, sheetId);
@@ -1960,20 +1935,84 @@
                         }
                         
                     } catch (error) {
-                        errorCount++;
-                        console.warn(`Sheet ${i + 1} error:`, error.message);
+                        // Silent fail on first pass
                     }
                     
-                    // ONLY add delay if we're getting rate limited
-                    if (rateLimitCounter > 2) {
-                        await new Promise(resolve => setTimeout(resolve, Math.min(100 * rateLimitCounter, 1000)));
+                    // Track failed sheets for retry
+                    if (!success) {
+                        failedSheets.push({ sheetId, index: i });
+                        errorCount++;
                     }
+                    
+                    // NO DELAY between sheets for maximum speed
+                }
+                
+                // Retry failed sheets ONCE with slightly longer timeout
+                if (failedSheets.length > 0 && failedSheets.length < 10) { // Only retry if reasonable number failed
+                    console.log(`🔄 Quick retry for ${failedSheets.length} sheets...`);
+                    
+                    // Process failed sheets in parallel for speed
+                    const retryPromises = failedSheets.map(async ({ sheetId, index }) => {
+                        try {
+                            const documentInfo = await Promise.race([
+                                getDocumentInfo(sheetId),
+                                new Promise((_, reject) => setTimeout(() => reject(new Error('Retry timeout')), 5000))
+                            ]);
+                            
+                            const sheetData = await Promise.race([
+                                fetchSheetData(sheetId, 'DASHBOARD!A1:H50'),
+                                new Promise((_, reject) => setTimeout(() => reject(new Error('Retry timeout')), 5000))
+                            ]);
+                            
+                            if (sheetData && sheetData.length > 0) {
+                                const teamData = parseSheetData(sheetData, 'DASHBOARD', documentInfo.properties.title);
+                                
+                                if (teamData) {
+                                    return { success: true, teamData, index };
+                                }
+                            }
+                        } catch (retryError) {
+                            // Silent fail
+                        }
+                        return { success: false, index };
+                    });
+                    
+                    // Wait for all retries to complete
+                    const retryResults = await Promise.all(retryPromises);
+                    
+                    // Process successful retries
+                    for (const result of retryResults) {
+                        if (result.success) {
+                            allTeams.push(result.teamData);
+                            successCount++;
+                            errorCount--;
+                            
+                            // Cache the sheet ID
+                            teamSheetCache.set(result.teamData.name, SHEET_IDS[result.index]);
+                        }
+                    }
+                    
+                    // Update dashboard after retries
+                    dashboardData.teams = [...allTeams];
+                    dashboardData.totalTickets = allTeams.reduce((sum, team) => sum + team.totalTickets, 0);
+                    dashboardData.totalSpent = allTeams.reduce((sum, team) => sum + team.totalSpent, 0);
+                    dashboardData.totalSales = allTeams.reduce((sum, team) => sum + team.totalSales, 0);
+                    dashboardData.netProfit = allTeams.reduce((sum, team) => sum + team.netProfit, 0);
+                    dashboardData.availableTickets = allTeams.reduce((sum, team) => {
+                        return sum + team.matches.reduce((matchSum, match) => matchSum + match.tickets, 0);
+                    }, 0);
+                    updateDashboard();
                 }
                 
                 const loadTime = ((Date.now() - startTime) / 1000).toFixed(1);
                 
                 // Clear the progress check timeout
                 clearTimeout(progressCheckTimeout);
+                
+                console.log(`\n📊 FINAL LOAD STATISTICS:`);
+                console.log(`✅ Successfully loaded: ${successCount} teams`);
+                console.log(`❌ Failed to load: ${errorCount} sheets`);
+                console.log(`⏱️ Total time: ${loadTime}s`);
                 
                 if (allTeams.length === 0) {
                     throw new Error(`No teams loaded successfully. Checked ${SHEET_IDS.length} sheets. Please check your internet connection and try again.`);
@@ -1982,7 +2021,7 @@
                 // Final update
                 updateDashboard();
                 
-                return { allTeams, loadTime, errorCount };
+                return { allTeams, loadTime, errorCount, totalSheets: SHEET_IDS.length };
             };
             
             try {
@@ -1990,9 +2029,14 @@
                 const result = await Promise.race([loadDataPromise(), timeoutPromise]);
                 
                 // Show success message
-                const successMessage = `✅ Loaded ${result.allTeams.length} teams in ${result.loadTime}s!${result.errorCount > 0 ? ` (${result.errorCount} sheets had issues)` : ''}`;
+                const successMessage = `✅ Loaded ${result.allTeams.length}/${result.totalSheets} teams in ${result.loadTime}s!${result.errorCount > 0 ? ` (${result.errorCount} sheets failed after retry)` : ''}`;
                 progressElement.textContent = successMessage;
                 progressElement.className = 'success-message';
+                
+                // Add warning if some sheets failed
+                if (result.errorCount > 0) {
+                    console.warn(`⚠️ WARNING: ${result.errorCount} sheets could not be loaded. Expected ${result.totalSheets}, got ${result.allTeams.length}`);
+                }
                 
                 setTimeout(() => {
                     progressElement.style.display = 'none';
