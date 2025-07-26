@@ -1,10 +1,10 @@
 const CACHE_NAME = 'ticket-father-v1';
 const urlsToCache = [
-  '/',
-  '/index.html',
-  '/icon-192.png',
-  '/icon-512.png',
-  '/manifest.json'
+  './',
+  './index.html',
+  './icon-192.png',
+  './icon-512.png',
+  './manifest.json'
 ];
 
 // Install event - cache essential files
