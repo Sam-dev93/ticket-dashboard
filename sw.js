@@ -7,7 +7,7 @@ const urlsToCache = [
   './manifest.json'
 ];
 
-// Install event - cache essential files
+// Install event - cache assets
 self.addEventListener('install', event => {
   event.waitUntil(
     caches.open(CACHE_NAME)
@@ -15,27 +15,12 @@ self.addEventListener('install', event => {
         console.log('Opened cache');
         return cache.addAll(urlsToCache);
       })
-      .then(() => self.skipWaiting())
   );
+  // Force the waiting service worker to become the active service worker
+  self.skipWaiting();
 });
 
-// Activate event - clean up old caches
-self.addEventListener('activate', event => {
-  event.waitUntil(
-    caches.keys().then(cacheNames => {
-      return Promise.all(
-        cacheNames.map(cacheName => {
-          if (cacheName !== CACHE_NAME) {
-            console.log('Deleting old cache:', cacheName);
-            return caches.delete(cacheName);
-          }
-        })
-      );
-    }).then(() => self.clients.claim())
-  );
-});
-
-// Fetch event - serve from cache, fallback to network
+// Fetch event - serve from cache when offline
 self.addEventListener('fetch', event => {
   // Skip non-GET requests
   if (event.request.method !== 'GET') {
@@ -59,24 +44,27 @@ self.addEventListener('fetch', event => {
     return;
   }
 
-  // For everything else, try cache first, then network
   event.respondWith(
     caches.match(event.request)
       .then(response => {
+        // Cache hit - return response
         if (response) {
           return response;
         }
 
-        return fetch(event.request).then(response => {
-          // Don't cache non-successful responses
-          if (!response || response.status !== 200 || response.type !== 'basic') {
+        // Clone the request
+        const fetchRequest = event.request.clone();
+
+        return fetch(fetchRequest).then(response => {
+          // Check if valid response
+          if (!response || response.status !== 200 || response.type === 'opaque') {
             return response;
           }
 
           // Clone the response
           const responseToCache = response.clone();
 
-          // Add to cache for future use
+          // Cache the fetched response
           caches.open(CACHE_NAME)
             .then(cache => {
               cache.put(event.request, responseToCache);
@@ -86,47 +74,37 @@ self.addEventListener('fetch', event => {
         });
       })
       .catch(() => {
-        // Offline fallback for HTML pages
-        if (event.request.destination === 'document') {
-          return caches.match('/index.html');
-        }
+        // Offline fallback
+        console.log('Offline - returning cached index.html');
+        return caches.match('./index.html');
       })
   );
 });
 
-// Handle messages from the app
+// Activate event - clean up old caches
+self.addEventListener('activate', event => {
+  const cacheWhitelist = [CACHE_NAME];
+  
+  event.waitUntil(
+    caches.keys().then(cacheNames => {
+      return Promise.all(
+        cacheNames.map(cacheName => {
+          if (cacheWhitelist.indexOf(cacheName) === -1) {
+            console.log('Deleting old cache:', cacheName);
+            return caches.delete(cacheName);
+          }
+        })
+      );
+    })
+  );
+  
+  // Claim clients
+  return self.clients.claim();
+});
+
+// Handle app updates
 self.addEventListener('message', event => {
   if (event.data && event.data.type === 'SKIP_WAITING') {
     self.skipWaiting();
-  }
-});
-
-// Background sync for offline actions (future enhancement)
-self.addEventListener('sync', event => {
-  if (event.tag === 'refresh-data') {
-    event.waitUntil(
-      // Could implement background data refresh here
-      console.log('Background sync: refresh-data')
-    );
-  }
-});
-
-// Push notifications (future enhancement)
-self.addEventListener('push', event => {
-  if (event.data) {
-    const options = {
-      body: event.data.text(),
-      icon: '/icon-192.png',
-      badge: '/icon-192.png',
-      vibrate: [100, 50, 100],
-      data: {
-        dateOfArrival: Date.now(),
-        primaryKey: 1
-      }
-    };
-
-    event.waitUntil(
-      self.registration.showNotification('Ticket Father', options)
-    );
   }
 });
