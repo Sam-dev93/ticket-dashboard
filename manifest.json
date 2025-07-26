@@ -1,0 +1,61 @@
+{
+  "name": "Ticket Father Dashboard",
+  "short_name": "Ticket Father",
+  "description": "Season 2025-2026 ticket management dashboard",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#181818",
+  "theme_color": "#181818",
+  "orientation": "portrait",
+  "scope": "/",
+  "lang": "en-GB",
+  "categories": ["sports", "productivity", "utilities"],
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Ticket Father Dashboard"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "Ticket Father Dashboard"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "View Next 7 Days",
+      "short_name": "Upcoming",
+      "description": "View matches in the next 7 days",
+      "url": "/#upcoming",
+      "icons": [{ "src": "icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Refresh Data",
+      "short_name": "Refresh",
+      "description": "Refresh all ticket data",
+      "url": "/#refresh",
+      "icons": [{ "src": "icon-192.png", "sizes": "192x192" }]
+    }
+  ],
+  "prefer_related_applications": false,
+  "related_applications": []
+}
