@@ -166,11 +166,57 @@
         .section-title {
             font-size: 20px;
             font-weight: 600;
-            padding: 20px 20px 16px 20px;
-            border-bottom: 1px solid #2E2E2E;
+            padding: 20px 20px 8px 20px;
             color: #F5F5F5;
             letter-spacing: -0.24px;
             text-align: center;
+        }
+        
+        .period-selector {
+            display: flex;
+            justify-content: center;
+            padding: 0 20px 16px 20px;
+            border-bottom: 1px solid #2E2E2E;
+        }
+        
+        .period-control {
+            display: flex;
+            background: #2A2A2A;
+            border-radius: 12px;
+            padding: 4px;
+            border: 1px solid #3A3A3A;
+        }
+        
+        .period-btn {
+            background: transparent;
+            border: none;
+            color: #B8B8B8;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            letter-spacing: -0.24px;
+            min-width: 44px;
+            /* Mobile touch improvements */
+            -webkit-tap-highlight-color: transparent;
+            touch-action: manipulation;
+        }
+        
+        .period-btn.active {
+            background: #10A37F;
+            color: #ffffff;
+            box-shadow: 0 2px 8px rgba(16, 163, 127, 0.25);
+        }
+        
+        .period-btn:hover:not(.active) {
+            background: #353535;
+            color: #E6E6E6;
+        }
+        
+        .period-btn:active {
+            transform: scale(0.98);
         }
         
         .match-item {
@@ -891,7 +937,15 @@
         </div>
         
         <div class="section">
-            <div class="section-title">📅 Next 7 Days</div>
+            <div class="section-title" id="upcomingTitle">📅 Next 7 Days</div>
+            <div class="period-selector">
+                <div class="period-control">
+                    <button class="period-btn" onclick="setUpcomingPeriod(3)" data-days="3">3d</button>
+                    <button class="period-btn active" onclick="setUpcomingPeriod(7)" data-days="7">7d</button>
+                    <button class="period-btn" onclick="setUpcomingPeriod(14)" data-days="14">14d</button>
+                    <button class="period-btn" onclick="setUpcomingPeriod(30)" data-days="30">30d</button>
+                </div>
+            </div>
             <div id="upcomingMatches"></div>
         </div>
         
@@ -1042,6 +1096,9 @@
             teams: []
         };
         
+        // Track selected upcoming period (default 7 days)
+        let selectedUpcomingPeriod = 7;
+        
         // Cache for team sheet IDs to avoid repeated lookups
         const teamSheetCache = new Map();
         
@@ -1092,18 +1149,42 @@
             });
         }
         
-        function isWithinNextWeek(dateStr) {
+        function isWithinPeriod(dateStr, days) {
             const [day, month, year] = dateStr.split('/');
             const matchDate = new Date(year, month - 1, day);
             const today = new Date();
-            const sevenDaysFromNow = new Date(today.getTime() + 6 * 24 * 60 * 60 * 1000);
+            const periodEndDate = new Date(today.getTime() + (days - 1) * 24 * 60 * 60 * 1000);
             
             // Compare just the dates (no time)
             const matchDateOnly = new Date(matchDate.getFullYear(), matchDate.getMonth(), matchDate.getDate());
             const todayOnly = new Date(today.getFullYear(), today.getMonth(), today.getDate());
-            const endDateOnly = new Date(sevenDaysFromNow.getFullYear(), sevenDaysFromNow.getMonth(), sevenDaysFromNow.getDate());
+            const endDateOnly = new Date(periodEndDate.getFullYear(), periodEndDate.getMonth(), periodEndDate.getDate());
             
             return matchDateOnly >= todayOnly && matchDateOnly <= endDateOnly;
+        }
+        
+        // Keep the old function for backward compatibility
+        function isWithinNextWeek(dateStr) {
+            return isWithinPeriod(dateStr, 7);
+        }
+
+        // Set upcoming period and update display
+        function setUpcomingPeriod(days) {
+            selectedUpcomingPeriod = days;
+            
+            // Update button states
+            document.querySelectorAll('.period-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if (parseInt(btn.dataset.days) === days) {
+                    btn.classList.add('active');
+                }
+            });
+            
+            // Update title
+            document.getElementById('upcomingTitle').textContent = `📅 Next ${days} Day${days === 1 ? '' : 's'}`;
+            
+            // Refresh the upcoming matches display
+            updateDashboard();
         }
 
         // Enhanced formatName function for both team names and match names
@@ -1183,7 +1264,7 @@
             const allUpcomingMatches = [];
             dashboardData.teams.forEach(team => {
                 team.matches.forEach(match => {
-                    if (isWithinNextWeek(match.date)) {
+                    if (isWithinPeriod(match.date, selectedUpcomingPeriod)) {
                         allUpcomingMatches.push({
                             ...match,
                             teamEmoji: team.emoji,
@@ -1201,7 +1282,7 @@
             
             const upcomingContainer = document.getElementById('upcomingMatches');
             if (allUpcomingMatches.length === 0) {
-                upcomingContainer.innerHTML = '<div class="empty-state">No matches in the next 7 days</div>';
+                upcomingContainer.innerHTML = `<div class="empty-state">No matches in the next ${selectedUpcomingPeriod} day${selectedUpcomingPeriod === 1 ? '' : 's'}</div>`;
             } else {
                 upcomingContainer.innerHTML = allUpcomingMatches.map((match, index) => `
                     <div class="match-item clickable-match" onclick="openMatchPopup('${match.teamName}', '${match.name}', '${match.date}')">
