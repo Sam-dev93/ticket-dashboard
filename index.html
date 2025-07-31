@@ -135,6 +135,12 @@
             background: var(--bg-primary);
         }
         
+        .bottom-spacer {
+            height: 50px;
+            flex-shrink: 0;
+            background: var(--bg-primary);
+        }
+        
         .main-content {
             /* Remove flexbox - use simple block layout like Salah Tracker */
         }
@@ -1003,6 +1009,10 @@
                 height: 60px;
             }
             
+            .bottom-spacer {
+                height: 40px;
+            }
+            
             .scrollable-content {
                 padding-top: 16px;
             }
@@ -1051,6 +1061,10 @@
                 padding: 0 24px;
             }
             
+            .bottom-spacer {
+                height: 60px;
+            }
+            
             .scrollable-content {
                 padding-top: 20px;
             }
@@ -1079,6 +1093,10 @@
             .container {
                 max-width: 1024px;
                 padding: 0 32px;
+            }
+            
+            .bottom-spacer {
+                height: 70px;
             }
             
             .scrollable-content {
@@ -1124,7 +1142,7 @@
             
             <!-- Theme Toggle -->
             <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme">
-                <span class="theme-icon moon">🌙</span>
+                <span class="theme-icon moon">⭐️</span>
                 <span class="theme-icon sun">☀️</span>
             </button>
         </div>
@@ -1181,6 +1199,9 @@
             
             <div id="teamsContainer"></div>
         </div>
+        
+        <!-- Bottom Spacer to push content up from bottom -->
+        <div class="bottom-spacer"></div>
         
         <!-- PWA Install Banner -->
         <div id="installBanner" class="install-banner">
