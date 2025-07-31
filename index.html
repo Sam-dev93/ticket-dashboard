@@ -39,12 +39,16 @@
     <!-- PWA Manifest -->
     <link rel="manifest" href="./manifest.json">
     
+    <!-- PDF Generation Libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
+    
     <style>
         :root {
             /* Dark mode colors (default) */
-            --bg-primary: #181818;
-            --bg-secondary: #1F1F1F;
-            --bg-tertiary: #2A2A2A;
+            --bg-primary: #181818;        /* 👈 MAIN BACKGROUND - Change this! */
+            --bg-secondary: #1F1F1F;      /* 👈 Card backgrounds */
+            --bg-tertiary: #2A2A2A;       /* 👈 Button backgrounds */
             --bg-quaternary: #3A3A3A;
             --border-primary: #2E2E2E;
             --border-secondary: #3A3A3A;
@@ -65,9 +69,9 @@
 
         [data-theme="light"] {
             /* Light mode colors */
-            --bg-primary: #F2F2F7;
-            --bg-secondary: #FFFFFF;
-            --bg-tertiary: #F1F3F4;
+            --bg-primary: #F2F2F7;        /* 👈 MAIN BACKGROUND - Hifz Tracker grey */
+            --bg-secondary: #FFFFFF;      /* 👈 Card backgrounds */
+            --bg-tertiary: #F1F3F4;       /* 👈 Button backgrounds */
             --bg-quaternary: #E8EAED;
             --border-primary: #E1E3E6;
             --border-secondary: #D1D5DB;
@@ -101,7 +105,7 @@
         
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, sans-serif;
-            background: var(--bg-primary);
+            background: var(--bg-primary);  /* 👈 Uses main background color */
             color: var(--text-secondary);
             line-height: 1.47;
             -webkit-font-smoothing: antialiased;
@@ -122,7 +126,7 @@
             max-width: 100%;
             margin: 0 auto;
             height: 100vh;
-            background: var(--bg-primary);
+            background: var(--bg-primary);  /* 👈 Uses main background color */
             display: flex;
             flex-direction: column;
             overflow: hidden;
@@ -132,13 +136,13 @@
         .top-spacer {
             height: 70px;
             flex-shrink: 0;
-            background: var(--bg-primary);
+            background: var(--bg-primary);  /* 👈 Uses main background color */
         }
         
         .bottom-spacer {
             height: 50px;
             flex-shrink: 0;
-            background: var(--bg-primary);
+            background: var(--bg-primary);  /* 👈 Uses main background color */
         }
         
         .main-content {
@@ -155,13 +159,13 @@
             padding: 10px 0;
             position: relative;
             flex-shrink: 0;
-            background: var(--bg-primary);
+            background: var(--bg-primary);  /* 👈 Uses main background color */
         }
         
         .sticky-header {
             position: sticky;
             top: 0;
-            background: var(--bg-primary);
+            background: var(--bg-primary);  /* 👈 Uses main background color */
             z-index: 100;
             height: 8px;
             border-bottom: 1px solid var(--border-primary);
@@ -497,6 +501,36 @@
             transform: none;
             box-shadow: none;
             cursor: not-allowed;
+        }
+        
+        .pdf-export-btn {
+            background: linear-gradient(135deg, #10A37F, #0D7A5F);
+            border: none;
+            color: #ffffff;
+            padding: 16px 24px;
+            border-radius: 14px;
+            font-size: 17px;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            margin: 24px 0 16px 0;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 12px var(--accent-green-shadow);
+            letter-spacing: -0.41px;
+            -webkit-tap-highlight-color: transparent;
+            touch-action: manipulation;
+            flex-shrink: 0;
+        }
+        
+        .pdf-export-btn:hover {
+            background: linear-gradient(135deg, #0D8B6F, #0A7A5F);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 20px var(--accent-green-shadow);
+        }
+        
+        .pdf-export-btn:active {
+            transform: translateY(0);
+            box-shadow: 0 1px 8px var(--accent-green-shadow);
         }
         
         .team-header {
@@ -913,6 +947,97 @@
             background: var(--bg-tertiary);
         }
         
+        /* PDF Export Modal Styles */
+        .pdf-export-options {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        
+        .pdf-option-btn {
+            background: var(--bg-secondary);
+            border: 2px solid var(--border-primary);
+            border-radius: 16px;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: left;
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-primary);
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .pdf-option-btn:hover {
+            border-color: var(--accent-primary);
+            background: var(--accent-green-bg);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px var(--accent-green-shadow);
+        }
+        
+        .pdf-option-btn span {
+            font-size: 14px;
+            font-weight: 400;
+            color: var(--text-tertiary);
+        }
+        
+        .pdf-teams-section {
+            margin-top: 24px;
+        }
+        
+        .pdf-teams-section h3 {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 16px;
+        }
+        
+        .pdf-team-btn {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-primary);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 15px;
+            font-weight: 500;
+            color: var(--text-secondary);
+            width: 100%;
+            text-align: left;
+        }
+        
+        .pdf-team-btn:hover {
+            border-color: var(--accent-primary);
+            background: var(--bg-tertiary);
+        }
+        
+        .pdf-team-emoji {
+            font-size: 20px;
+        }
+        
+        .pdf-loading {
+            text-align: center;
+            padding: 20px;
+            color: var(--text-tertiary);
+            font-size: 16px;
+        }
+        
+        .pdf-loading-spinner {
+            width: 20px;
+            height: 20px;
+            border: 3px solid var(--border-secondary);
+            border-top: 3px solid var(--accent-primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 12px auto;
+        }
+        
         /* PWA Installation Banner */
         .install-banner {
             position: fixed;
@@ -1142,7 +1267,7 @@
             
             <!-- Theme Toggle -->
             <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme">
-                <span class="theme-icon moon">⭐️</span>
+                <span class="theme-icon moon">🌙</span>
                 <span class="theme-icon sun">☀️</span>
             </button>
         </div>
@@ -1198,6 +1323,8 @@
             </div>
             
             <div id="teamsContainer"></div>
+            
+            <button class="pdf-export-btn" onclick="showPDFExportModal()">📄 Export PDF</button>
         </div>
         
         <!-- Bottom Spacer to push content up from bottom -->
@@ -1224,6 +1351,32 @@
                     <div class="match-loading">
                         <div class="match-loading-spinner"></div>
                         Loading match details...
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- PDF Export Modal -->
+        <div id="pdfExportModal" class="match-popup-overlay" onclick="closePDFExportModal(event)">
+            <div class="match-popup" onclick="event.stopPropagation()">
+                <div class="match-popup-header">
+                    <div>
+                        <div class="match-popup-title">📄 Export PDF Report</div>
+                        <div class="match-popup-date">Choose what to export</div>
+                    </div>
+                    <button class="close-btn" onclick="closePDFExportModal()">×</button>
+                </div>
+                <div class="match-popup-content" id="pdfExportContent">
+                    <div class="pdf-export-options">
+                        <button class="pdf-option-btn" onclick="exportAllDataPDF()">
+                            📊 Export All Teams Summary
+                            <span>Complete overview of all teams and matches</span>
+                        </button>
+                        
+                        <div class="pdf-teams-section">
+                            <h3>Export Individual Teams:</h3>
+                            <div id="pdfTeamsList"></div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -2510,6 +2663,239 @@
                 updateDashboard();
             }
         });
+        
+        // PDF Export Functions
+        function showPDFExportModal() {
+            const modal = document.getElementById('pdfExportModal');
+            const teamsList = document.getElementById('pdfTeamsList');
+            
+            // Sort teams alphabetically for PDF export list
+            const sortedTeams = [...dashboardData.teams].sort((a, b) => a.name.localeCompare(b.name));
+            
+            // Populate teams list (alphabetical order)
+            teamsList.innerHTML = sortedTeams.map(team => `
+                <button class="pdf-team-btn" onclick="exportTeamPDF('${team.name}')">
+                    <span class="pdf-team-emoji">${team.emoji}</span>
+                    <div>
+                        <div>${team.name}</div>
+                        <small>${team.totalTickets} tickets • ${formatCurrency(team.totalSpent)} spent</small>
+                    </div>
+                </button>
+            `).join('');
+            
+            modal.style.display = 'flex';
+        }
+        
+        function closePDFExportModal(event) {
+            if (event && event.target !== event.currentTarget) return;
+            document.getElementById('pdfExportModal').style.display = 'none';
+        }
+        
+        function exportAllDataPDF() {
+            const content = document.getElementById('pdfExportContent');
+            content.innerHTML = `
+                <div class="pdf-loading">
+                    <div class="pdf-loading-spinner"></div>
+                    Generating All Teams Summary PDF...
+                </div>
+            `;
+            
+            setTimeout(() => {
+                generateAllTeamsPDF();
+                closePDFExportModal();
+            }, 500);
+        }
+        
+        function exportTeamPDF(teamName) {
+            const content = document.getElementById('pdfExportContent');
+            content.innerHTML = `
+                <div class="pdf-loading">
+                    <div class="pdf-loading-spinner"></div>
+                    Generating ${teamName} PDF Report...
+                </div>
+            `;
+            
+            setTimeout(() => {
+                generateTeamPDF(teamName);
+                closePDFExportModal();
+            }, 500);
+        }
+        
+        // Utility function to remove emojis from text
+        function removeEmojis(text) {
+            return text.replace(/[\u{1F600}-\u{1F64F}]|[\u{1F300}-\u{1F5FF}]|[\u{1F680}-\u{1F6FF}]|[\u{1F1E0}-\u{1F1FF}]|[\u{2600}-\u{26FF}]|[\u{2700}-\u{27BF}]/gu, '').trim();
+        }
+        
+        function generateAllTeamsPDF() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            
+            // Title
+            doc.setFontSize(20);
+            doc.setFont(undefined, 'bold');
+            doc.text('Ticket Father - All Teams Summary', 20, 30);
+            
+            doc.setFontSize(12);
+            doc.setFont(undefined, 'normal');
+            doc.text(`Season 2025-2026 • Generated: ${new Date().toLocaleDateString('en-GB')}`, 20, 40);
+            
+            // Overall Stats
+            doc.setFontSize(14);
+            doc.setFont(undefined, 'bold');
+            doc.text('Overall Statistics', 20, 60);
+            
+            const overallStats = [
+                ['Total Tickets', dashboardData.totalTickets.toString()],
+                ['Available Tickets', dashboardData.availableTickets.toString()],
+                ['Total Spent', formatCurrency(dashboardData.totalSpent)],
+                ['Net Profit', (dashboardData.netProfit >= 0 ? '+' : '-') + formatCurrency(dashboardData.netProfit)]
+            ];
+            
+            doc.autoTable({
+                startY: 70,
+                head: [['Metric', 'Value']],
+                body: overallStats,
+                theme: 'grid',
+                headStyles: { fillColor: [16, 163, 127] },
+                margin: { left: 20, right: 20 },
+                columnStyles: {
+                    1: { 
+                        textColor: function(data) {
+                            if (data.row.index === 3) { // Net Profit row
+                                return data.cell.text[0].startsWith('-') ? [220, 38, 38] : [16, 163, 127];
+                            }
+                            return [0, 0, 0]; // Default black for other rows
+                        }
+                    }
+                }
+            });
+            
+            // Teams Summary
+            let currentY = doc.lastAutoTable.finalY + 20;
+            doc.setFontSize(14);
+            doc.setFont(undefined, 'bold');
+            doc.text('Teams Breakdown', 20, currentY);
+            
+            // Sort teams alphabetically for the table
+            const sortedTeamsForTable = [...dashboardData.teams].sort((a, b) => a.name.localeCompare(b.name));
+            const teamsData = sortedTeamsForTable.map(team => [
+                removeEmojis(team.name), // Remove emoji from team name
+                team.totalTickets.toString(),
+                formatCurrency(team.totalSpent),
+                formatCurrency(team.totalSales),
+                (team.netProfit >= 0 ? '+' : '-') + formatCurrency(team.netProfit)
+            ]);
+            
+            doc.autoTable({
+                startY: currentY + 10,
+                head: [['Team', 'Tickets', 'Spent', 'Sales', 'Profit']],
+                body: teamsData,
+                theme: 'grid',
+                headStyles: { fillColor: [16, 163, 127] },
+                margin: { left: 20, right: 20 },
+                columnStyles: {
+                    4: { 
+                        textColor: function(data) {
+                            return data.cell.text[0].startsWith('-') ? [220, 38, 38] : [16, 163, 127];
+                        }
+                    }
+                }
+            });
+            
+            // Save the PDF
+            doc.save(`Ticket-Father-All-Teams-${new Date().toISOString().split('T')[0]}.pdf`);
+        }
+        
+        function generateTeamPDF(teamName) {
+            const team = dashboardData.teams.find(t => t.name === teamName);
+            if (!team) return;
+            
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            
+            // Title (remove emoji)
+            doc.setFontSize(20);
+            doc.setFont(undefined, 'bold');
+            doc.text(removeEmojis(team.name), 20, 30);
+            
+            doc.setFontSize(12);
+            doc.setFont(undefined, 'normal');
+            doc.text(`Season 2025-2026 • Generated: ${new Date().toLocaleDateString('en-GB')}`, 20, 40);
+            
+            // Team Stats
+            doc.setFontSize(14);
+            doc.setFont(undefined, 'bold');
+            doc.text('Team Statistics', 20, 60);
+            
+            const teamStats = [
+                ['Total Tickets', team.totalTickets.toString()],
+                ['Available Tickets', team.matches.reduce((sum, match) => sum + match.tickets, 0).toString()],
+                ['Sold Tickets', team.matches.reduce((sum, match) => sum + match.sold, 0).toString()],
+                ['Total Spent', formatCurrency(team.totalSpent)],
+                ['Total Sales', formatCurrency(team.totalSales)],
+                ['Net Profit', (team.netProfit >= 0 ? '+' : '-') + formatCurrency(team.netProfit)]
+            ];
+            
+            doc.autoTable({
+                startY: 70,
+                head: [['Metric', 'Value']],
+                body: teamStats,
+                theme: 'grid',
+                headStyles: { fillColor: [16, 163, 127] },
+                margin: { left: 20, right: 20 },
+                columnStyles: {
+                    1: { 
+                        textColor: function(data) {
+                            if (data.row.index === 5) { // Net Profit row
+                                return data.cell.text[0].startsWith('-') ? [220, 38, 38] : [16, 163, 127];
+                            }
+                            return [0, 0, 0]; // Default black for other rows
+                        }
+                    }
+                }
+            });
+            
+            // Matches Table
+            if (team.matches.length > 0) {
+                let currentY = doc.lastAutoTable.finalY + 20;
+                doc.setFontSize(14);
+                doc.setFont(undefined, 'bold');
+                doc.text('Matches', 20, currentY);
+                
+                // Sort matches alphabetically
+                const sortedMatches = [...team.matches].sort((a, b) => a.name.localeCompare(b.name));
+                const matchesData = sortedMatches.map(match => [
+                    removeEmojis(match.name), // Remove any emojis from match names
+                    formatDate(match.date),
+                    `${match.tickets}/${match.total}`,
+                    match.sold.toString(),
+                    formatCurrency(match.spent),
+                    formatCurrency(match.sales),
+                    (match.profit >= 0 ? '+' : '-') + formatCurrency(match.profit)
+                ]);
+                
+                doc.autoTable({
+                    startY: currentY + 10,
+                    head: [['Match', 'Date', 'Available', 'Sold', 'Spent', 'Sales', 'Profit']],
+                    body: matchesData,
+                    theme: 'grid',
+                    headStyles: { fillColor: [16, 163, 127] },
+                    margin: { left: 20, right: 20 },
+                    styles: { fontSize: 9 },
+                    columnStyles: {
+                        6: { 
+                            textColor: function(data) {
+                                return data.cell.text[0].startsWith('-') ? [220, 38, 38] : [16, 163, 127];
+                            }
+                        }
+                    }
+                });
+            }
+            
+            // Save the PDF
+            const safeName = removeEmojis(teamName).replace(/[^a-zA-Z0-9]/g, '-');
+            doc.save(`Ticket-Father-${safeName}-${new Date().toISOString().split('T')[0]}.pdf`);
+        }
     </script>
 </body>
 </html>
