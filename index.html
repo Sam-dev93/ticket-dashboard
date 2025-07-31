@@ -116,10 +116,6 @@
             min-height: 100vh;
             margin: 0;
             padding: 0;
-            /* Safe area with extra top padding to avoid status bar */
-            padding-top: max(20px, env(safe-area-inset-top));
-            padding-left: env(safe-area-inset-left);
-            padding-right: env(safe-area-inset-right);
         }
         
         .container {
@@ -130,10 +126,7 @@
             display: flex;
             flex-direction: column;
             overflow: hidden;
-            padding-top: 25px;
-            padding-left: max(16px, env(safe-area-inset-left));
-            padding-right: max(16px, env(safe-area-inset-right));
-            padding-bottom: max(20px, env(safe-area-inset-bottom));
+            padding: 0 16px;
         }
         
         .main-content {
@@ -147,7 +140,7 @@
         .header {
             text-align: center;
             margin-bottom: 0;
-            padding: 12px 0;
+            padding: 20px 0;
             position: relative;
             flex-shrink: 0;
             background: var(--bg-primary);
@@ -191,7 +184,7 @@
         /* Theme Toggle */
         .theme-toggle {
             position: absolute;
-            top: 0px;
+            top: 20px;
             right: 0;
             background: var(--bg-tertiary);
             border: 1px solid var(--border-secondary);
@@ -997,10 +990,7 @@
         /* Enhanced mobile styles */
         @media (max-width: 767px) {
             .container {
-                padding-top: 20px;
-                padding-left: max(12px, env(safe-area-inset-left));
-                padding-right: max(12px, env(safe-area-inset-right));
-                padding-bottom: max(16px, env(safe-area-inset-bottom));
+                padding: 0 12px;
             }
             
             .scrollable-content {
@@ -1022,8 +1012,7 @@
 
             .header {
                 margin-bottom: 0;
-                padding: 8px 0;
-                padding-top: 12px;
+                padding: 20px 0;
             }
             
             /* Better touch targets on mobile */
@@ -1039,7 +1028,7 @@
             }
 
             .theme-toggle {
-                top: 7px;
+                top: 20px;
                 right: 0;
             }
         }
@@ -1049,10 +1038,7 @@
             .container {
                 max-width: 768px;
                 margin: 0 auto;
-                padding-top: 20px;
-                padding-left: max(24px, env(safe-area-inset-left));
-                padding-right: max(24px, env(safe-area-inset-right));
-                padding-bottom: max(24px, env(safe-area-inset-bottom));
+                padding: 0 24px;
             }
             
             .scrollable-content {
@@ -1082,10 +1068,7 @@
         @media (min-width: 1024px) {
             .container {
                 max-width: 1024px;
-                padding-top: 25px;
-                padding-left: max(32px, env(safe-area-inset-left));
-                padding-right: max(32px, env(safe-area-inset-right));
-                padding-bottom: max(32px, env(safe-area-inset-bottom));
+                padding: 0 32px;
             }
             
             .scrollable-content {
@@ -1128,7 +1111,7 @@
             
             <!-- Theme Toggle -->
             <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme">
-                <span class="theme-icon moon">⭐️</span>
+                <span class="theme-icon moon">🌙</span>
                 <span class="theme-icon sun">☀️</span>
             </button>
         </div>
