@@ -65,8 +65,8 @@
 
         [data-theme="light"] {
             /* Light mode colors */
-            --bg-primary: #FFFFFF;
-            --bg-secondary: #F8F9FA;
+            --bg-primary: #F5F5F7;
+            --bg-secondary: #FFFFFF;
             --bg-tertiary: #F1F3F4;
             --bg-quaternary: #E8EAED;
             --border-primary: #E1E3E6;
@@ -161,7 +161,7 @@
         /* Theme Toggle */
         .theme-toggle {
             position: absolute;
-            top: 20px;
+            top: 0px;
             right: 0;
             background: var(--bg-tertiary);
             border: 1px solid var(--border-secondary);
@@ -192,12 +192,12 @@
             transition: all 0.3s ease;
         }
 
-        [data-theme="light"] .theme-icon.moon {
+        [data-theme="light"] .theme-icon.moon,
+        body:not([data-theme]) .theme-icon.moon {
             display: none;
         }
 
-        [data-theme="dark"] .theme-icon.sun,
-        body:not([data-theme]) .theme-icon.sun {
+        [data-theme="dark"] .theme-icon.sun {
             display: none;
         }
         
@@ -624,12 +624,13 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: rgba(0, 0, 0, 0.4);
+            background: rgba(0, 0, 0, 0.5);
             z-index: 1000;
             display: none;
             align-items: center;
             justify-content: center;
             padding: 20px;
+            overflow-y: auto;
         }
         
         .match-popup {
@@ -637,20 +638,25 @@
             border-radius: 20px;
             width: 100%;
             max-width: 800px;
-            max-height: 90vh;
+            max-height: 80vh;
             overflow-y: auto;
             position: relative;
             box-shadow: 0 20px 60px var(--shadow-secondary);
             border: 1px solid var(--border-primary);
             transition: all 0.3s ease;
+            margin: 20px;
         }
         
         .match-popup-header {
-            padding: 24px 24px 16px 24px;
+            padding: 20px 20px 16px 20px;
             border-bottom: 1px solid var(--border-primary);
             display: flex;
             justify-content: space-between;
             align-items: flex-start;
+            position: sticky;
+            top: 0;
+            background: var(--bg-secondary);
+            z-index: 1001;
         }
         
         .match-popup-title {
@@ -676,13 +682,15 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 24px;
+            font-size: 20px;
             color: var(--text-tertiary);
             cursor: pointer;
             transition: all 0.2s ease;
             flex-shrink: 0;
             margin-left: 16px;
             border: 1px solid var(--border-secondary);
+            position: relative;
+            z-index: 1001;
         }
         
         .close-btn:hover {
@@ -691,7 +699,8 @@
         }
         
         .match-popup-content {
-            padding: 16px;
+            padding: 20px;
+            padding-top: 16px;
         }
         
         .match-stats-grid {
@@ -938,11 +947,11 @@
             .match-popup {
                 margin: 10px;
                 max-height: calc(100vh - 20px);
+                border-radius: 16px;
             }
 
             .theme-toggle {
-                position: absolute;
-                top: 10px;
+                top: -5px;
                 right: 0;
             }
         }
