@@ -678,45 +678,23 @@
             background: rgba(0, 0, 0, 0.5);
             z-index: 1000;
             display: none;
-            align-items: flex-end;
+            align-items: center;
             justify-content: center;
-            padding: 0;
+            padding: 20px;
             overflow-y: auto;
-            animation: fadeIn 0.3s ease;
-        }
-        
-        .match-popup-overlay.show {
-            display: flex;
         }
         
         .match-popup {
             background: var(--bg-secondary);
-            border-radius: 20px 20px 0 0;
-            width: 100%;
-            max-width: 800px;
-            max-height: 90vh;
+            border-radius: 20px;
+            width: 90%;
+            max-width: 600px;
+            max-height: 80vh;
             overflow-y: auto;
             position: relative;
-            box-shadow: 0 -20px 60px var(--shadow-secondary);
+            box-shadow: 0 20px 60px var(--shadow-secondary);
             border: 1px solid var(--border-primary);
-            border-bottom: none;
-            transform: translateY(100%);
-            animation: slideUp 0.4s ease forwards;
-        }
-        
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-        
-        @keyframes slideUp {
-            from { transform: translateY(100%); }
-            to { transform: translateY(0); }
-        }
-        
-        @keyframes slideDown {
-            from { transform: translateY(0); }
-            to { transform: translateY(100%); }
+            margin: auto;
         }
         
         .match-popup-header {
@@ -1025,8 +1003,10 @@
             }
             
             .match-popup {
-                max-height: 90vh;
-                border-radius: 20px 20px 0 0;
+                width: 95%;
+                max-width: 500px;
+                max-height: 85vh;
+                border-radius: 16px;
             }
 
             .theme-toggle {
@@ -1058,6 +1038,11 @@
             .stat-value {
                 font-size: 32px;
             }
+            
+            .match-popup {
+                width: 80%;
+                max-width: 700px;
+            }
         }
         
         /* Desktop styles */
@@ -1072,6 +1057,11 @@
             
             .header h1 {
                 font-size: 48px;
+            }
+            
+            .match-popup {
+                width: 70%;
+                max-width: 800px;
             }
         }
         
@@ -1101,7 +1091,7 @@
             
             <!-- Theme Toggle -->
             <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme">
-                <span class="theme-icon moon">🌙</span>
+                <span class="theme-icon moon">⭐️</span>
                 <span class="theme-icon sun">☀️</span>
             </button>
         </div>
@@ -1862,10 +1852,7 @@
                     Loading match details...
                 </div>
             `;
-            
-            // Show overlay and trigger animation
             overlay.style.display = 'flex';
-            setTimeout(() => overlay.classList.add('show'), 10);
             
             try {
                 console.log(`🎯 Opening match popup for: "${teamName}" - "${matchName}"`);
@@ -1931,18 +1918,7 @@
         
         function closeMatchPopup(event) {
             if (event && event.target !== event.currentTarget) return;
-            
-            const overlay = document.getElementById('matchPopupOverlay');
-            const popup = overlay.querySelector('.match-popup');
-            
-            // Add slide down animation
-            popup.style.animation = 'slideDown 0.3s ease forwards';
-            
-            setTimeout(() => {
-                overlay.classList.remove('show');
-                overlay.style.display = 'none';
-                popup.style.animation = ''; // Reset animation
-            }, 300);
+            document.getElementById('matchPopupOverlay').style.display = 'none';
         }
         
         async function findTeamSheetId(teamName) {
