@@ -96,6 +96,9 @@
             height: 100%;
             width: 100%;
             overflow: hidden;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
         
         body {
@@ -117,6 +120,7 @@
             overflow: hidden;
             margin: 0;
             padding: 0;
+            box-sizing: border-box;
         }
         
         .container {
@@ -130,13 +134,16 @@
             /* Minimal top padding - no other padding */
             padding: max(6px, env(safe-area-inset-top) + 2px) max(16px, env(safe-area-inset-left)) 0 max(16px, env(safe-area-inset-right));
             overflow: hidden;
+            /* Ensure no bottom spacing */
+            box-sizing: border-box;
         }
         
         .main-content {
             flex: 1;
             display: flex;
             flex-direction: column;
-            min-height: 0; /* Allow content to shrink */
+            min-height: 0;
+            overflow: hidden;
         }
         
         .scrollable-content {
@@ -144,7 +151,21 @@
             overflow-y: auto;
             overflow-x: hidden;
             -webkit-overflow-scrolling: touch;
-            padding-bottom: 0; /* Remove bottom padding completely */
+            padding-bottom: 0;
+            margin-bottom: 0;
+            /* Ensure content goes to very bottom */
+            min-height: 0;
+            background: var(--bg-primary);
+            /* Force the background to extend to bottom */
+            position: relative;
+        }
+        
+        /* Add pseudo-element to fill any remaining space */
+        .scrollable-content::after {
+            content: '';
+            display: block;
+            min-height: 1px;
+            background: var(--bg-primary);
         }
         
         .header {
@@ -659,7 +680,18 @@
         }
         
         .scrollable-content > *:last-child {
+            margin-bottom: 0 !important;
+        }
+        
+        /* Force the last section to have no bottom margin */
+        .section:last-child {
+            margin-bottom: 0 !important;
+        }
+        
+        /* Remove any bottom spacing from team details */
+        .team-details:last-child {
             margin-bottom: 0;
+            padding-bottom: 0;
         }
         
         /* Match Popup Modal */
@@ -1071,7 +1103,7 @@
                 
                 <!-- Theme Toggle -->
                 <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme">
-                    <span class="theme-icon moon">🌕</span>
+                    <span class="theme-icon moon">🌙</span>
                     <span class="theme-icon sun">☀️</span>
                 </button>
             </div>
