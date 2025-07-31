@@ -92,6 +92,12 @@
             box-sizing: border-box;
         }
         
+        html {
+            height: 100%;
+            width: 100%;
+            overflow: hidden;
+        }
+        
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, sans-serif;
             background: var(--bg-primary);
@@ -114,25 +120,36 @@
             padding: 0;
         }
         
-        /* Prevent bounce on iOS */
-        html {
-            position: fixed;
-            height: 100%;
-            width: 100%;
-            overflow: hidden;
-        }
-        
         .container {
             max-width: 100%;
             margin: 0 auto;
-            min-height: 100vh;
+            height: 100vh;
+            height: 100dvh; /* Use dynamic viewport height for better PWA support */
             background: var(--bg-primary);
-            /* Create top "border" but no bottom spacing */
-            padding-top: max(32px, env(safe-area-inset-top) + 10px);
+            display: flex;
+            flex-direction: column;
+            /* Top padding only - no bottom padding */
+            padding-top: max(20px, env(safe-area-inset-top) + 8px);
             padding-left: max(16px, env(safe-area-inset-left));
             padding-right: max(16px, env(safe-area-inset-right));
-            padding-bottom: 0;
-            margin-bottom: 0;
+            padding-bottom: env(safe-area-inset-bottom);
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
+        
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            min-height: 0; /* Allow content to shrink */
+        }
+        
+        .scrollable-content {
+            flex: 1;
+            overflow-y: auto;
+            overflow-x: hidden;
+            -webkit-overflow-scrolling: touch;
+            padding-bottom: 20px; /* Small bottom padding for last item spacing */
         }
         
         .header {
@@ -140,6 +157,7 @@
             margin-bottom: 24px;
             padding: 20px 0;
             position: relative;
+            flex-shrink: 0;
         }
         
         .header h1 {
@@ -441,6 +459,7 @@
             /* Mobile touch improvements */
             -webkit-tap-highlight-color: transparent;
             touch-action: manipulation;
+            flex-shrink: 0;
         }
         
         .refresh-btn:hover {
@@ -945,10 +964,10 @@
         /* Enhanced mobile styles */
         @media (max-width: 767px) {
             .container {
-                padding-top: max(24px, env(safe-area-inset-top) + 4px);
+                padding-top: max(16px, env(safe-area-inset-top) + 4px);
                 padding-left: max(12px, env(safe-area-inset-left));
                 padding-right: max(12px, env(safe-area-inset-right));
-                padding-bottom: 0;
+                padding-bottom: max(4px, env(safe-area-inset-bottom));
             }
             
             .stats-grid {
@@ -990,10 +1009,10 @@
             .container {
                 max-width: 768px;
                 margin: 0 auto;
-                padding-top: max(40px, env(safe-area-inset-top) + 8px);
+                padding-top: max(32px, env(safe-area-inset-top) + 8px);
                 padding-left: max(24px, env(safe-area-inset-left));
                 padding-right: max(24px, env(safe-area-inset-right));
-                padding-bottom: 0;
+                padding-bottom: max(8px, env(safe-area-inset-bottom));
             }
             
             .stats-grid {
@@ -1014,10 +1033,10 @@
         @media (min-width: 1024px) {
             .container {
                 max-width: 1024px;
-                padding-top: max(48px, env(safe-area-inset-top) + 16px);
+                padding-top: max(40px, env(safe-area-inset-top) + 16px);
                 padding-left: max(32px, env(safe-area-inset-left));
                 padding-right: max(32px, env(safe-area-inset-right));
-                padding-bottom: 0;
+                padding-bottom: max(16px, env(safe-area-inset-bottom));
             }
             
             .header h1 {
@@ -1045,65 +1064,69 @@
             📵 You're offline - Data may be outdated
         </div>
         
-        <div class="header">
-            <h1>Ticket Father Dashboard</h1>
-            <p>Season 2025 - 2026</p>
+        <div class="main-content">
+            <div class="header">
+                <h1>Ticket Father Dashboard</h1>
+                <p>Season 2025 - 2026</p>
+                
+                <!-- Theme Toggle -->
+                <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme">
+                    <span class="theme-icon moon">🌙</span>
+                    <span class="theme-icon sun">☀️</span>
+                </button>
+            </div>
             
-            <!-- Theme Toggle -->
-            <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme">
-                <span class="theme-icon moon">🌙</span>
-                <span class="theme-icon sun">☀️</span>
-            </button>
-        </div>
-        
-        <div class="stats-grid">
-            <div class="stat-card">
-                <div class="stat-value" id="totalTickets">0</div>
-                <div class="stat-label">Total Tickets</div>
-            </div>
-            <div class="stat-card available-tickets">
-                <div class="stat-value" id="availableTickets">0</div>
-                <div class="stat-label">Available Tickets</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-value" id="totalSpent">£0</div>
-                <div class="stat-label">Total Spent</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-value" id="netProfit">£0</div>
-                <div class="stat-label">Net Profit</div>
-            </div>
-        </div>
-        
-        <button class="refresh-btn" onclick="refreshDashboard()">Refresh Data</button>
-        
-        <div id="loadingMessage" class="loading" style="display: none;">
-            Loading latest data...
-        </div>
-        
-        <div id="loadingProgress" style="display: none;">
-            <div class="progress-container">
-                <div class="progress-bar" id="progressBar"></div>
-            </div>
-            <div class="progress-text" id="progressText">0%</div>
-        </div>
-        
-        <div class="section">
-            <div class="section-title" id="upcomingTitle">📅 Next 7 Days</div>
-            <div class="period-selector">
-                <div class="period-control">
-                    <button class="period-btn" onclick="setUpcomingPeriod(3)" data-days="3">3d</button>
-                    <button class="period-btn active" onclick="setUpcomingPeriod(7)" data-days="7">7d</button>
-                    <button class="period-btn" onclick="setUpcomingPeriod(14)" data-days="14">14d</button>
-                    <button class="period-btn" onclick="setUpcomingPeriod(30)" data-days="30">30d</button>
+            <div class="scrollable-content">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-value" id="totalTickets">0</div>
+                        <div class="stat-label">Total Tickets</div>
+                    </div>
+                    <div class="stat-card available-tickets">
+                        <div class="stat-value" id="availableTickets">0</div>
+                        <div class="stat-label">Available Tickets</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="totalSpent">£0</div>
+                        <div class="stat-label">Total Spent</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="netProfit">£0</div>
+                        <div class="stat-label">Net Profit</div>
+                    </div>
                 </div>
+                
+                <button class="refresh-btn" onclick="refreshDashboard()">Refresh Data</button>
+                
+                <div id="loadingMessage" class="loading" style="display: none;">
+                    Loading latest data...
+                </div>
+                
+                <div id="loadingProgress" style="display: none;">
+                    <div class="progress-container">
+                        <div class="progress-bar" id="progressBar"></div>
+                    </div>
+                    <div class="progress-text" id="progressText">0%</div>
+                </div>
+                
+                <div class="section">
+                    <div class="section-title" id="upcomingTitle">📅 Next 7 Days</div>
+                    <div class="period-selector">
+                        <div class="period-control">
+                            <button class="period-btn" onclick="setUpcomingPeriod(3)" data-days="3">3d</button>
+                            <button class="period-btn active" onclick="setUpcomingPeriod(7)" data-days="7">7d</button>
+                            <button class="period-btn" onclick="setUpcomingPeriod(14)" data-days="14">14d</button>
+                            <button class="period-btn" onclick="setUpcomingPeriod(30)" data-days="30">30d</button>
+                        </div>
+                    </div>
+                    <div id="upcomingMatches"></div>
+                </div>
+                
+                <div class="separator"></div>
+                
+                <div id="teamsContainer"></div>
             </div>
-            <div id="upcomingMatches"></div>
         </div>
-        
-        <div class="separator"></div>
-        
-        <div id="teamsContainer"></div>
         
         <!-- PWA Install Banner -->
         <div id="installBanner" class="install-banner">
