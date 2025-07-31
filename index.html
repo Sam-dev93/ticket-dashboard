@@ -192,13 +192,29 @@
             transition: all 0.3s ease;
         }
 
-        [data-theme="light"] .theme-icon.moon,
-        body:not([data-theme]) .theme-icon.moon {
+        [data-theme="light"] .theme-icon.moon {
             display: none;
+        }
+
+        [data-theme="light"] .theme-icon.sun {
+            display: block;
         }
 
         [data-theme="dark"] .theme-icon.sun {
             display: none;
+        }
+
+        [data-theme="dark"] .theme-icon.moon {
+            display: block;
+        }
+
+        /* Default (no theme set) - show moon for dark mode */
+        body:not([data-theme]) .theme-icon.sun {
+            display: none;
+        }
+
+        body:not([data-theme]) .theme-icon.moon {
+            display: block;
         }
         
         .stats-grid {
@@ -627,10 +643,11 @@
             background: rgba(0, 0, 0, 0.5);
             z-index: 1000;
             display: none;
-            align-items: center;
+            align-items: flex-start;
             justify-content: center;
-            padding: 20px;
+            padding: 40px 20px;
             overflow-y: auto;
+            padding-top: max(40px, 5vh);
         }
         
         .match-popup {
@@ -644,7 +661,6 @@
             box-shadow: 0 20px 60px var(--shadow-secondary);
             border: 1px solid var(--border-primary);
             transition: all 0.3s ease;
-            margin: 20px;
         }
         
         .match-popup-header {
@@ -653,10 +669,8 @@
             display: flex;
             justify-content: space-between;
             align-items: flex-start;
-            position: sticky;
-            top: 0;
             background: var(--bg-secondary);
-            z-index: 1001;
+            border-radius: 20px 20px 0 0;
         }
         
         .match-popup-title {
@@ -689,8 +703,6 @@
             flex-shrink: 0;
             margin-left: 16px;
             border: 1px solid var(--border-secondary);
-            position: relative;
-            z-index: 1001;
         }
         
         .close-btn:hover {
@@ -945,9 +957,13 @@
             }
             
             .match-popup {
-                margin: 10px;
-                max-height: calc(100vh - 20px);
+                max-height: calc(100vh - 80px);
                 border-radius: 16px;
+            }
+
+            .match-popup-overlay {
+                padding: 20px 10px;
+                padding-top: max(20px, 3vh);
             }
 
             .theme-toggle {
