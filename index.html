@@ -116,8 +116,8 @@
             min-height: 100vh;
             margin: 0;
             padding: 0;
+            /* Only top safe area - no bottom padding */
             padding-top: env(safe-area-inset-top);
-            padding-bottom: env(safe-area-inset-bottom);
             padding-left: env(safe-area-inset-left);
             padding-right: env(safe-area-inset-right);
         }
@@ -131,6 +131,7 @@
             padding-top: 15px;
             padding-left: max(16px, env(safe-area-inset-left));
             padding-right: max(16px, env(safe-area-inset-right));
+            padding-bottom: max(20px, env(safe-area-inset-bottom));
         }
         
         .main-content {
@@ -441,7 +442,7 @@
             font-weight: 600;
             cursor: pointer;
             width: 100%;
-            margin: 16px 0 0 0; /* Remove bottom margin */
+            margin: 16px 0 24px 0; /* Add proper bottom margin */
             transition: all 0.2s ease;
             box-shadow: 0 2px 12px var(--accent-green-shadow);
             letter-spacing: -0.41px;
@@ -640,7 +641,7 @@
                 transparent 8px,
                 transparent 16px
             );
-            margin: 20px 0 0 0; /* Remove bottom margin */
+            margin: 16px 0 0 0; /* Reduce top margin */
         }
         
         #teamsContainer .section:last-child {
@@ -677,24 +678,45 @@
             background: rgba(0, 0, 0, 0.5);
             z-index: 1000;
             display: none;
-            align-items: flex-start;
+            align-items: flex-end;
             justify-content: center;
-            padding: 8px 20px;
+            padding: 0;
             overflow-y: auto;
-            padding-top: max(8px, env(safe-area-inset-top) + 4px);
+            animation: fadeIn 0.3s ease;
+        }
+        
+        .match-popup-overlay.show {
+            display: flex;
         }
         
         .match-popup {
             background: var(--bg-secondary);
-            border-radius: 20px;
+            border-radius: 20px 20px 0 0;
             width: 100%;
             max-width: 800px;
-            max-height: 80vh;
+            max-height: 90vh;
             overflow-y: auto;
             position: relative;
-            box-shadow: 0 20px 60px var(--shadow-secondary);
+            box-shadow: 0 -20px 60px var(--shadow-secondary);
             border: 1px solid var(--border-primary);
-            transition: all 0.3s ease;
+            border-bottom: none;
+            transform: translateY(100%);
+            animation: slideUp 0.4s ease forwards;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        @keyframes slideUp {
+            from { transform: translateY(100%); }
+            to { transform: translateY(0); }
+        }
+        
+        @keyframes slideDown {
+            from { transform: translateY(0); }
+            to { transform: translateY(100%); }
         }
         
         .match-popup-header {
@@ -976,6 +998,7 @@
                 padding-top: 10px;
                 padding-left: max(12px, env(safe-area-inset-left));
                 padding-right: max(12px, env(safe-area-inset-right));
+                padding-bottom: max(16px, env(safe-area-inset-bottom));
             }
             
             .stats-grid {
@@ -1002,13 +1025,8 @@
             }
             
             .match-popup {
-                max-height: calc(100vh - 20px);
-                border-radius: 16px;
-            }
-
-            .match-popup-overlay {
-                padding: 4px 10px;
-                padding-top: max(4px, env(safe-area-inset-top) + 2px);
+                max-height: 90vh;
+                border-radius: 20px 20px 0 0;
             }
 
             .theme-toggle {
@@ -1025,6 +1043,7 @@
                 padding-top: 20px;
                 padding-left: max(24px, env(safe-area-inset-left));
                 padding-right: max(24px, env(safe-area-inset-right));
+                padding-bottom: max(24px, env(safe-area-inset-bottom));
             }
             
             .stats-grid {
@@ -1048,6 +1067,7 @@
                 padding-top: 25px;
                 padding-left: max(32px, env(safe-area-inset-left));
                 padding-right: max(32px, env(safe-area-inset-right));
+                padding-bottom: max(32px, env(safe-area-inset-bottom));
             }
             
             .header h1 {
@@ -1081,7 +1101,7 @@
             
             <!-- Theme Toggle -->
             <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme">
-                <span class="theme-icon moon">💙</span>
+                <span class="theme-icon moon">🌙</span>
                 <span class="theme-icon sun">☀️</span>
             </button>
         </div>
@@ -1842,7 +1862,10 @@
                     Loading match details...
                 </div>
             `;
+            
+            // Show overlay and trigger animation
             overlay.style.display = 'flex';
+            setTimeout(() => overlay.classList.add('show'), 10);
             
             try {
                 console.log(`🎯 Opening match popup for: "${teamName}" - "${matchName}"`);
@@ -1908,7 +1931,18 @@
         
         function closeMatchPopup(event) {
             if (event && event.target !== event.currentTarget) return;
-            document.getElementById('matchPopupOverlay').style.display = 'none';
+            
+            const overlay = document.getElementById('matchPopupOverlay');
+            const popup = overlay.querySelector('.match-popup');
+            
+            // Add slide down animation
+            popup.style.animation = 'slideDown 0.3s ease forwards';
+            
+            setTimeout(() => {
+                overlay.classList.remove('show');
+                overlay.style.display = 'none';
+                popup.style.animation = ''; // Reset animation
+            }, 300);
         }
         
         async function findTeamSheetId(teamName) {
