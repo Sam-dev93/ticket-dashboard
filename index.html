@@ -129,6 +129,12 @@
             padding: 0 16px;
         }
         
+        .top-spacer {
+            height: 50px;
+            flex-shrink: 0;
+            background: var(--bg-primary);
+        }
+        
         .main-content {
             /* Remove flexbox - use simple block layout like Salah Tracker */
         }
@@ -140,7 +146,7 @@
         .header {
             text-align: center;
             margin-bottom: 0;
-            padding: 20px 0;
+            padding: 10px 0;
             position: relative;
             flex-shrink: 0;
             background: var(--bg-primary);
@@ -184,7 +190,7 @@
         /* Theme Toggle */
         .theme-toggle {
             position: absolute;
-            top: 20px;
+            top: 10px;
             right: 0;
             background: var(--bg-tertiary);
             border: 1px solid var(--border-secondary);
@@ -993,6 +999,10 @@
                 padding: 0 12px;
             }
             
+            .top-spacer {
+                height: 45px;
+            }
+            
             .scrollable-content {
                 padding-top: 16px;
             }
@@ -1012,7 +1022,7 @@
 
             .header {
                 margin-bottom: 0;
-                padding: 20px 0;
+                padding: 10px 0;
             }
             
             /* Better touch targets on mobile */
@@ -1028,7 +1038,7 @@
             }
 
             .theme-toggle {
-                top: 20px;
+                top: 10px;
                 right: 0;
             }
         }
@@ -1100,6 +1110,9 @@
 </head>
 <body>
     <div class="container">
+        <!-- Top Spacer Bar to push content below status bar -->
+        <div class="top-spacer"></div>
+        
         <!-- Offline Indicator -->
         <div id="offlineIndicator" class="offline-indicator">
             📵 You're offline - Data may be outdated
@@ -1111,7 +1124,7 @@
             
             <!-- Theme Toggle -->
             <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme">
-                <span class="theme-icon moon">🌙</span>
+                <span class="theme-icon moon">⭐️</span>
                 <span class="theme-icon sun">☀️</span>
             </button>
         </div>
