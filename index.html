@@ -97,7 +97,6 @@
             background: var(--bg-primary);
             color: var(--text-secondary);
             line-height: 1.47;
-            padding: env(safe-area-inset-top) env(safe-area-inset-right) 0 env(safe-area-inset-left);
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
             /* PWA specific */
@@ -107,6 +106,12 @@
             overscroll-behavior: none;
             -webkit-overflow-scrolling: touch;
             transition: background-color 0.3s ease, color 0.3s ease;
+            height: 100%;
+            width: 100%;
+            overflow-y: auto;
+            overflow-x: hidden;
+            margin: 0;
+            padding: 0;
         }
         
         /* Prevent bounce on iOS */
@@ -117,24 +122,17 @@
             overflow: hidden;
         }
         
-        body {
-            height: 100%;
-            width: 100%;
-            overflow-y: auto;
-            overflow-x: hidden;
-        }
-        
         .container {
             max-width: 100%;
             margin: 0 auto;
-            padding: 16px;
             min-height: 100vh;
             background: var(--bg-primary);
-            /* PWA safe area */
-            padding-top: max(24px, env(safe-area-inset-top) + 8px);
-            padding-bottom: 0;
+            /* Create top "border" but no bottom spacing */
+            padding-top: max(32px, env(safe-area-inset-top) + 16px);
             padding-left: max(16px, env(safe-area-inset-left));
             padding-right: max(16px, env(safe-area-inset-right));
+            padding-bottom: 0;
+            margin-bottom: 0;
         }
         
         .header {
@@ -270,6 +268,10 @@
             border: 1px solid var(--border-primary);
             overflow: hidden;
             transition: all 0.3s ease;
+        }
+        
+        .section:last-child {
+            margin-bottom: 0;
         }
         
         .section-title {
@@ -432,7 +434,7 @@
             font-weight: 600;
             cursor: pointer;
             width: 100%;
-            margin: 24px 0;
+            margin: 24px 0 16px 0;
             transition: all 0.2s ease;
             box-shadow: 0 2px 12px var(--accent-green-shadow);
             letter-spacing: -0.41px;
@@ -630,11 +632,11 @@
                 transparent 8px,
                 transparent 16px
             );
-            margin: 32px 0;
+            margin: 32px 0 24px 0;
         }
         
         #teamsContainer .section:last-child {
-            margin-bottom: 20px;
+            margin-bottom: 0;
         }
         
         /* Match Popup Modal */
@@ -943,7 +945,9 @@
         /* Enhanced mobile styles */
         @media (max-width: 767px) {
             .container {
-                padding-top: max(20px, env(safe-area-inset-top) + 4px);
+                padding-top: max(24px, env(safe-area-inset-top) + 8px);
+                padding-left: max(12px, env(safe-area-inset-left));
+                padding-right: max(12px, env(safe-area-inset-right));
                 padding-bottom: 0;
             }
             
@@ -979,10 +983,6 @@
                 top: -5px;
                 right: 0;
             }
-            
-            #teamsContainer .section:last-child {
-                margin-bottom: 16px;
-            }
         }
         
         /* Tablet styles */
@@ -990,8 +990,9 @@
             .container {
                 max-width: 768px;
                 margin: 0 auto;
-                padding: 24px;
-                padding-top: max(32px, env(safe-area-inset-top) + 16px);
+                padding-top: max(40px, env(safe-area-inset-top) + 24px);
+                padding-left: max(24px, env(safe-area-inset-left));
+                padding-right: max(24px, env(safe-area-inset-right));
                 padding-bottom: 0;
             }
             
@@ -1013,8 +1014,9 @@
         @media (min-width: 1024px) {
             .container {
                 max-width: 1024px;
-                padding: 32px;
-                padding-top: max(40px, env(safe-area-inset-top) + 24px);
+                padding-top: max(48px, env(safe-area-inset-top) + 32px);
+                padding-left: max(32px, env(safe-area-inset-left));
+                padding-right: max(32px, env(safe-area-inset-right));
                 padding-bottom: 0;
             }
             
