@@ -686,6 +686,37 @@
             border-radius: 12px;
             border: 1px solid var(--accent-green-border);
         }
+
+        .error-message {
+            text-align: center;
+            color: var(--accent-red);
+            font-size: 15px;
+            font-weight: 500;
+            margin: 16px 0 24px 0;
+            padding: 12px;
+            background: rgba(232, 90, 90, 0.1);
+            border-radius: 12px;
+            border: 1px solid rgba(232, 90, 90, 0.2);
+        }
+
+        .persistent-message {
+            position: relative;
+            cursor: pointer;
+        }
+
+        .persistent-message::after {
+            content: '×';
+            position: absolute;
+            top: 8px;
+            right: 12px;
+            font-size: 18px;
+            color: inherit;
+            opacity: 0.7;
+        }
+
+        .persistent-message:hover::after {
+            opacity: 1;
+        }
         
         .empty-state {
             text-align: center;
@@ -1308,6 +1339,9 @@
                 </div>
                 <div class="progress-text" id="progressText">0%</div>
             </div>
+
+            <!-- Persistent Status Messages -->
+            <div id="statusMessages"></div>
             
             <div class="section">
                 <div class="section-title" id="upcomingTitle">📅 Next 7 Days</div>
@@ -1702,6 +1736,45 @@
         function formatMatchName(matchName) {
             return formatName(matchName);
         }
+
+        // Status Messages System
+        function showStatusMessage(message, type = 'success', persistent = false) {
+            const container = document.getElementById('statusMessages');
+            const messageId = 'status-' + Date.now();
+            
+            const messageClass = type === 'error' ? 'error-message' : 'success-message';
+            const persistentClass = persistent ? ' persistent-message' : '';
+            
+            const messageElement = document.createElement('div');
+            messageElement.id = messageId;
+            messageElement.className = messageClass + persistentClass;
+            messageElement.innerHTML = message;
+            
+            // Add click to dismiss for persistent messages
+            if (persistent) {
+                messageElement.onclick = () => dismissStatusMessage(messageId);
+            }
+            
+            container.appendChild(messageElement);
+            
+            // Auto-dismiss non-persistent messages after 5 seconds
+            if (!persistent) {
+                setTimeout(() => dismissStatusMessage(messageId), 5000);
+            }
+            
+            return messageId;
+        }
+        
+        function dismissStatusMessage(messageId) {
+            const message = document.getElementById(messageId);
+            if (message) {
+                message.remove();
+            }
+        }
+        
+        function clearAllStatusMessages() {
+            document.getElementById('statusMessages').innerHTML = '';
+        }
         
         function updateDashboard() {
             document.getElementById('totalTickets').textContent = dashboardData.totalTickets;
@@ -2013,6 +2086,7 @@
                 'west ham': '⚒️',
                 'fulham': '⚪',
                 'crystal palace': '🦅',
+                'sunderland': '🦓', // Added Sunderland emoji
                 
                 // Sports and Events
                 'comedy': '🎭',
@@ -2514,7 +2588,8 @@
             const progressElement = document.getElementById('loadingProgress');
             const refreshBtn = document.querySelector('.refresh-btn');
             
-            // Clear dashboard immediately when refresh is clicked
+            // Clear previous status messages and dashboard
+            clearAllStatusMessages();
             dashboardData = {
                 totalTickets: 0,
                 availableTickets: 0,
@@ -2523,7 +2598,7 @@
                 netProfit: 0,
                 teams: []
             };
-            updateDashboard(); // Show zeros immediately
+            updateDashboard();
             
             loadingElement.style.display = 'block';
             progressElement.style.display = 'block';
@@ -2533,32 +2608,33 @@
             try {
                 const allTeams = [];
                 let successCount = 0;
-                let errorCount = 0;
+                const failedSheets = [];
                 
                 console.log(`🚀 Starting to load ${SHEET_IDS.length} sheets...`);
                 
-                // Process sheets one by one with optimized logging
+                // Process sheets one by one
                 for (let i = 0; i < SHEET_IDS.length; i++) {
                     const sheetId = SHEET_IDS[i];
+                    let sheetName = `Sheet ${i + 1}`;
                     
                     try {
-                        console.log(`\n📊 Processing sheet ${i + 1}/${SHEET_IDS.length}`);
+                        console.log(`\n📊 Processing sheet ${i + 1}/${SHEET_IDS.length}: ${sheetId}`);
                         
                         // Update progress bar
                         const percentage = Math.round(((i + 1) / SHEET_IDS.length) * 100);
                         document.getElementById('progressBar').style.width = `${percentage}%`;
                         document.getElementById('progressText').textContent = `${percentage}% (${i + 1}/${SHEET_IDS.length})`;
                         
-                        // Optimized single request approach - combine document info and sheet data
-                        let documentInfo, sheetData;
-                        
-                        // Get document info
-                        documentInfo = await fastFetch(
-                            `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}?key=${API_KEY}&fields=properties.title,sheets.properties.title`,
+                        // Get document info first
+                        const documentInfo = await fastFetch(
+                            `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}?key=${API_KEY}&fields=properties.title`,
                             3500,
                             1
                         );
-                        console.log(`✅ Document title: "${documentInfo.properties.title}"`);
+                        
+                        const documentTitle = documentInfo.properties.title;
+                        sheetName = documentTitle; // Use document title as sheet name
+                        console.log(`✅ Document title: "${documentTitle}"`);
                         
                         // Get sheet data
                         const response = await fastFetch(
@@ -2566,12 +2642,10 @@
                             3500,
                             1
                         );
-                        sheetData = response.values || [];
+                        const sheetData = response.values || [];
                         console.log(`✅ Retrieved ${sheetData.length} rows of data`);
                         
                         // Parse the data
-                        const documentTitle = documentInfo.properties.title;
-                        
                         if (sheetData && sheetData.length > 0) {
                             const teamData = parseSheetData(sheetData, 'DASHBOARD', documentTitle);
                             
@@ -2584,29 +2658,44 @@
                                 teamSheetCache.set(teamData.name, sheetId);
                             } else {
                                 console.log(`⚠️ No valid team data found (no tickets or spending)`);
+                                failedSheets.push({
+                                    name: sheetName,
+                                    id: sheetId,
+                                    reason: 'No valid data found'
+                                });
                             }
                         } else {
                             console.log(`⚠️ No data found in DASHBOARD sheet`);
+                            failedSheets.push({
+                                name: sheetName,
+                                id: sheetId,
+                                reason: 'No DASHBOARD sheet or no data'
+                            });
                         }
                         
                     } catch (error) {
-                        errorCount++;
                         console.log(`❌ Failed processing sheet ${i + 1}: ${error.message}`);
+                        failedSheets.push({
+                            name: sheetName,
+                            id: sheetId,
+                            reason: error.message
+                        });
                     }
                     
-                    // Minimal delay between requests to avoid rate limiting while maximizing speed
+                    // Minimal delay between requests
                     if (i < SHEET_IDS.length - 1) {
-                        await new Promise(resolve => setTimeout(resolve, 150)); // Reduced from 400ms
+                        await new Promise(resolve => setTimeout(resolve, 150));
                     }
                 }
                 
                 console.log(`\n📊 FINAL RESULTS:`);
                 console.log(`✅ Successfully loaded: ${successCount} teams`);
-                console.log(`❌ Failed to load: ${errorCount} sheets`);
+                console.log(`❌ Failed to load: ${failedSheets.length} sheets`);
                 console.log(`📋 Teams loaded: ${allTeams.map(t => t.name).join(', ')}`);
+                console.log(`💥 Failed sheets:`, failedSheets.map(f => f.name).join(', '));
                 
                 if (allTeams.length === 0) {
-                    throw new Error(`No teams loaded successfully. Checked ${SHEET_IDS.length} sheets, ${errorCount} failed. Please check your internet connection and try again.`);
+                    throw new Error(`No teams loaded successfully. All ${SHEET_IDS.length} sheets failed. Please check your internet connection and try again.`);
                 }
                 
                 // Update dashboard with final data
@@ -2619,36 +2708,29 @@
                     return sum + team.matches.reduce((matchSum, match) => matchSum + match.tickets, 0);
                 }, 0);
                 
-                updateDashboard(); // Show final data
+                updateDashboard();
                 
-                // Show success message with details
-                const successMessage = `✅ Loaded ${allTeams.length} teams successfully!${errorCount > 0 ? ` (${errorCount} sheets had issues)` : ''}`;
-                progressElement.innerHTML = `<div class="success-message">${successMessage}</div>`;
+                // Create persistent success/error messages
+                let successMessage = `✅ Loaded ${allTeams.length} teams successfully!`;
                 
-                setTimeout(() => {
-                    progressElement.style.display = 'none';
-                    progressElement.innerHTML = `
-                        <div class="progress-container">
-                            <div class="progress-bar" id="progressBar"></div>
-                        </div>
-                        <div class="progress-text" id="progressText">0%</div>
-                    `;
-                }, 3000);
+                if (failedSheets.length > 0) {
+                    // Show success message
+                    showStatusMessage(successMessage, 'success', true);
+                    
+                    // Show detailed failed sheets message
+                    const failedList = failedSheets.map(f => `• ${f.name}: ${f.reason}`).join('<br>');
+                    const errorMessage = `❌ ${failedSheets.length} sheets had issues:<br><br>${failedList}<br><br>Click to dismiss this message.`;
+                    showStatusMessage(errorMessage, 'error', true);
+                } else {
+                    showStatusMessage(successMessage, 'success', true);
+                }
                 
             } catch (error) {
                 console.error('❌ Critical error during refresh:', error);
-                progressElement.innerHTML = `<div style="color: #ff3b30; text-align: center; padding: 16px;">❌ ${error.message}</div>`;
-                setTimeout(() => {
-                    progressElement.style.display = 'none';
-                    progressElement.innerHTML = `
-                        <div class="progress-container">
-                            <div class="progress-bar" id="progressBar"></div>
-                        </div>
-                        <div class="progress-text" id="progressText">0%</div>
-                    `;
-                }, 5000);
+                showStatusMessage(`❌ Critical error: ${error.message}`, 'error', true);
             } finally {
                 loadingElement.style.display = 'none';
+                progressElement.style.display = 'none';
                 refreshBtn.disabled = false;
                 refreshBtn.textContent = 'Refresh Data';
             }
