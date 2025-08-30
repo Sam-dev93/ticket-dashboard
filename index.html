@@ -1068,6 +1068,50 @@
             animation: spin 1s linear infinite;
             margin: 0 auto 12px auto;
         }
+
+        /* Monthly Report Styles */
+        .pdf-monthly-section {
+            margin-top: 24px;
+        }
+
+        .pdf-monthly-section h3 {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 16px;
+        }
+
+        .month-selector {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+
+        .month-btn {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-primary);
+            border-radius: 8px;
+            padding: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-secondary);
+            text-align: center;
+        }
+
+        .month-btn:hover {
+            border-color: var(--accent-primary);
+            background: var(--bg-tertiary);
+        }
+
+        .month-btn.selected {
+            border-color: var(--accent-primary);
+            background: var(--accent-green-bg);
+            color: var(--accent-primary);
+            font-weight: 600;
+        }
         
         /* PWA Installation Banner */
         .install-banner {
@@ -1207,6 +1251,10 @@
                 top: 10px;
                 right: 0;
             }
+
+            .month-selector {
+                grid-template-columns: repeat(2, 1fr);
+            }
         }
         
         /* Tablet styles */
@@ -1242,6 +1290,10 @@
                 width: 80%;
                 max-width: 700px;
             }
+
+            .month-selector {
+                grid-template-columns: repeat(3, 1fr);
+            }
         }
         
         /* Desktop styles */
@@ -1267,6 +1319,10 @@
                 width: 70%;
                 max-width: 800px;
             }
+
+            .month-selector {
+                grid-template-columns: repeat(4, 1fr);
+            }
         }
         
         /* Print styles for PWA */
@@ -1289,7 +1345,7 @@
         
         <!-- Offline Indicator -->
         <div id="offlineIndicator" class="offline-indicator">
-            📵 You're offline - Data may be outdated
+            🔵 You're offline - Data may be outdated
         </div>
         
         <div class="header">
@@ -1405,6 +1461,11 @@
                         <button class="pdf-option-btn" onclick="exportAllDataPDF()">
                             📊 Export All Teams Summary
                             <span>Complete overview of all teams and matches</span>
+                        </button>
+
+                        <button class="pdf-option-btn" onclick="showMonthlyReportOptions()">
+                            📅 Export Monthly Report
+                            <span>Filter matches by specific month</span>
                         </button>
                         
                         <div class="pdf-teams-section">
@@ -2069,25 +2130,25 @@
             const emojiMap = {
                 // Premier League teams
                 'arsenal': '💣',
-                'aston villa': '🐯',
+                'aston villa': '🏯',
                 'burnley': '🔥',
-                'bournemouth': '🏐',
+                'bournemouth': '🍒',
                 'chelsea': '🦁',
                 'everton': '🏰',
                 'forest': '🌳',
                 'nottingham forest': '🌳',
-                'liverpool': '🐦‍🔥',
+                'liverpool': '🦅‍🔥',
                 'man city': '⛴️',
                 'manchester city': '⛴️',
                 'man utd': '👹',
                 'manchester united': '👹',
-                'newcastle': '🐎',
-                'spurs': '🐦‍⬛',
-                'tottenham': '🐦‍⬛',
+                'newcastle': '🎩',
+                'spurs': '🦅‍⬛',
+                'tottenham': '🦅‍⬛',
                 'west ham': '⚒️',
                 'fulham': '⚪',
                 'crystal palace': '🦅',
-                'sunderland': '🦓', // Added Sunderland emoji
+                'sunderland': '🦁', // Added Sunderland emoji
                 
                 // Sports and Events
                 'comedy': '🎭',
@@ -2097,8 +2158,8 @@
                 'eng int': '🏴󠁧󠁢󠁥󠁮󠁧󠁿',
                 'england': '🏴󠁧󠁢󠁥󠁮󠁧󠁿',
                 'nfl': '🏈',
-                'rugby autumn nations': '🍁',
-                'autumn nations': '🍁',
+                'rugby autumn nations': '🏉',
+                'autumn nations': '🏉',
                 'rugby six nations': '🏟️',
                 'six nations': '🏟️',
                 'rugby': '🏟️',
@@ -2662,11 +2723,11 @@
                                 // Cache the sheet ID for this team
                                 teamSheetCache.set(teamData.name, sheetId);
                             } else {
-                                console.log(`📝 Sheet has no ticket data yet: "${sheetName}"`);
+                                console.log(`🔍 Sheet has no ticket data yet: "${sheetName}"`);
                                 emptySheets.push(sheetName); // Track but don't show as error
                             }
                         } else {
-                            console.log(`📝 No DASHBOARD data found: "${sheetName}"`);
+                            console.log(`🔍 No DASHBOARD data found: "${sheetName}"`);
                             emptySheets.push(sheetName); // Track but don't show as error
                         }
                         
@@ -2699,12 +2760,12 @@
                 
                 console.log(`\n📊 FINAL RESULTS:`);
                 console.log(`✅ Successfully loaded: ${successCount} teams`);
-                console.log(`📝 Empty sheets (no data yet): ${emptySheets.length}`);
+                console.log(`🔍 Empty sheets (no data yet): ${emptySheets.length}`);
                 console.log(`❌ Actual errors: ${errorSheets.length} sheets`);
                 console.log(`📋 Teams loaded: ${allTeams.map(t => t.name).join(', ')}`);
                 
                 if (emptySheets.length > 0) {
-                    console.log(`📝 Empty sheets: ${emptySheets.join(', ')}`);
+                    console.log(`🔍 Empty sheets: ${emptySheets.join(', ')}`);
                 }
                 if (errorSheets.length > 0) {
                     console.log(`💥 Error sheets:`, errorSheets.map(f => f.name).join(', '));
@@ -2768,6 +2829,281 @@
                 updateDashboard();
             }
         });
+        
+        // Monthly Report Functions
+        function getSeasonMonths() {
+            // Season runs August 2025 to July 2026
+            return [
+                { value: '2025-08', label: 'August 2025', short: 'Aug 25' },
+                { value: '2025-09', label: 'September 2025', short: 'Sep 25' },
+                { value: '2025-10', label: 'October 2025', short: 'Oct 25' },
+                { value: '2025-11', label: 'November 2025', short: 'Nov 25' },
+                { value: '2025-12', label: 'December 2025', short: 'Dec 25' },
+                { value: '2026-01', label: 'January 2026', short: 'Jan 26' },
+                { value: '2026-02', label: 'February 2026', short: 'Feb 26' },
+                { value: '2026-03', label: 'March 2026', short: 'Mar 26' },
+                { value: '2026-04', label: 'April 2026', short: 'Apr 26' },
+                { value: '2026-05', label: 'May 2026', short: 'May 26' },
+                { value: '2026-06', label: 'June 2026', short: 'Jun 26' },
+                { value: '2026-07', label: 'July 2026', short: 'Jul 26' }
+            ];
+        }
+
+        function filterMatchesByMonth(matches, monthValue) {
+            const [year, month] = monthValue.split('-');
+            return matches.filter(match => {
+                const [day, matchMonth, matchYear] = match.date.split('/');
+                const paddedMonth = matchMonth.padStart(2, '0');
+                return matchYear === year && paddedMonth === month;
+            });
+        }
+
+        function showMonthlyReportOptions() {
+            const content = document.getElementById('pdfExportContent');
+            const months = getSeasonMonths();
+            
+            content.innerHTML = `
+                <div class="pdf-export-options">
+                    <button class="pdf-option-btn" onclick="showPDFExportModal()" style="margin-bottom: 20px;">
+                        ← Back to Export Options
+                    </button>
+                    
+                    <div class="pdf-monthly-section">
+                        <h3>Select Month for Report:</h3>
+                        <div class="month-selector">
+                            ${months.map(month => `
+                                <button class="month-btn" onclick="selectMonth('${month.value}', this)" data-month="${month.value}">
+                                    ${month.short}
+                                </button>
+                            `).join('')}
+                        </div>
+                        
+                        <button class="pdf-option-btn" onclick="generateMonthlyReport()" id="generateMonthlyBtn" style="opacity: 0.5; cursor: not-allowed;" disabled>
+                            📅 Generate Monthly Report
+                            <span id="selectedMonthText">Please select a month above</span>
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        let selectedMonth = null;
+
+        function selectMonth(monthValue, buttonElement) {
+            // Remove previous selection
+            document.querySelectorAll('.month-btn').forEach(btn => btn.classList.remove('selected'));
+            
+            // Select current month
+            buttonElement.classList.add('selected');
+            selectedMonth = monthValue;
+            
+            // Enable generate button
+            const generateBtn = document.getElementById('generateMonthlyBtn');
+            const monthText = document.getElementById('selectedMonthText');
+            
+            const monthLabel = getSeasonMonths().find(m => m.value === monthValue).label;
+            monthText.textContent = `Generate report for ${monthLabel}`;
+            
+            generateBtn.style.opacity = '1';
+            generateBtn.style.cursor = 'pointer';
+            generateBtn.disabled = false;
+        }
+
+        function generateMonthlyReport() {
+            if (!selectedMonth) {
+                alert('Please select a month first');
+                return;
+            }
+
+            const content = document.getElementById('pdfExportContent');
+            const monthLabel = getSeasonMonths().find(m => m.value === selectedMonth).label;
+            
+            content.innerHTML = `
+                <div class="pdf-loading">
+                    <div class="pdf-loading-spinner"></div>
+                    Generating Monthly Report for ${monthLabel}...
+                </div>
+            `;
+            
+            setTimeout(() => {
+                generateMonthlyPDF(selectedMonth);
+                closePDFExportModal();
+            }, 500);
+        }
+
+        function generateMonthlyPDF(monthValue) {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            
+            const monthLabel = getSeasonMonths().find(m => m.value === monthValue).label;
+            
+            // Title
+            doc.setFontSize(20);
+            doc.setFont(undefined, 'bold');
+            doc.text(`Ticket Father - ${monthLabel} Report`, 20, 30);
+            
+            doc.setFontSize(12);
+            doc.setFont(undefined, 'normal');
+            doc.text(`Season 2025-2026 • Generated: ${new Date().toLocaleDateString('en-GB')}`, 20, 40);
+            
+            // Filter all matches by selected month
+            const monthlyTeams = [];
+            let monthlyTotalTickets = 0;
+            let monthlyTotalSpent = 0;
+            let monthlyTotalSales = 0;
+            let monthlyTotalProfit = 0;
+            
+            dashboardData.teams.forEach(team => {
+                const monthlyMatches = filterMatchesByMonth(team.matches, monthValue);
+                
+                if (monthlyMatches.length > 0) {
+                    const teamMonthlyTickets = monthlyMatches.reduce((sum, match) => sum + match.total, 0);
+                    const teamMonthlySpent = monthlyMatches.reduce((sum, match) => sum + match.spent, 0);
+                    const teamMonthlySales = monthlyMatches.reduce((sum, match) => sum + match.sales, 0);
+                    const teamMonthlyProfit = monthlyMatches.reduce((sum, match) => sum + match.profit, 0);
+                    
+                    monthlyTeams.push({
+                        ...team,
+                        matches: monthlyMatches,
+                        monthlyTickets: teamMonthlyTickets,
+                        monthlySpent: teamMonthlySpent,
+                        monthlySales: teamMonthlySales,
+                        monthlyProfit: teamMonthlyProfit
+                    });
+                    
+                    monthlyTotalTickets += teamMonthlyTickets;
+                    monthlyTotalSpent += teamMonthlySpent;
+                    monthlyTotalSales += teamMonthlySales;
+                    monthlyTotalProfit += teamMonthlyProfit;
+                }
+            });
+            
+            if (monthlyTeams.length === 0) {
+                doc.setFontSize(16);
+                doc.setFont(undefined, 'normal');
+                doc.text('No matches found for this month.', 20, 70);
+                doc.save(`Ticket-Father-${monthValue}-Report.pdf`);
+                return;
+            }
+            
+            // Monthly Stats
+            doc.setFontSize(14);
+            doc.setFont(undefined, 'bold');
+            doc.text(`${monthLabel} Statistics`, 20, 60);
+            
+            const monthlyStats = [
+                ['Total Tickets', monthlyTotalTickets.toString()],
+                ['Total Spent', formatCurrency(monthlyTotalSpent)],
+                ['Total Sales', formatCurrency(monthlyTotalSales)],
+                ['Net Profit', (monthlyTotalProfit >= 0 ? '+' : '-') + formatCurrency(monthlyTotalProfit)]
+            ];
+            
+            doc.autoTable({
+                startY: 70,
+                head: [['Metric', 'Value']],
+                body: monthlyStats,
+                theme: 'grid',
+                headStyles: { fillColor: [16, 163, 127] },
+                margin: { left: 20, right: 20 },
+                didParseCell: function(data) {
+                    if (data.row.index === 3 && monthlyTotalProfit < 0) {
+                        data.cell.styles.fillColor = [255, 220, 220];
+                        if (data.column.index === 1) {
+                            data.cell.styles.textColor = [220, 38, 38];
+                        }
+                    }
+                }
+            });
+            
+            // Teams with matches in this month
+            let currentY = doc.lastAutoTable.finalY + 20;
+            doc.setFontSize(14);
+            doc.setFont(undefined, 'bold');
+            doc.text(`Teams with Matches in ${monthLabel}`, 20, currentY);
+            
+            const sortedMonthlyTeams = [...monthlyTeams].sort((a, b) => a.name.localeCompare(b.name));
+            
+            doc.autoTable({
+                startY: currentY + 10,
+                head: [['Team', 'Tickets', 'Spent', 'Sales', 'Profit']],
+                body: sortedMonthlyTeams.map(team => [
+                    removeEmojis(team.name),
+                    team.monthlyTickets.toString(),
+                    formatCurrency(team.monthlySpent),
+                    formatCurrency(team.monthlySales),
+                    (team.monthlyProfit >= 0 ? '+' : '-') + formatCurrency(team.monthlyProfit)
+                ]),
+                theme: 'grid',
+                headStyles: { fillColor: [16, 163, 127] },
+                margin: { left: 20, right: 20 },
+                didParseCell: function(data) {
+                    if (sortedMonthlyTeams[data.row.index].monthlyProfit < 0) {
+                        data.cell.styles.fillColor = [255, 220, 220];
+                        if (data.column.index === 4) {
+                            data.cell.styles.textColor = [220, 38, 38];
+                        }
+                    }
+                }
+            });
+            
+            // Detailed matches breakdown
+            currentY = doc.lastAutoTable.finalY + 20;
+            
+            if (currentY > 250) {
+                doc.addPage();
+                currentY = 30;
+            }
+            
+            doc.setFontSize(14);
+            doc.setFont(undefined, 'bold');
+            doc.text(`All Matches in ${monthLabel}`, 20, currentY);
+            
+            // Create detailed matches table
+            const allMonthlyMatches = [];
+            sortedMonthlyTeams.forEach(team => {
+                team.matches.forEach(match => {
+                    allMonthlyMatches.push({
+                        team: removeEmojis(team.name),
+                        match: removeEmojis(match.name),
+                        date: formatDate(match.date),
+                        tickets: `${match.tickets}/${match.total}`,
+                        sold: match.sold.toString(),
+                        spent: formatCurrency(match.spent),
+                        sales: formatCurrency(match.sales),
+                        profit: (match.profit >= 0 ? '+' : '-') + formatCurrency(match.profit),
+                        profitValue: match.profit
+                    });
+                });
+            });
+            
+            allMonthlyMatches.sort((a, b) => {
+                const dateA = new Date(a.date.split(' ').reverse().join(' ') + ` ${monthValue.split('-')[0]}`);
+                const dateB = new Date(b.date.split(' ').reverse().join(' ') + ` ${monthValue.split('-')[0]}`);
+                return dateA - dateB;
+            });
+            
+            doc.autoTable({
+                startY: currentY + 10,
+                head: [['Team', 'Match', 'Date', 'Tickets', 'Spent', 'Sales', 'Profit']],
+                body: allMonthlyMatches.map(match => [
+                    match.team, match.match, match.date, match.tickets, match.spent, match.sales, match.profit
+                ]),
+                theme: 'grid',
+                headStyles: { fillColor: [16, 163, 127] },
+                margin: { left: 20, right: 20 },
+                styles: { fontSize: 8 },
+                didParseCell: function(data) {
+                    if (allMonthlyMatches[data.row.index].profitValue < 0) {
+                        data.cell.styles.fillColor = [255, 220, 220];
+                        if (data.column.index === 6) {
+                            data.cell.styles.textColor = [220, 38, 38];
+                        }
+                    }
+                }
+            });
+            
+            doc.save(`Ticket-Father-${monthValue}-Report.pdf`);
+        }
         
         // PDF Export Functions
         function showPDFExportModal() {
@@ -2863,13 +3199,11 @@
                 theme: 'grid',
                 headStyles: { fillColor: [16, 163, 127] },
                 margin: { left: 20, right: 20 },
-                columnStyles: {
-                    1: { 
-                        textColor: function(data) {
-                            if (data.row.index === 3) { // Net Profit row
-                                return data.cell.text[0].startsWith('-') ? [220, 38, 38] : [16, 163, 127];
-                            }
-                            return [0, 0, 0]; // Default black for other rows
+                didParseCell: function(data) {
+                    if (data.row.index === 3 && dashboardData.netProfit < 0) {
+                        data.cell.styles.fillColor = [255, 220, 220];
+                        if (data.column.index === 1) {
+                            data.cell.styles.textColor = [220, 38, 38];
                         }
                     }
                 }
@@ -2881,33 +3215,31 @@
             doc.setFont(undefined, 'bold');
             doc.text('Teams Breakdown', 20, currentY);
             
-            // Sort teams alphabetically for the table
             const sortedTeamsForTable = [...dashboardData.teams].sort((a, b) => a.name.localeCompare(b.name));
-            const teamsData = sortedTeamsForTable.map(team => [
-                removeEmojis(team.name), // Remove emoji from team name
-                team.totalTickets.toString(),
-                formatCurrency(team.totalSpent),
-                formatCurrency(team.totalSales),
-                (team.netProfit >= 0 ? '+' : '-') + formatCurrency(team.netProfit)
-            ]);
             
             doc.autoTable({
                 startY: currentY + 10,
                 head: [['Team', 'Tickets', 'Spent', 'Sales', 'Profit']],
-                body: teamsData,
+                body: sortedTeamsForTable.map(team => [
+                    removeEmojis(team.name),
+                    team.totalTickets.toString(),
+                    formatCurrency(team.totalSpent),
+                    formatCurrency(team.totalSales),
+                    (team.netProfit >= 0 ? '+' : '-') + formatCurrency(team.netProfit)
+                ]),
                 theme: 'grid',
                 headStyles: { fillColor: [16, 163, 127] },
                 margin: { left: 20, right: 20 },
-                columnStyles: {
-                    4: { 
-                        textColor: function(data) {
-                            return data.cell.text[0].startsWith('-') ? [220, 38, 38] : [16, 163, 127];
+                didParseCell: function(data) {
+                    if (sortedTeamsForTable[data.row.index].netProfit < 0) {
+                        data.cell.styles.fillColor = [255, 220, 220];
+                        if (data.column.index === 4) {
+                            data.cell.styles.textColor = [220, 38, 38];
                         }
                     }
                 }
             });
             
-            // Save the PDF
             doc.save(`Ticket-Father-All-Teams-${new Date().toISOString().split('T')[0]}.pdf`);
         }
         
@@ -2948,13 +3280,11 @@
                 theme: 'grid',
                 headStyles: { fillColor: [16, 163, 127] },
                 margin: { left: 20, right: 20 },
-                columnStyles: {
-                    1: { 
-                        textColor: function(data) {
-                            if (data.row.index === 5) { // Net Profit row
-                                return data.cell.text[0].startsWith('-') ? [220, 38, 38] : [16, 163, 127];
-                            }
-                            return [0, 0, 0]; // Default black for other rows
+                didParseCell: function(data) {
+                    if (data.row.index === 5 && team.netProfit < 0) {
+                        data.cell.styles.fillColor = [255, 220, 220];
+                        if (data.column.index === 1) {
+                            data.cell.styles.textColor = [220, 38, 38];
                         }
                     }
                 }
@@ -2967,30 +3297,29 @@
                 doc.setFont(undefined, 'bold');
                 doc.text('Matches', 20, currentY);
                 
-                // Sort matches alphabetically
                 const sortedMatches = [...team.matches].sort((a, b) => a.name.localeCompare(b.name));
-                const matchesData = sortedMatches.map(match => [
-                    removeEmojis(match.name), // Remove any emojis from match names
-                    formatDate(match.date),
-                    `${match.tickets}/${match.total}`,
-                    match.sold.toString(),
-                    formatCurrency(match.spent),
-                    formatCurrency(match.sales),
-                    (match.profit >= 0 ? '+' : '-') + formatCurrency(match.profit)
-                ]);
                 
                 doc.autoTable({
                     startY: currentY + 10,
                     head: [['Match', 'Date', 'Available', 'Sold', 'Spent', 'Sales', 'Profit']],
-                    body: matchesData,
+                    body: sortedMatches.map(match => [
+                        removeEmojis(match.name),
+                        formatDate(match.date),
+                        `${match.tickets}/${match.total}`,
+                        match.sold.toString(),
+                        formatCurrency(match.spent),
+                        formatCurrency(match.sales),
+                        (match.profit >= 0 ? '+' : '-') + formatCurrency(match.profit)
+                    ]),
                     theme: 'grid',
                     headStyles: { fillColor: [16, 163, 127] },
                     margin: { left: 20, right: 20 },
                     styles: { fontSize: 9 },
-                    columnStyles: {
-                        6: { 
-                            textColor: function(data) {
-                                return data.cell.text[0].startsWith('-') ? [220, 38, 38] : [16, 163, 127];
+                    didParseCell: function(data) {
+                        if (sortedMatches[data.row.index].profit < 0) {
+                            data.cell.styles.fillColor = [255, 220, 220];
+                            if (data.column.index === 6) {
+                                data.cell.styles.textColor = [220, 38, 38];
                             }
                         }
                     }
