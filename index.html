@@ -1918,8 +1918,8 @@
             }
         }
         
-        // Ultra-fast request function with aggressive optimizations
-        async function fastFetch(url, timeout = 3000, maxRetries = 2) {
+        // Ultra-fast request function with enhanced rate limiting protection
+        async function fastFetch(url, timeout = 5000, maxRetries = 2) {
             for (let attempt = 1; attempt <= maxRetries; attempt++) {
                 try {
                     const controller = new AbortController();
@@ -1941,8 +1941,9 @@
                     if (attempt === maxRetries) {
                         throw error;
                     }
-                    // Much shorter wait before retry
-                    await new Promise(resolve => setTimeout(resolve, 200));
+                    // Longer wait before retry, especially for rate limiting
+                    const waitTime = error.message.includes('429') ? 2000 : 500;
+                    await new Promise(resolve => setTimeout(resolve, waitTime));
                 }
             }
         }
@@ -2608,11 +2609,12 @@
             try {
                 const allTeams = [];
                 let successCount = 0;
-                const failedSheets = [];
+                const errorSheets = []; // Only track actual errors, not empty sheets
+                const emptySheets = []; // Track sheets with no data separately
                 
                 console.log(`🚀 Starting to load ${SHEET_IDS.length} sheets...`);
                 
-                // Process sheets one by one
+                // Process sheets one by one with longer delays to prevent rate limiting
                 for (let i = 0; i < SHEET_IDS.length; i++) {
                     const sheetId = SHEET_IDS[i];
                     let sheetName = `Sheet ${i + 1}`;
@@ -2628,18 +2630,21 @@
                         // Get document info first
                         const documentInfo = await fastFetch(
                             `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}?key=${API_KEY}&fields=properties.title`,
-                            3500,
+                            5000, // Longer timeout
                             1
                         );
                         
                         const documentTitle = documentInfo.properties.title;
-                        sheetName = documentTitle; // Use document title as sheet name
+                        sheetName = documentTitle;
                         console.log(`✅ Document title: "${documentTitle}"`);
+                        
+                        // Longer delay after getting document info
+                        await new Promise(resolve => setTimeout(resolve, 300));
                         
                         // Get sheet data
                         const response = await fastFetch(
                             `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/DASHBOARD!A1:H50?key=${API_KEY}&valueRenderOption=UNFORMATTED_VALUE&dateTimeRenderOption=FORMATTED_STRING`,
-                            3500,
+                            5000, // Longer timeout
                             1
                         );
                         const sheetData = response.values || [];
@@ -2657,45 +2662,56 @@
                                 // Cache the sheet ID for this team
                                 teamSheetCache.set(teamData.name, sheetId);
                             } else {
-                                console.log(`⚠️ No valid team data found (no tickets or spending)`);
-                                failedSheets.push({
-                                    name: sheetName,
-                                    id: sheetId,
-                                    reason: 'No valid data found'
-                                });
+                                console.log(`📝 Sheet has no ticket data yet: "${sheetName}"`);
+                                emptySheets.push(sheetName); // Track but don't show as error
                             }
                         } else {
-                            console.log(`⚠️ No data found in DASHBOARD sheet`);
-                            failedSheets.push({
-                                name: sheetName,
-                                id: sheetId,
-                                reason: 'No DASHBOARD sheet or no data'
-                            });
+                            console.log(`📝 No DASHBOARD data found: "${sheetName}"`);
+                            emptySheets.push(sheetName); // Track but don't show as error
                         }
                         
                     } catch (error) {
-                        console.log(`❌ Failed processing sheet ${i + 1}: ${error.message}`);
-                        failedSheets.push({
-                            name: sheetName,
-                            id: sheetId,
-                            reason: error.message
-                        });
+                        console.log(`❌ Error processing sheet ${i + 1}: ${error.message}`);
+                        
+                        // Only track as errors if they are actual API/network errors
+                        if (error.message.includes('HTTP') || 
+                            error.message.includes('timeout') || 
+                            error.message.includes('fetch') ||
+                            error.message.includes('403') ||
+                            error.message.includes('429') ||
+                            error.message.includes('404')) {
+                            errorSheets.push({
+                                name: sheetName,
+                                id: sheetId,
+                                reason: error.message
+                            });
+                        } else {
+                            // Other errors (like parsing) are also not shown as errors
+                            emptySheets.push(sheetName);
+                        }
                     }
                     
-                    // Minimal delay between requests
+                    // Much longer delay between requests to prevent rate limiting
                     if (i < SHEET_IDS.length - 1) {
-                        await new Promise(resolve => setTimeout(resolve, 150));
+                        await new Promise(resolve => setTimeout(resolve, 500)); // Increased from 150ms to 500ms
                     }
                 }
                 
                 console.log(`\n📊 FINAL RESULTS:`);
                 console.log(`✅ Successfully loaded: ${successCount} teams`);
-                console.log(`❌ Failed to load: ${failedSheets.length} sheets`);
+                console.log(`📝 Empty sheets (no data yet): ${emptySheets.length}`);
+                console.log(`❌ Actual errors: ${errorSheets.length} sheets`);
                 console.log(`📋 Teams loaded: ${allTeams.map(t => t.name).join(', ')}`);
-                console.log(`💥 Failed sheets:`, failedSheets.map(f => f.name).join(', '));
                 
-                if (allTeams.length === 0) {
-                    throw new Error(`No teams loaded successfully. All ${SHEET_IDS.length} sheets failed. Please check your internet connection and try again.`);
+                if (emptySheets.length > 0) {
+                    console.log(`📝 Empty sheets: ${emptySheets.join(', ')}`);
+                }
+                if (errorSheets.length > 0) {
+                    console.log(`💥 Error sheets:`, errorSheets.map(f => f.name).join(', '));
+                }
+                
+                if (allTeams.length === 0 && errorSheets.length === SHEET_IDS.length) {
+                    throw new Error(`No teams loaded successfully. All ${SHEET_IDS.length} sheets had errors. Please check your internet connection and try again.`);
                 }
                 
                 // Update dashboard with final data
@@ -2710,18 +2726,23 @@
                 
                 updateDashboard();
                 
-                // Create persistent success/error messages
+                // Create persistent messages
                 let successMessage = `✅ Loaded ${allTeams.length} teams successfully!`;
                 
-                if (failedSheets.length > 0) {
+                // Only show error message if there are actual errors (not empty sheets)
+                if (errorSheets.length > 0) {
                     // Show success message
                     showStatusMessage(successMessage, 'success', true);
                     
-                    // Show detailed failed sheets message
-                    const failedList = failedSheets.map(f => `• ${f.name}: ${f.reason}`).join('<br>');
-                    const errorMessage = `❌ ${failedSheets.length} sheets had issues:<br><br>${failedList}<br><br>Click to dismiss this message.`;
+                    // Show detailed error sheets message (only actual errors)
+                    const errorList = errorSheets.map(f => `• ${f.name}: ${f.reason}`).join('<br>');
+                    const errorMessage = `❌ ${errorSheets.length} sheets had connection/permission issues:<br><br>${errorList}<br><br>Click to dismiss this message.`;
                     showStatusMessage(errorMessage, 'error', true);
                 } else {
+                    // If there are empty sheets but no errors, mention them subtly
+                    if (emptySheets.length > 0) {
+                        successMessage += ` (${emptySheets.length} sheets have no data yet)`;
+                    }
                     showStatusMessage(successMessage, 'success', true);
                 }
                 
