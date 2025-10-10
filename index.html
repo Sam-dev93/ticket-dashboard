@@ -46,9 +46,9 @@
     <style>
         :root {
             /* Dark mode colors (default) */
-            --bg-primary: #181818;        /* 👈 MAIN BACKGROUND - Change this! */
-            --bg-secondary: #1F1F1F;      /* 👈 Card backgrounds */
-            --bg-tertiary: #2A2A2A;       /* 👈 Button backgrounds */
+            --bg-primary: #181818;
+            --bg-secondary: #1F1F1F;
+            --bg-tertiary: #2A2A2A;
             --bg-quaternary: #3A3A3A;
             --border-primary: #2E2E2E;
             --border-secondary: #3A3A3A;
@@ -69,9 +69,9 @@
 
         [data-theme="light"] {
             /* Light mode colors */
-            --bg-primary: #F2F2F7;        /* 👈 MAIN BACKGROUND - Hifz Tracker grey */
-            --bg-secondary: #FFFFFF;      /* 👈 Card backgrounds */
-            --bg-tertiary: #F1F3F4;       /* 👈 Button backgrounds */
+            --bg-primary: #F2F2F7;
+            --bg-secondary: #FFFFFF;
+            --bg-tertiary: #F1F3F4;
             --bg-quaternary: #E8EAED;
             --border-primary: #E1E3E6;
             --border-secondary: #D1D5DB;
@@ -105,12 +105,11 @@
         
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, sans-serif;
-            background: var(--bg-primary);  /* 👈 Uses main background color */
+            background: var(--bg-primary);
             color: var(--text-secondary);
             line-height: 1.47;
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
-            /* PWA specific */
             -webkit-touch-callout: none;
             -webkit-user-select: none;
             user-select: none;
@@ -126,7 +125,7 @@
             max-width: 100%;
             margin: 0 auto;
             height: 100vh;
-            background: var(--bg-primary);  /* 👈 Uses main background color */
+            background: var(--bg-primary);
             display: flex;
             flex-direction: column;
             overflow: hidden;
@@ -136,21 +135,13 @@
         .top-spacer {
             height: 70px;
             flex-shrink: 0;
-            background: var(--bg-primary);  /* 👈 Uses main background color */
+            background: var(--bg-primary);
         }
         
         .bottom-spacer {
             height: 50px;
             flex-shrink: 0;
-            background: var(--bg-primary);  /* 👈 Uses main background color */
-        }
-        
-        .main-content {
-            /* Remove flexbox - use simple block layout like Salah Tracker */
-        }
-        
-        .scrollable-content {
-            /* Remove flexbox - use simple block layout like Salah Tracker */
+            background: var(--bg-primary);
         }
         
         .header {
@@ -159,17 +150,16 @@
             padding: 10px 0;
             position: relative;
             flex-shrink: 0;
-            background: var(--bg-primary);  /* 👈 Uses main background color */
+            background: var(--bg-primary);
         }
         
         .sticky-header {
             position: sticky;
             top: 0;
-            background: var(--bg-primary);  /* 👈 Uses main background color */
+            background: var(--bg-primary);
             z-index: 100;
             height: 8px;
             border-bottom: 1px solid var(--border-primary);
-            /* Add subtle backdrop blur effect */
             backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px);
         }
@@ -197,7 +187,6 @@
             font-weight: 400;
         }
 
-        /* Theme Toggle */
         .theme-toggle {
             position: absolute;
             top: 10px;
@@ -247,7 +236,6 @@
             display: block;
         }
 
-        /* Default (no theme set) - show moon for dark mode */
         body:not([data-theme]) .theme-icon.sun {
             display: none;
         }
@@ -351,7 +339,6 @@
             transition: all 0.2s ease;
             letter-spacing: -0.24px;
             min-width: 44px;
-            /* Mobile touch improvements */
             -webkit-tap-highlight-color: transparent;
             touch-action: manipulation;
         }
@@ -475,11 +462,10 @@
             font-weight: 600;
             cursor: pointer;
             width: 100%;
-            margin: 16px 0 24px 0; /* Restore bottom margin */
+            margin: 16px 0 24px 0;
             transition: all 0.2s ease;
             box-shadow: 0 2px 12px var(--accent-green-shadow);
             letter-spacing: -0.41px;
-            /* Mobile touch improvements */
             -webkit-tap-highlight-color: transparent;
             touch-action: manipulation;
             flex-shrink: 0;
@@ -610,7 +596,6 @@
             transition: all 0.2s ease;
             letter-spacing: -0.41px;
             border: 1px solid var(--border-secondary);
-            /* Mobile touch improvements */
             -webkit-tap-highlight-color: transparent;
             touch-action: manipulation;
         }
@@ -735,14 +720,13 @@
                 transparent 8px,
                 transparent 16px
             );
-            margin: 16px 0 0 0; /* Reduce top margin */
+            margin: 16px 0 0 0;
         }
         
         #teamsContainer .section:last-child {
             margin-bottom: 0;
         }
         
-        /* Ensure no bottom spacing on the very last elements */
         #teamsContainer:last-child {
             margin-bottom: 0;
         }
@@ -751,18 +735,15 @@
             margin-bottom: 0 !important;
         }
         
-        /* Force the last section to have no bottom margin */
         .section:last-child {
             margin-bottom: 0 !important;
         }
         
-        /* Remove any bottom spacing from team details */
         .team-details:last-child {
             margin-bottom: 0;
             padding-bottom: 0;
         }
         
-        /* Match Popup Modal */
         .match-popup-overlay {
             position: fixed;
             top: 0;
@@ -978,7 +959,6 @@
             background: var(--bg-tertiary);
         }
         
-        /* PDF Export Modal Styles */
         .pdf-export-options {
             display: flex;
             flex-direction: column;
@@ -1069,7 +1049,6 @@
             margin: 0 auto 12px auto;
         }
 
-        /* Monthly Report Styles */
         .pdf-monthly-section {
             margin-top: 24px;
         }
@@ -1113,7 +1092,6 @@
             font-weight: 600;
         }
         
-        /* PWA Installation Banner */
         .install-banner {
             position: fixed;
             bottom: 0;
@@ -1178,7 +1156,6 @@
             justify-content: center;
         }
         
-        /* Offline indicator */
         .offline-indicator {
             position: fixed;
             top: 0;
@@ -1199,7 +1176,6 @@
             transform: translateY(0);
         }
         
-        /* Enhanced mobile styles */
         @media (max-width: 767px) {
             .container {
                 padding: 0 12px;
@@ -1235,7 +1211,6 @@
                 padding: 10px 0;
             }
             
-            /* Better touch targets on mobile */
             .expand-btn, .refresh-btn {
                 min-height: 44px;
             }
@@ -1257,7 +1232,6 @@
             }
         }
         
-        /* Tablet styles */
         @media (min-width: 768px) {
             .container {
                 max-width: 768px;
@@ -1296,7 +1270,6 @@
             }
         }
         
-        /* Desktop styles */
         @media (min-width: 1024px) {
             .container {
                 max-width: 1024px;
@@ -1325,7 +1298,6 @@
             }
         }
         
-        /* Print styles for PWA */
         @media print {
             body {
                 background: white;
@@ -1340,10 +1312,8 @@
 </head>
 <body>
     <div class="container">
-        <!-- Top Spacer Bar to push content below status bar -->
         <div class="top-spacer"></div>
         
-        <!-- Offline Indicator -->
         <div id="offlineIndicator" class="offline-indicator">
             🔵 You're offline - Data may be outdated
         </div>
@@ -1352,17 +1322,14 @@
             <h1>Ticket Father Dashboard</h1>
             <p>Season 2025 - 2026</p>
             
-            <!-- Theme Toggle -->
             <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme">
                 <span class="theme-icon moon">🌙</span>
                 <span class="theme-icon sun">☀️</span>
             </button>
         </div>
         
-        <!-- Sticky Header (just visual divider) -->
         <div class="sticky-header"></div>
         
-        <!-- Scrollable Content -->
         <div class="scrollable-content">
             <div class="stats-grid">
                 <div class="stat-card">
@@ -1396,7 +1363,6 @@
                 <div class="progress-text" id="progressText">0%</div>
             </div>
 
-            <!-- Persistent Status Messages -->
             <div id="statusMessages"></div>
             
             <div class="section">
@@ -1417,17 +1383,14 @@
             <button class="pdf-export-btn" onclick="showPDFExportModal()">📄 Export PDF</button>
         </div>
         
-        <!-- Bottom Spacer to push content up from bottom -->
         <div class="bottom-spacer"></div>
         
-        <!-- PWA Install Banner -->
         <div id="installBanner" class="install-banner">
             <span>Add Ticket Father to your home screen!</span>
             <button class="install-btn" onclick="installPWA()">Install</button>
             <button class="install-banner-close" onclick="hideInstallBanner()">×</button>
         </div>
         
-        <!-- Match Popup Modal -->
         <div id="matchPopupOverlay" class="match-popup-overlay" onclick="closeMatchPopup(event)">
             <div class="match-popup" onclick="event.stopPropagation()">
                 <div class="match-popup-header">
@@ -1446,7 +1409,6 @@
             </div>
         </div>
         
-        <!-- PDF Export Modal -->
         <div id="pdfExportModal" class="match-popup-overlay" onclick="closePDFExportModal(event)">
             <div class="match-popup" onclick="event.stopPropagation()">
                 <div class="match-popup-header">
@@ -1479,9 +1441,7 @@
     </div>
     
     <script>
-        // Theme Management
         function initializeTheme() {
-            // Check for saved theme preference or default to system preference
             const savedTheme = localStorage.getItem('theme');
             const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
             
@@ -1492,7 +1452,6 @@
             
             setTheme(theme);
             
-            // Listen for system theme changes
             window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
                 if (!localStorage.getItem('theme')) {
                     setTheme(e.matches ? 'dark' : 'light');
@@ -1503,13 +1462,11 @@
         function setTheme(theme) {
             document.documentElement.setAttribute('data-theme', theme);
             
-            // Update PWA theme color
             const themeColorMeta = document.querySelector('meta[name="theme-color"]');
             if (themeColorMeta) {
                 themeColorMeta.content = theme === 'dark' ? '#181818' : '#FFFFFF';
             }
             
-            // Update apple status bar style
             const statusBarMeta = document.querySelector('meta[name="apple-mobile-web-app-status-bar-style"]');
             if (statusBarMeta) {
                 statusBarMeta.content = theme === 'dark' ? 'black-translucent' : 'default';
@@ -1524,22 +1481,18 @@
             localStorage.setItem('theme', newTheme);
         }
         
-        // Initialize theme on page load
         initializeTheme();
 
-        // PWA Service Worker Registration
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', async () => {
                 try {
                     const registration = await navigator.serviceWorker.register('/sw.js');
                     console.log('PWA: Service Worker registered', registration);
                     
-                    // Check for updates
                     registration.addEventListener('updatefound', () => {
                         const newWorker = registration.installing;
                         newWorker.addEventListener('statechange', () => {
                             if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-                                // New service worker available
                                 if (confirm('New version available! Reload to update?')) {
                                     newWorker.postMessage({ type: 'SKIP_WAITING' });
                                     window.location.reload();
@@ -1553,10 +1506,8 @@
             });
         }
         
-        // Handle offline/online events
         window.addEventListener('online', () => {
             document.getElementById('offlineIndicator').classList.remove('show');
-            // Optionally refresh data when coming back online
             if (confirm('You\'re back online! Refresh data?')) {
                 refreshDashboard();
             }
@@ -1566,7 +1517,6 @@
             document.getElementById('offlineIndicator').classList.add('show');
         });
         
-        // PWA Install Prompt
         let deferredPrompt;
         const installBanner = document.getElementById('installBanner');
         
@@ -1574,7 +1524,6 @@
             e.preventDefault();
             deferredPrompt = e;
             
-            // Show install banner if not already installed
             if (!window.matchMedia('(display-mode: standalone)').matches) {
                 installBanner.classList.add('show');
             }
@@ -1595,34 +1544,28 @@
         
         function hideInstallBanner() {
             installBanner.classList.remove('show');
-            // Store that user dismissed the banner
             localStorage.setItem('installBannerDismissed', 'true');
         }
         
-        // Check if banner was previously dismissed
         if (localStorage.getItem('installBannerDismissed') === 'true') {
             installBanner.classList.remove('show');
         }
         
-        // Handle app installed
         window.addEventListener('appinstalled', () => {
             console.log('PWA installed');
             hideInstallBanner();
         });
         
-        // Auto-hide banner after 30 seconds
         setTimeout(() => {
             if (installBanner.classList.contains('show')) {
                 hideInstallBanner();
             }
         }, 30000);
         
-        // Refresh button function
         function refreshDashboard() {
             refreshData();
         }
         
-        // Handle URL shortcuts
         if (window.location.hash === '#refresh') {
             refreshDashboard();
             window.location.hash = '';
@@ -1642,43 +1585,40 @@
             teams: []
         };
         
-        // Track selected upcoming period (default 7 days)
         let selectedUpcomingPeriod = 7;
         
-        // Cache for team sheet IDs to avoid repeated lookups
         const teamSheetCache = new Map();
         
-        // Add all your Google Sheets IDs here - the script will auto-discover all sheets in each document
         const SHEET_IDS = [
-            '17uSJ3wdV8M3oW_bqLTOpLLC5dnyov-Ee5WTcR2sM2Ms', // Arsenal
-            '1Lkxf1_KGA30xMOgEygIHNaGuQdBPaLMxwXtEWMBJLUE', // Aston Villa
-            '1zeaq_GjpKdK7kYgQCgHIWTB_jfQl4seoWxsrsTWoNqQ', // Bournemouth
-            '1EPwkWcVmAikgp7mFkek_2SSP-fwKMHYI6mysov5vlCk', // Burnley
-            '1GbJ48f5EoQnDJw5WMjjmPr0Oy66sY1BuXdOb4NQNo2I', // Chelsea
-            '1DIb2AQVEoKFo8OSl_x1HhNDLSigu073r1O2qDbv7rm8', // Comedy
-            '1u5qdm6YZ7m0XDDU1PZOJeTxou2UEk_HXz44lH3Rx8GI', // Club Wembley
-            '1dlWwwyXcc53fgBW2Ib87foaTQElt7iZC0N9nW17njnw', // Cricket
-            '1YS2zI68QUxuPNR6RItEiSRefGBftJHb1aZON4OR_1Kk', // Darts
-            '1PW80ky6_UqbDzgbqy679BF6NbwHbLyXZJrEh761Xnp8', // England Int
-            '1w6Gvm_e9cS9Qef2Kn_wLMKxDlzxIrzWMgjipfCv3jS0', // Everton
-            '19ngBpgYAx4u7MGSc-e2yp_nAog7wf7rJM4vWs0rptfQ', // Forest
-            '1_bPsrJNHXWnF2nRWYb7o9rH_aoXraC094G_d88RoCpA', // Fulham
-            '1K1Mst0IM--WXBA4-7JVF2wH2lfee6uQQPCKh2mYJy1Y', // Liverpool (Hospo)
-            '1fcH6jZpR-2sqSuH5x9c7xAHvnmqIJOjpp2pytCud5Yk', // Liverpool
-            '1X-CCXyujnmb2W2gtevgFUZuEIP-XEMeCYsZq_DBm6YE', // Manchester City
-            '1kKcKOdYiRL5WJRkDptG8XXWRy-LyuenPBMhKJpFE5D0', // Manchester United
-            '17V0wN1FQ52LxL7oLgwzudYJ8YEYNxyf7bvYm3lQ5JAc', // Newcastle
-            '11A1xlufizy7Hb3__JNnEe0pDR3oQH5bSUBJkyw2vwlg', // NFL Tottenham
-            '17NY7MbUp7je1NWyw_9CqeCkjKbeGBcREKyIx3pyexe8', // Palace
-            '1RglR4HhWVllr5rS7XHVJsRhbqyqW90C83lJ1mtsHD5M', // Rugby Autumn
-            '1KxMZ-0LaSsXwUbQfO6o3ExMPZZlpMerBuDRl-opvrbA', // Rugby Six
-            '149WZcwKo2-Iz5TYK2lqMZJvXmOzyzeKjHY9Rztv-P_M', // Scotland Int
-            '1GuPuPNrh6ZFCFmwniaacp1_fFq-ijQP834-AfGlJweU', // Snooker
-            '13b68m7yoI4Iyk_6Sv6MClvxlEov17FGdsdYEyCtYDyw', // Sunderland
-            '1nRXCX2koGjf3A06e6hg4aFvXmJ-ws_fzI6naxnwpP0E', // Tottenham
-            '1R-QsTpfsH4oqqAtzAJj5ZQs09B5LN9qk0n7KsgTT9hI', // UEFA Super Cup
-            '1Z18kzbG_KOEQK4r645aIEEc48ScgZBFW478dEKqjhck', // West Ham
-            '1l0P0H0rJNAO0UPHlosTqc2HfbjbfEOdqeY-hYTqdPso' // Women Rugby
+            '17uSJ3wdV8M3oW_bqLTOpLLC5dnyov-Ee5WTcR2sM2Ms',
+            '1Lkxf1_KGA30xMOgEygIHNaGuQdBPaLMxwXtEWMBJLUE',
+            '1zeaq_GjpKdK7kYgQCgHIWTB_jfQl4seoWxsrsTWoNqQ',
+            '1EPwkWcVmAikgp7mFkek_2SSP-fwKMHYI6mysov5vlCk',
+            '1GbJ48f5EoQnDJw5WMjjmPr0Oy66sY1BuXdOb4NQNo2I',
+            '1DIb2AQVEoKFo8OSl_x1HhNDLSigu073r1O2qDbv7rm8',
+            '1u5qdm6YZ7m0XDDU1PZOJeTxou2UEk_HXz44lH3Rx8GI',
+            '1dlWwwyXcc53fgBW2Ib87foaTQElt7iZC0N9nW17njnw',
+            '1YS2zI68QUxuPNR6RItEiSRefGBftJHb1aZON4OR_1Kk',
+            '1PW80ky6_UqbDzgbqy679BF6NbwHbLyXZJrEh761Xnp8',
+            '1w6Gvm_e9cS9Qef2Kn_wLMKxDlzxIrzWMgjipfCv3jS0',
+            '19ngBpgYAx4u7MGSc-e2yp_nAog7wf7rJM4vWs0rptfQ',
+            '1_bPsrJNHXWnF2nRWYb7o9rH_aoXraC094G_d88RoCpA',
+            '1K1Mst0IM--WXBA4-7JVF2wH2lfee6uQQPCKh2mYJy1Y',
+            '1fcH6jZpR-2sqSuH5x9c7xAHvnmqIJOjpp2pytCud5Yk',
+            '1X-CCXyujnmb2W2gtevgFUZuEIP-XEMeCYsZq_DBm6YE',
+            '1kKcKOdYiRL5WJRkDptG8XXWRy-LyuenPBMhKJpFE5D0',
+            '17V0wN1FQ52LxL7oLgwzudYJ8YEYNxyf7bvYm3lQ5JAc',
+            '11A1xlufizy7Hb3__JNnEe0pDR3oQH5bSUBJkyw2vwlg',
+            '17NY7MbUp7je1NWyw_9CqeCkjKbeGBcREKyIx3pyexe8',
+            '1RglR4HhWVllr5rS7XHVJsRhbqyqW90C83lJ1mtsHD5M',
+            '1KxMZ-0LaSsXwUbQfO6o3ExMPZZlpMerBuDRl-opvrbA',
+            '149WZcwKo2-Iz5TYK2lqMZJvXmOzyzeKjHY9Rztv-P_M',
+            '1GuPuPNrh6ZFCFmwniaacp1_fFq-ijQP834-AfGlJweU',
+            '13b68m7yoI4Iyk_6Sv6MClvxlEov17FGdsdYEyCtYDyw',
+            '1nRXCX2koGjf3A06e6hg4aFvXmJ-ws_fzI6naxnwpP0E',
+            '1R-QsTpfsH4oqqAtzAJj5ZQs09B5LN9qk0n7KsgTT9hI',
+            '1Z18kzbG_KOEQK4r645aIEEc48ScgZBFW478dEKqjhck',
+            '1l0P0H0rJNAO0UPHlosTqc2HfbjbfEOdqeY-hYTqdPso'
         ];
         
         const API_KEY = 'AIzaSyDb5oijZ2Zo-XG1YNKQygWDzJqZ7hkySrI';
@@ -1706,7 +1646,6 @@
             const today = new Date();
             const periodEndDate = new Date(today.getTime() + (days - 1) * 24 * 60 * 60 * 1000);
             
-            // Compare just the dates (no time)
             const matchDateOnly = new Date(matchDate.getFullYear(), matchDate.getMonth(), matchDate.getDate());
             const todayOnly = new Date(today.getFullYear(), today.getMonth(), today.getDate());
             const endDateOnly = new Date(periodEndDate.getFullYear(), periodEndDate.getMonth(), periodEndDate.getDate());
@@ -1714,16 +1653,13 @@
             return matchDateOnly >= todayOnly && matchDateOnly <= endDateOnly;
         }
         
-        // Keep the old function for backward compatibility
         function isWithinNextWeek(dateStr) {
             return isWithinPeriod(dateStr, 7);
         }
 
-        // Set upcoming period and update display
         function setUpcomingPeriod(days) {
             selectedUpcomingPeriod = days;
             
-            // Update button states
             document.querySelectorAll('.period-btn').forEach(btn => {
                 btn.classList.remove('active');
                 if (parseInt(btn.dataset.days) === days) {
@@ -1731,27 +1667,20 @@
                 }
             });
             
-            // Update title
             document.getElementById('upcomingTitle').textContent = `📅 Next ${days} Day${days === 1 ? '' : 's'}`;
             
-            // Refresh the upcoming matches display
             updateDashboard();
         }
 
-        // Enhanced formatName function for both team names and match names
         function formatName(name) {
             if (!name) return '';
             
-            // Remove "BOUGHT" and year patterns first
             name = name.replace(/\s+BOUGHT\s+\d{2}-\d{2}$/i, '').trim();
             name = name.replace(/\s+BOUGHT\s+\d{4}$/i, '').trim();
             
-            // Split into words
             const words = name.split(/\s+/);
             
-            // Process each word
             const formattedWords = words.map(word => {
-                // Handle words with punctuation (like "Man.City")
                 if (word.includes('.')) {
                     return word.split('.').map(part => formatSingleWord(part)).join('.');
                 }
@@ -1765,7 +1694,6 @@
         function formatSingleWord(word) {
             if (!word) return '';
             
-            // Specific abbreviations/initials that should stay uppercase
             const upperCaseWords = [
                 'FC', 'AFC', 'RFC', 'LFC', 'CFC', 'MUFC', 'MCFC', 'NUFC', 'QPR', 'MK',
                 'NFL', 'NHL', 'NBA', 'MLB', 'UTD', 'ENG', 'SCOT', 'INT', 'UK', 'US', 'USA',
@@ -1773,7 +1701,6 @@
                 'UEFA', 'FIFA', 'VAR', 'PSG', 'AC', 'AS', 'SS', 'CF', 'CD', 'SD', 'UD'
             ];
             
-            // Words that should be lowercase (except first letter if at start)
             const lowerCaseWords = ['v', 'vs', 'versus', 'and', 'the', 'of', 'at', 'in', 'on', 'for', 'with'];
             
             const upperWord = word.toUpperCase();
@@ -1787,21 +1714,17 @@
                 return lowerWord;
             }
             
-            // Otherwise, capitalize first letter and lowercase the rest
             return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
         }
         
-        // Keep the original formatTeamName function for backward compatibility
         function formatTeamName(teamName) {
             return formatName(teamName);
         }
         
-        // New function specifically for match names
         function formatMatchName(matchName) {
             return formatName(matchName);
         }
 
-        // Status Messages System
         function showStatusMessage(message, type = 'success', persistent = false) {
             const container = document.getElementById('statusMessages');
             const messageId = 'status-' + Date.now();
@@ -1814,14 +1737,12 @@
             messageElement.className = messageClass + persistentClass;
             messageElement.innerHTML = message;
             
-            // Add click to dismiss for persistent messages
             if (persistent) {
                 messageElement.onclick = () => dismissStatusMessage(messageId);
             }
             
             container.appendChild(messageElement);
             
-            // Auto-dismiss non-persistent messages after 5 seconds
             if (!persistent) {
                 setTimeout(() => dismissStatusMessage(messageId), 5000);
             }
@@ -1898,7 +1819,6 @@
         function updateTeamsSections() {
             const teamsContainer = document.getElementById('teamsContainer');
             
-            // Sort teams alphabetically by name
             const sortedTeams = [...dashboardData.teams].sort((a, b) => a.name.localeCompare(b.name));
             
             teamsContainer.innerHTML = sortedTeams.map((team, sortedIndex) => `
@@ -1962,7 +1882,6 @@
                 </div>
             `).join('');
             
-            // Store sorted teams for the toggle function to use
             window.sortedTeams = sortedTeams;
         }
         
@@ -1982,7 +1901,6 @@
             }
         }
         
-        // Ultra-fast request function with enhanced rate limiting protection
         async function fastFetch(url, timeout = 5000, maxRetries = 2) {
             for (let attempt = 1; attempt <= maxRetries; attempt++) {
                 try {
@@ -2005,7 +1923,6 @@
                     if (attempt === maxRetries) {
                         throw error;
                     }
-                    // Longer wait before retry, especially for rate limiting
                     const waitTime = error.message.includes('429') ? 2000 : 500;
                     await new Promise(resolve => setTimeout(resolve, waitTime));
                 }
@@ -2035,7 +1952,6 @@
             let totalSales = 0;
             let netProfit = 0;
             
-            // Look for dashboard data in the sheet (first 10 rows for speed)
             for (let i = 0; i < Math.min(rows.length, 10); i++) {
                 const row = rows[i];
                 if (!row || !row[1]) continue;
@@ -2054,28 +1970,23 @@
                 }
             }
             
-            // If no dashboard data found, this might be a match sheet, skip it
             if (totalTickets === 0 && totalSpent === 0) {
                 return null;
             }
             
             const matches = [];
             
-            // Start from row 12 (index 11) and go through all rows - FIXED COLUMN REFERENCES
             for (let i = 11; i < rows.length; i++) {
                 const row = rows[i];
-                if (!row || !row[1]) continue; // Check column B for match names
+                if (!row || !row[1]) continue;
                 
-                const matchName = row[1].toString().trim(); // Column B (MATCH)
+                const matchName = row[1].toString().trim();
                 
-                // Skip header rows and empty rows
                 if (matchName === '' || matchName.toLowerCase().includes('match')) continue;
                 
-                // If there's any meaningful content in the match name column, treat it as a match
                 if (matchName.length > 3) {
-                    const matchDate = row[2] ? row[2].toString().trim() : '01/08/2025'; // Column C (DATE)
+                    const matchDate = row[2] ? row[2].toString().trim() : '01/08/2025';
                     
-                    // Column D - "AVAILABLE / TICKETS" 
                     const ticketsCell = row[3] ? row[3].toString().trim() : '';
                     let availableTickets = 0;
                     let totalTickets = 0;
@@ -2085,25 +1996,23 @@
                         availableTickets = parseInt(parts[0]) || 0;
                         totalTickets = parseInt(parts[1]) || 0;
                     } else {
-                        // Just a number
                         availableTickets = parseInt(ticketsCell.replace(/[^\d]/g, '')) || 0;
                         totalTickets = availableTickets;
                     }
                     
-                    const spent = parseFloat(row[4]?.toString().replace(/[£,]/g, '')) || 0; // Column E - "SPENT (FV)"
-                    const sales = parseFloat(row[5]?.toString().replace(/[£,]/g, '')) || 0; // Column F - "SALES"
-                    const profit = parseFloat(row[6]?.toString().replace(/[£,]/g, '')) || (sales - spent); // Column G - "NET PROFIT"
+                    const spent = parseFloat(row[4]?.toString().replace(/[£,]/g, '')) || 0;
+                    const sales = parseFloat(row[5]?.toString().replace(/[£,]/g, '')) || 0;
+                    const profit = parseFloat(row[6]?.toString().replace(/[£,]/g, '')) || (sales - spent);
                     
-                    // Only add if we have meaningful data (either tickets or money spent)
                     if (totalTickets > 0 || spent > 0) {
                         const soldTickets = totalTickets - availableTickets;
                         
                         matches.push({
-                            name: matchName, // Will be formatted when displayed
+                            name: matchName,
                             date: matchDate,
-                            tickets: availableTickets,  // Available tickets
-                            total: totalTickets,        // Total tickets
-                            sold: soldTickets,          // Sold tickets
+                            tickets: availableTickets,
+                            total: totalTickets,
+                            sold: soldTickets,
                             spent: spent,
                             sales: sales,
                             profit: profit
@@ -2112,10 +2021,8 @@
                 }
             }
             
-            // Use document title as team name, fall back to sheet name
             let teamName = documentTitle || sheetName;
             
-            // Format the team name with smart capitalization
             teamName = formatTeamName(teamName);
             
             return {
@@ -2131,7 +2038,6 @@
         
         function getTeamEmoji(teamName) {
             const emojiMap = {
-                // Premier League teams
                 'arsenal': '💣',
                 'aston villa': '🏯',
                 'burnley': '🔥',
@@ -2151,9 +2057,7 @@
                 'west ham': '⚒️',
                 'fulham': '⚪',
                 'crystal palace': '🦅',
-                'sunderland': '🦁', // Added Sunderland emoji
-                
-                // Sports and Events
+                'sunderland': '🦁',
                 'comedy': '🎭',
                 'theatre': '🎭',
                 'cricket': '🏏',
@@ -2173,29 +2077,25 @@
             
             const lowerName = teamName.toLowerCase();
             
-            // Check for exact matches first
             if (emojiMap[lowerName]) {
                 return emojiMap[lowerName];
             }
             
-            // Check for partial matches
             for (const [key, emoji] of Object.entries(emojiMap)) {
                 if (lowerName.includes(key)) {
                     return emoji;
                 }
             }
             
-            return '⚽'; // Default football emoji
+            return '⚽';
         }
         
-        // Match Popup Functions
         async function openMatchPopup(teamName, matchName, matchDate) {
             const overlay = document.getElementById('matchPopupOverlay');
             const popupTitle = document.getElementById('popupMatchTitle');
             const popupDate = document.getElementById('popupMatchDate');
             const popupContent = document.getElementById('matchPopupContent');
             
-            // Show popup with loading state
             popupTitle.textContent = formatMatchName(matchName);
             popupDate.textContent = formatDate(matchDate);
             popupContent.innerHTML = `
@@ -2209,13 +2109,11 @@
             try {
                 console.log(`🎯 Opening match popup for: "${teamName}" - "${matchName}"`);
                 
-                // First, check if we have the team sheet ID cached
                 let teamSheetId = teamSheetCache.get(teamName);
                 
                 if (!teamSheetId) {
                     console.log(`💾 No cached sheet ID for "${teamName}", searching...`);
                     
-                    // Show more specific loading message
                     popupContent.innerHTML = `
                         <div class="match-loading">
                             <div class="match-loading-spinner"></div>
@@ -2235,7 +2133,6 @@
                     throw new Error(`Could not find spreadsheet for team "${teamName}". The team may not have a dedicated sheet yet.`);
                 }
                 
-                // Update loading message
                 popupContent.innerHTML = `
                     <div class="match-loading">
                         <div class="match-loading-spinner"></div>
@@ -2243,16 +2140,13 @@
                     </div>
                 `;
                 
-                // Load the specific match sheet
                 const matchData = await loadMatchDetails(teamSheetId, matchName);
                 
-                // Display the match data
                 displayMatchDetails(matchData, matchName);
                 
             } catch (error) {
                 console.error('❌ Error loading match details:', error);
                 
-                // Show user-friendly error message with retry option
                 popupContent.innerHTML = `
                     <div class="match-loading">
                         <div style="color: #ff3b30; margin-bottom: 16px;">❌ ${error.message}</div>
@@ -2276,7 +2170,6 @@
         async function findTeamSheetId(teamName) {
             console.log(`🔍 Finding sheet ID for team: "${teamName}"`);
             
-            // Try to find the sheet ID by checking each one for the team name
             for (let i = 0; i < SHEET_IDS.length; i++) {
                 const sheetId = SHEET_IDS[i];
                 try {
@@ -2284,8 +2177,8 @@
                     
                     const documentInfo = await fastFetch(
                         `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}?key=${API_KEY}&fields=properties.title`,
-                        4000, // Shorter timeout
-                        1     // Single attempt only to speed up
+                        4000,
+                        1
                     );
                     
                     const documentTitle = documentInfo.properties.title;
@@ -2293,7 +2186,6 @@
                     
                     console.log(`📄 Document title: "${documentTitle}" -> Formatted: "${formattedTitle}"`);
                     
-                    // Try multiple matching strategies
                     if (formattedTitle === teamName ||
                         formattedTitle.toLowerCase() === teamName.toLowerCase() ||
                         formattedTitle.toLowerCase().includes(teamName.toLowerCase()) ||
@@ -2308,7 +2200,6 @@
                     continue;
                 }
                 
-                // Minimal delay between requests to avoid rate limiting
                 if (i < SHEET_IDS.length - 1) {
                     await new Promise(resolve => setTimeout(resolve, 50));
                 }
@@ -2322,38 +2213,29 @@
             try {
                 console.log(`🔍 Loading match details for: "${matchName}"`);
                 
-                // Get all sheet names first
                 const documentInfo = await getDocumentInfo(sheetId);
                 const sheets = documentInfo.sheets || [];
                 
                 console.log(`📋 Available sheets:`, sheets.map(s => s.properties.title));
                 
-                // Find the sheet that matches the match name (case insensitive, partial match)
                 let matchSheetName = null;
                 const searchName = matchName.toLowerCase().trim();
                 
-                // Try multiple matching strategies in order of preference
                 const matchingStrategies = [
-                    // 1. Exact match (case insensitive)
                     (sheetTitle) => sheetTitle.toLowerCase() === searchName,
                     
-                    // 2. Sheet contains match name
                     (sheetTitle) => sheetTitle.toLowerCase().includes(searchName),
                     
-                    // 3. Match name contains sheet title
                     (sheetTitle) => searchName.includes(sheetTitle.toLowerCase()),
                     
-                    // 4. Remove spaces and try again
                     (sheetTitle) => sheetTitle.toLowerCase().replace(/\s+/g, '').includes(searchName.replace(/\s+/g, '')),
                     
-                    // 5. Remove common words and try partial match
                     (sheetTitle) => {
                         const cleanSheet = sheetTitle.toLowerCase().replace(/\b(vs|v|against|home|away)\b/g, '').trim();
                         const cleanMatch = searchName.replace(/\b(vs|v|against|home|away)\b/g, '').trim();
                         return cleanSheet.includes(cleanMatch) || cleanMatch.includes(cleanSheet);
                     },
                     
-                    // 6. Try team name extraction (look for team names in both)
                     (sheetTitle) => {
                         const teamNames = ['arsenal', 'spurs', 'tottenham', 'utd', 'united', 'city', 'liverpool', 'chelsea'];
                         const sheetTeams = teamNames.filter(team => sheetTitle.toLowerCase().includes(team));
@@ -2362,12 +2244,10 @@
                     }
                 ];
                 
-                // Try each strategy
                 for (const strategy of matchingStrategies) {
                     for (const sheet of sheets) {
                         const sheetTitle = sheet.properties.title;
                         
-                        // Skip dashboard and summary sheets
                         if (sheetTitle.toLowerCase().includes('dashboard') || 
                             sheetTitle.toLowerCase().includes('summary')) {
                             continue;
@@ -2382,7 +2262,6 @@
                     if (matchSheetName) break;
                 }
                 
-                // If still no match, try the first non-dashboard sheet
                 if (!matchSheetName) {
                     console.log(`⚠️ No direct match found, trying first available sheet...`);
                     for (const sheet of sheets) {
@@ -2401,12 +2280,11 @@
                 
                 console.log(`📊 Loading data from sheet: "${matchSheetName}"`);
                 
-                // Fetch the match sheet data with optimized timeout
                 const range = `'${matchSheetName}'!A1:L100`;
                 const sheetData = await fastFetch(
                     `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/${range}?key=${API_KEY}&valueRenderOption=UNFORMATTED_VALUE&dateTimeRenderOption=FORMATTED_STRING`,
-                    6000, // Reasonable timeout for individual sheets
-                    2     // Balanced retries
+                    6000,
+                    2
                 );
                 
                 if (!sheetData || !sheetData.values || sheetData.values.length === 0) {
@@ -2418,7 +2296,6 @@
             } catch (error) {
                 console.error('❌ Load match details error:', error);
                 
-                // Provide more helpful error messages
                 if (error.message.includes('HTTP 429')) {
                     throw new Error('Too many requests. Please wait a moment and try again.');
                 } else if (error.message.includes('HTTP 403')) {
@@ -2445,7 +2322,6 @@
             let totalFV = 0;
             let totalSales = 0;
             
-            // Track merged cell values
             let currentBoughtBy = '';
             let currentPaidVia = '';
             let currentNumTickets = '';
@@ -2453,7 +2329,6 @@
             let currentBlock = '';
             let currentRow = '';
             
-            // Start from row 4 (index 3) as specified
             for (let i = 3; i < rows.length; i++) {
                 const row = rows[i];
                 if (!row || row.length < 8) {
@@ -2464,22 +2339,20 @@
                 console.log(`\n--- Row ${i + 1} ---`);
                 console.log('Raw data:', row);
                 
-                // Extract cell values - CORRECTED COLUMN MAPPING
                 const boughtBy = row[0] ? row[0].toString().trim() : '';
-                const fvRaw = row[2] ? row[2].toString().trim() : ''; // FV is in column C (index 2)
+                const fvRaw = row[2] ? row[2].toString().trim() : '';
                 const paidVia = row[3] ? row[3].toString().trim() : '';
                 const numTickets = row[4] ? row[4].toString().trim() : '';
                 const nameEmail = row[5] ? row[5].toString().trim() : '';
                 const block = row[6] ? row[6].toString().trim() : '';
                 const rowNum = row[7] ? row[7].toString().trim() : '';
                 const seat = row[8] ? row[8].toString().trim() : '';
-                const soldForRaw = row[11] ? row[11].toString().trim() : ''; // SOLD FOR is in column L (index 11)
+                const soldForRaw = row[11] ? row[11].toString().trim() : '';
                 
                 console.log(`FV Raw: "${fvRaw}"`);
                 console.log(`Seat: "${seat}"`);
                 console.log(`Sold For Raw: "${soldForRaw}"`);
                 
-                // Update merged cell values when present
                 if (boughtBy) currentBoughtBy = boughtBy;
                 if (paidVia) currentPaidVia = paidVia;
                 if (numTickets) currentNumTickets = numTickets;
@@ -2487,15 +2360,12 @@
                 if (block) currentBlock = block;
                 if (rowNum) currentRow = rowNum;
                 
-                // Parse FV - much simpler approach
                 let fv = 0;
                 if (fvRaw) {
-                    // Just try to parse the number directly, handling the long decimals
                     const numValue = parseFloat(fvRaw.replace(/[£,\s]/g, ''));
                     console.log(`Parsed number: ${numValue}`);
                     
                     if (!isNaN(numValue) && numValue > 0) {
-                        // Round to 2 decimal places
                         fv = Math.round(numValue * 100) / 100;
                         console.log(`✅ Final FV: £${fv}`);
                     } else {
@@ -2503,13 +2373,11 @@
                     }
                 }
                 
-                // Skip if no valid FV
                 if (fv === 0) {
                     console.log('❌ No valid FV, skipping');
                     continue;
                 }
                 
-                // Parse sold for amount
                 let soldFor = 0;
                 if (soldForRaw) {
                     const soldValue = parseFloat(soldForRaw.replace(/[£,\s]/g, ''));
@@ -2519,13 +2387,11 @@
                     }
                 }
                 
-                // Determine status
                 let status = 'Available';
                 if (soldFor > 0) {
                     status = 'Sold';
                 }
                 
-                // Create ticket
                 const ticket = {
                     boughtBy: currentBoughtBy || 'Unknown',
                     fv: fv,
@@ -2555,11 +2421,10 @@
             if (tickets.length === 0) {
                 console.log('\n❌ NO TICKETS CREATED - Let me check why...');
                 
-                // Let's see what we got in rows 4-10
                 for (let i = 3; i < Math.min(rows.length, 10); i++) {
                     const row = rows[i];
                     console.log(`Row ${i + 1} detail check:`);
-                    console.log(`  - Raw FV (col C): "${row[2]}"`); // Changed from row[1] to row[2]
+                    console.log(`  - Raw FV (col C): "${row[2]}"`);
                     console.log(`  - Type: ${typeof row[2]}`);
                     console.log(`  - parseFloat result: ${parseFloat(row[2])}`);
                     console.log(`  - isNaN check: ${isNaN(parseFloat(row[2]))}`);
@@ -2653,7 +2518,6 @@
             const progressElement = document.getElementById('loadingProgress');
             const refreshBtn = document.querySelector('.refresh-btn');
             
-            // Clear previous status messages and dashboard
             clearAllStatusMessages();
             dashboardData = {
                 totalTickets: 0,
@@ -2673,12 +2537,11 @@
             try {
                 const allTeams = [];
                 let successCount = 0;
-                const errorSheets = []; // Only track actual errors, not empty sheets
-                const emptySheets = []; // Track sheets with no data separately
+                const errorSheets = [];
+                const emptySheets = [];
                 
                 console.log(`🚀 Starting to load ${SHEET_IDS.length} sheets...`);
                 
-                // Process sheets one by one with longer delays to prevent rate limiting
                 for (let i = 0; i < SHEET_IDS.length; i++) {
                     const sheetId = SHEET_IDS[i];
                     let sheetName = `Sheet ${i + 1}`;
@@ -2686,15 +2549,13 @@
                     try {
                         console.log(`\n📊 Processing sheet ${i + 1}/${SHEET_IDS.length}: ${sheetId}`);
                         
-                        // Update progress bar
                         const percentage = Math.round(((i + 1) / SHEET_IDS.length) * 100);
                         document.getElementById('progressBar').style.width = `${percentage}%`;
                         document.getElementById('progressText').textContent = `${percentage}% (${i + 1}/${SHEET_IDS.length})`;
                         
-                        // Get document info first
                         const documentInfo = await fastFetch(
                             `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}?key=${API_KEY}&fields=properties.title`,
-                            5000, // Longer timeout
+                            5000,
                             1
                         );
                         
@@ -2702,19 +2563,16 @@
                         sheetName = documentTitle;
                         console.log(`✅ Document title: "${documentTitle}"`);
                         
-                        // Longer delay after getting document info to prevent rate limiting
                         await new Promise(resolve => setTimeout(resolve, 400));
                         
-                        // Get sheet data
                         const response = await fastFetch(
                             `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/DASHBOARD!A1:H50?key=${API_KEY}&valueRenderOption=UNFORMATTED_VALUE&dateTimeRenderOption=FORMATTED_STRING`,
-                            6000, // Even longer timeout
+                            6000,
                             1
                         );
                         const sheetData = response.values || [];
                         console.log(`✅ Retrieved ${sheetData.length} rows of data`);
                         
-                        // Parse the data
                         if (sheetData && sheetData.length > 0) {
                             const teamData = parseSheetData(sheetData, 'DASHBOARD', documentTitle);
                             
@@ -2723,21 +2581,19 @@
                                 successCount++;
                                 console.log(`✅ Successfully loaded: "${teamData.name}" (${teamData.totalTickets} tickets, £${teamData.totalSpent} spent)`);
                                 
-                                // Cache the sheet ID for this team
                                 teamSheetCache.set(teamData.name, sheetId);
                             } else {
                                 console.log(`🔍 Sheet has no ticket data yet: "${sheetName}"`);
-                                emptySheets.push(sheetName); // Track but don't show as error
+                                emptySheets.push(sheetName);
                             }
                         } else {
                             console.log(`🔍 No DASHBOARD data found: "${sheetName}"`);
-                            emptySheets.push(sheetName); // Track but don't show as error
+                            emptySheets.push(sheetName);
                         }
                         
                     } catch (error) {
                         console.log(`❌ Error processing sheet ${i + 1}: ${error.message}`);
                         
-                        // Only track as errors if they are actual API/network errors
                         if (error.message.includes('HTTP') || 
                             error.message.includes('timeout') || 
                             error.message.includes('fetch') ||
@@ -2750,14 +2606,12 @@
                                 reason: error.message
                             });
                         } else {
-                            // Other errors (like parsing) are also not shown as errors
                             emptySheets.push(sheetName);
                         }
                     }
                     
-                    // Much longer delay between requests to prevent rate limiting
                     if (i < SHEET_IDS.length - 1) {
-                        await new Promise(resolve => setTimeout(resolve, 800)); // Increased from 500ms to 800ms
+                        await new Promise(resolve => setTimeout(resolve, 800));
                     }
                 }
                 
@@ -2778,7 +2632,6 @@
                     throw new Error(`No teams loaded successfully. All ${SHEET_IDS.length} sheets had errors. Please check your internet connection and try again.`);
                 }
                 
-                // Update dashboard with final data
                 dashboardData.teams = allTeams;
                 dashboardData.totalTickets = allTeams.reduce((sum, team) => sum + team.totalTickets, 0);
                 dashboardData.totalSpent = allTeams.reduce((sum, team) => sum + team.totalSpent, 0);
@@ -2790,20 +2643,15 @@
                 
                 updateDashboard();
                 
-                // Create persistent messages
                 let successMessage = `✅ Loaded ${allTeams.length} teams successfully!`;
                 
-                // Only show error message if there are actual errors (not empty sheets)
                 if (errorSheets.length > 0) {
-                    // Show success message
                     showStatusMessage(successMessage, 'success', true);
                     
-                    // Show detailed error sheets message (only actual errors)
                     const errorList = errorSheets.map(f => `• ${f.name}: ${f.reason}`).join('<br>');
                     const errorMessage = `❌ ${errorSheets.length} sheets had connection/permission issues:<br><br>${errorList}<br><br>Click to dismiss this message.`;
                     showStatusMessage(errorMessage, 'error', true);
                 } else {
-                    // If there are empty sheets but no errors, mention them subtly
                     if (emptySheets.length > 0) {
                         successMessage += ` (${emptySheets.length} sheets have no data yet)`;
                     }
@@ -2821,21 +2669,16 @@
             }
         }
         
-        // Initial load when page loads
         document.addEventListener('DOMContentLoaded', function() {
-            // Check if we're online before loading
             if (navigator.onLine) {
                 refreshData();
             } else {
                 document.getElementById('offlineIndicator').classList.add('show');
-                // Try to load from cache if available
                 updateDashboard();
             }
         });
         
-        // Monthly Report Functions
         function getSeasonMonths() {
-            // Season runs August 2025 to July 2026
             return [
                 { value: '2025-08', label: 'August 2025', short: 'Aug 25' },
                 { value: '2025-09', label: 'September 2025', short: 'Sep 25' },
@@ -2893,14 +2736,11 @@
         let selectedMonth = null;
 
         function selectMonth(monthValue, buttonElement) {
-            // Remove previous selection
             document.querySelectorAll('.month-btn').forEach(btn => btn.classList.remove('selected'));
             
-            // Select current month
             buttonElement.classList.add('selected');
             selectedMonth = monthValue;
             
-            // Enable generate button
             const generateBtn = document.getElementById('generateMonthlyBtn');
             const monthText = document.getElementById('selectedMonthText');
             
@@ -2940,7 +2780,6 @@
             
             const monthLabel = getSeasonMonths().find(m => m.value === monthValue).label;
             
-            // Title
             doc.setFontSize(20);
             doc.setFont(undefined, 'bold');
             doc.text(`Ticket Father - ${monthLabel} Report`, 20, 30);
@@ -2949,12 +2788,15 @@
             doc.setFont(undefined, 'normal');
             doc.text(`Season 2025-2026 • Generated: ${new Date().toLocaleDateString('en-GB')}`, 20, 40);
             
-            // Filter all matches by selected month
             const monthlyTeams = [];
             let monthlyTotalTickets = 0;
             let monthlyTotalSpent = 0;
             let monthlyTotalSales = 0;
             let monthlyTotalProfit = 0;
+            let eventsInProfit = 0;
+            let eventsInLoss = 0;
+            let ticketsInProfit = 0;
+            let ticketsInLoss = 0;
             
             dashboardData.teams.forEach(team => {
                 const monthlyMatches = filterMatchesByMonth(team.matches, monthValue);
@@ -2964,6 +2806,16 @@
                     const teamMonthlySpent = monthlyMatches.reduce((sum, match) => sum + match.spent, 0);
                     const teamMonthlySales = monthlyMatches.reduce((sum, match) => sum + match.sales, 0);
                     const teamMonthlyProfit = monthlyMatches.reduce((sum, match) => sum + match.profit, 0);
+                    
+                    monthlyMatches.forEach(match => {
+                        if (match.profit >= 0) {
+                            eventsInProfit++;
+                            ticketsInProfit += match.total;
+                        } else {
+                            eventsInLoss++;
+                            ticketsInLoss += match.total;
+                        }
+                    });
                     
                     monthlyTeams.push({
                         ...team,
@@ -2989,7 +2841,6 @@
                 return;
             }
             
-            // Monthly Stats
             doc.setFontSize(14);
             doc.setFont(undefined, 'bold');
             doc.text(`${monthLabel} Statistics`, 20, 60);
@@ -2998,7 +2849,11 @@
                 ['Total Tickets', monthlyTotalTickets.toString()],
                 ['Total Spent', formatCurrency(monthlyTotalSpent)],
                 ['Total Sales', formatCurrency(monthlyTotalSales)],
-                ['Net Profit', (monthlyTotalProfit >= 0 ? '+' : '-') + formatCurrency(monthlyTotalProfit)]
+                ['Net Profit', (monthlyTotalProfit >= 0 ? '+' : '-') + formatCurrency(monthlyTotalProfit)],
+                ['Events in Profit', eventsInProfit.toString()],
+                ['Events in Loss', eventsInLoss.toString()],
+                ['Tickets in Profit', ticketsInProfit.toString()],
+                ['Tickets in Loss', ticketsInLoss.toString()]
             ];
             
             doc.autoTable({
@@ -3018,7 +2873,6 @@
                 }
             });
             
-            // Teams with matches in this month
             let currentY = doc.lastAutoTable.finalY + 20;
             doc.setFontSize(14);
             doc.setFont(undefined, 'bold');
@@ -3049,7 +2903,6 @@
                 }
             });
             
-            // Detailed matches breakdown
             currentY = doc.lastAutoTable.finalY + 20;
             
             if (currentY > 250) {
@@ -3061,7 +2914,6 @@
             doc.setFont(undefined, 'bold');
             doc.text(`All Matches in ${monthLabel}`, 20, currentY);
             
-            // Create detailed matches table
             const allMonthlyMatches = [];
             sortedMonthlyTeams.forEach(team => {
                 team.matches.forEach(match => {
@@ -3108,15 +2960,12 @@
             doc.save(`Ticket-Father-${monthValue}-Report.pdf`);
         }
         
-        // PDF Export Functions
         function showPDFExportModal() {
             const modal = document.getElementById('pdfExportModal');
             const teamsList = document.getElementById('pdfTeamsList');
             
-            // Sort teams alphabetically for PDF export list
             const sortedTeams = [...dashboardData.teams].sort((a, b) => a.name.localeCompare(b.name));
             
-            // Populate teams list (alphabetical order)
             teamsList.innerHTML = sortedTeams.map(team => `
                 <button class="pdf-team-btn" onclick="exportTeamPDF('${team.name}')">
                     <span class="pdf-team-emoji">${team.emoji}</span>
@@ -3165,7 +3014,6 @@
             }, 500);
         }
         
-        // Utility function to remove emojis from text
         function removeEmojis(text) {
             return text.replace(/[\u{1F600}-\u{1F64F}]|[\u{1F300}-\u{1F5FF}]|[\u{1F680}-\u{1F6FF}]|[\u{1F1E0}-\u{1F1FF}]|[\u{2600}-\u{26FF}]|[\u{2700}-\u{27BF}]/gu, '').trim();
         }
@@ -3174,7 +3022,6 @@
             const { jsPDF } = window.jspdf;
             const doc = new jsPDF();
             
-            // Title
             doc.setFontSize(20);
             doc.setFont(undefined, 'bold');
             doc.text('Ticket Father - All Teams Summary', 20, 30);
@@ -3183,7 +3030,6 @@
             doc.setFont(undefined, 'normal');
             doc.text(`Season 2025-2026 • Generated: ${new Date().toLocaleDateString('en-GB')}`, 20, 40);
             
-            // Overall Stats
             doc.setFontSize(14);
             doc.setFont(undefined, 'bold');
             doc.text('Overall Statistics', 20, 60);
@@ -3212,7 +3058,6 @@
                 }
             });
             
-            // Teams Summary
             let currentY = doc.lastAutoTable.finalY + 20;
             doc.setFontSize(14);
             doc.setFont(undefined, 'bold');
@@ -3253,7 +3098,6 @@
             const { jsPDF } = window.jspdf;
             const doc = new jsPDF();
             
-            // Title (remove emoji)
             doc.setFontSize(20);
             doc.setFont(undefined, 'bold');
             doc.text(removeEmojis(team.name), 20, 30);
@@ -3262,7 +3106,6 @@
             doc.setFont(undefined, 'normal');
             doc.text(`Season 2025-2026 • Generated: ${new Date().toLocaleDateString('en-GB')}`, 20, 40);
             
-            // Team Stats
             doc.setFontSize(14);
             doc.setFont(undefined, 'bold');
             doc.text('Team Statistics', 20, 60);
@@ -3293,7 +3136,6 @@
                 }
             });
             
-            // Matches Table
             if (team.matches.length > 0) {
                 let currentY = doc.lastAutoTable.finalY + 20;
                 doc.setFontSize(14);
@@ -3329,7 +3171,6 @@
                 });
             }
             
-            // Save the PDF
             const safeName = removeEmojis(teamName).replace(/[^a-zA-Z0-9]/g, '-');
             doc.save(`Ticket-Father-${safeName}-${new Date().toISOString().split('T')[0]}.pdf`);
         }
