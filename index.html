@@ -1965,7 +1965,7 @@
                     totalSpent = parseFloat(value.replace(/[£,]/g, '')) || 0;
                 } else if (cell === 'TOTAL SALES') {
                     totalSales = parseFloat(value.replace(/[£,]/g, '')) || 0;
-                } else if (cell === 'NET PROFIT') {
+                } else if (cell === 'MAS PROFIT') {
                     netProfit = parseFloat(value.replace(/[£,]/g, '')) || 0;
                 }
             }
@@ -2002,7 +2002,7 @@
                     
                     const spent = parseFloat(row[4]?.toString().replace(/[£,]/g, '')) || 0;
                     const sales = parseFloat(row[5]?.toString().replace(/[£,]/g, '')) || 0;
-                    const profit = parseFloat(row[6]?.toString().replace(/[£,]/g, '')) || (sales - spent);
+                    const profit = parseFloat(row[7]?.toString().replace(/[£,]/g, '')) || (sales - spent);
                     
                     if (totalTickets > 0 || spent > 0) {
                         const soldTickets = totalTickets - availableTickets;
