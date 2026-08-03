@@ -1540,7 +1540,7 @@
 
         /* ===== Density + fit pass ===== */
         .container{ max-width:560px; }
-        .top-spacer{ height:6px; }
+        .top-spacer{ height: calc(env(safe-area-inset-top, 20px) + 10px); }
         .bottom-spacer{ height:28px; }
         .scrollable-content{ padding-top:8px; }
 
@@ -1805,22 +1805,33 @@
         initializeTheme();
 
         if ('serviceWorker' in navigator) {
+            let swRefreshing = false;
+            // When a new service worker takes control, reload once to pick up the update.
+            navigator.serviceWorker.addEventListener('controllerchange', () => {
+                if (swRefreshing) return;
+                swRefreshing = true;
+                window.location.reload();
+            });
+
             window.addEventListener('load', async () => {
                 try {
                     const registration = await navigator.serviceWorker.register('/sw.js');
                     console.log('PWA: Service Worker registered', registration);
-                    
+
+                    // A new version was found → activate it immediately (no prompt).
                     registration.addEventListener('updatefound', () => {
                         const newWorker = registration.installing;
+                        if (!newWorker) return;
                         newWorker.addEventListener('statechange', () => {
                             if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-                                if (confirm('New version available! Reload to update?')) {
-                                    newWorker.postMessage({ type: 'SKIP_WAITING' });
-                                    window.location.reload();
-                                }
+                                newWorker.postMessage({ type: 'SKIP_WAITING' });
                             }
                         });
                     });
+
+                    // Check for a newer service worker on every load, and every 60s while open.
+                    registration.update();
+                    setInterval(() => registration.update(), 60 * 1000);
                 } catch (error) {
                     console.error('PWA: Service Worker registration failed', error);
                 }
@@ -2438,6 +2449,7 @@
                 </div>
             `;
             overlay.style.display = 'flex';
+            requestAnimationFrame(() => overlay.classList.add('show'));
             
             try {
                 console.log(`🎯 Opening match popup for: "${teamName}" - "${matchName}"`);
@@ -2497,7 +2509,9 @@
         
         function closeMatchPopup(event) {
             if (event && event.target !== event.currentTarget) return;
-            document.getElementById('matchPopupOverlay').style.display = 'none';
+            const o = document.getElementById('matchPopupOverlay');
+            o.classList.remove('show');
+            setTimeout(() => { o.style.display = 'none'; }, 320);
         }
         
         async function findTeamSheetId(teamName) {
@@ -3335,11 +3349,14 @@
             `).join('');
             
             modal.style.display = 'flex';
+            requestAnimationFrame(() => modal.classList.add('show'));
         }
         
         function closePDFExportModal(event) {
             if (event && event.target !== event.currentTarget) return;
-            document.getElementById('pdfExportModal').style.display = 'none';
+            const m = document.getElementById('pdfExportModal');
+            m.classList.remove('show');
+            setTimeout(() => { m.style.display = 'none'; }, 320);
         }
         
         function exportAllDataPDF() {
