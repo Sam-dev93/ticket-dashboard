@@ -1,5 +1,11 @@
-const CACHE_NAME = 'ticket-father-v1';
-const urlsToCache = [
+// ============ Ticket Father — Service Worker (auto-updating) ============
+// Bump CACHE_VERSION any time you want a hard reset of cached assets.
+// You normally WON'T need to: the app HTML is fetched network-first, so any
+// change you push to index.html shows on the next load automatically.
+const CACHE_VERSION = 'v2';
+const CACHE_NAME = 'ticket-father-' + CACHE_VERSION;
+
+const APP_SHELL = [
   './',
   './index.html',
   './icon-192.png',
@@ -7,104 +13,74 @@ const urlsToCache = [
   './manifest.json'
 ];
 
-// Install event - cache assets
+// ---- Install: pre-cache the shell, then take over ASAP ----
 self.addEventListener('install', event => {
   event.waitUntil(
-    caches.open(CACHE_NAME)
-      .then(cache => {
-        console.log('Opened cache');
-        return cache.addAll(urlsToCache);
-      })
+    caches.open(CACHE_NAME).then(cache => cache.addAll(APP_SHELL)).catch(() => {})
   );
-  // Force the waiting service worker to become the active service worker
   self.skipWaiting();
 });
 
-// Fetch event - serve from cache when offline
-self.addEventListener('fetch', event => {
-  // Skip non-GET requests
-  if (event.request.method !== 'GET') {
-    return;
-  }
+// ---- Activate: delete old version caches, then control all open pages ----
+self.addEventListener('activate', event => {
+  event.waitUntil(
+    caches.keys()
+      .then(keys => Promise.all(keys.filter(k => k !== CACHE_NAME).map(k => caches.delete(k))))
+      .then(() => self.clients.claim())
+  );
+});
 
-  // Handle Google Sheets API requests differently (always network)
-  if (event.request.url.includes('googleapis.com')) {
+// ---- Let the page tell us to activate a waiting worker immediately ----
+self.addEventListener('message', event => {
+  if (event.data && event.data.type === 'SKIP_WAITING') self.skipWaiting();
+});
+
+// ---- Fetch strategy ----
+self.addEventListener('fetch', event => {
+  const req = event.request;
+  if (req.method !== 'GET') return;
+
+  let url;
+  try { url = new URL(req.url); } catch (e) { return; }
+
+  // Google Sheets API → always network (never serve stale ticket data).
+  if (url.hostname.indexOf('googleapis.com') !== -1) {
     event.respondWith(
-      fetch(event.request)
-        .catch(() => {
-          // Return a custom offline response for API failures
-          return new Response(JSON.stringify({
-            error: 'offline',
-            message: 'Unable to fetch data while offline'
-          }), {
-            headers: { 'Content-Type': 'application/json' }
-          });
-        })
+      fetch(req).catch(() => new Response(
+        JSON.stringify({ error: 'offline' }),
+        { headers: { 'Content-Type': 'application/json' } }
+      ))
     );
     return;
   }
 
-  event.respondWith(
-    caches.match(event.request)
-      .then(response => {
-        // Cache hit - return response
-        if (response) {
-          return response;
-        }
-
-        // Clone the request
-        const fetchRequest = event.request.clone();
-
-        return fetch(fetchRequest).then(response => {
-          // Check if valid response
-          if (!response || response.status !== 200 || response.type === 'opaque') {
-            return response;
-          }
-
-          // Clone the response
-          const responseToCache = response.clone();
-
-          // Cache the fetched response
-          caches.open(CACHE_NAME)
-            .then(cache => {
-              cache.put(event.request, responseToCache);
-            });
-
-          return response;
-        });
-      })
-      .catch(() => {
-        // Offline fallback
-        console.log('Offline - returning cached index.html');
-        return caches.match('./index.html');
-      })
-  );
-});
-
-// Activate event - clean up old caches
-self.addEventListener('activate', event => {
-  const cacheWhitelist = [CACHE_NAME];
-  
-  event.waitUntil(
-    caches.keys().then(cacheNames => {
-      return Promise.all(
-        cacheNames.map(cacheName => {
-          if (cacheWhitelist.indexOf(cacheName) === -1) {
-            console.log('Deleting old cache:', cacheName);
-            return caches.delete(cacheName);
-          }
+  // App HTML / navigation → NETWORK-FIRST so updates appear immediately,
+  // falling back to the cached copy when offline.
+  const isHTML = req.mode === 'navigate' ||
+                 url.pathname.endsWith('/') ||
+                 url.pathname.endsWith('.html');
+  if (isHTML) {
+    event.respondWith(
+      fetch(req)
+        .then(res => {
+          const copy = res.clone();
+          caches.open(CACHE_NAME).then(c => c.put(req, copy));
+          return res;
         })
-      );
+        .catch(() => caches.match(req).then(r => r || caches.match('./index.html')))
+    );
+    return;
+  }
+
+  // Everything else (icons, manifest, scripts) → cache-first, refresh in background.
+  event.respondWith(
+    caches.match(req).then(cached => {
+      const network = fetch(req).then(res => {
+        const copy = res.clone();
+        caches.open(CACHE_NAME).then(c => c.put(req, copy));
+        return res;
+      }).catch(() => cached);
+      return cached || network;
     })
   );
-  
-  // Claim clients
-  return self.clients.claim();
-});
-
-// Handle app updates
-self.addEventListener('message', event => {
-  if (event.data && event.data.type === 'SKIP_WAITING') {
-    self.skipWaiting();
-  }
 });
