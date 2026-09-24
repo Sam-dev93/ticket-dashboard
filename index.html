@@ -1661,7 +1661,7 @@ body.offline .offline-pill { display: flex; }
    Data loading, parsing and PDF generation further down are unchanged
    from the previous version (apart from the season label).
    ===================================================================== */
-const APP_VERSION = '2026.09.24-6';
+const APP_VERSION = '2026.09.24-7';
 const SEASON_START = 2026;                 // season 2026–27 (Aug 2026 – Jul 2027)
 const SEASON_LABEL = '2026–27';
 const CACHE_KEY = 'tf-cache-v1';
@@ -2396,20 +2396,27 @@ function refreshDashboard() {
   refreshData();
 }
 
-/* ---- Auto-update (same as Salah Times) ----
-   1) sw.js is re-checked every time the app is opened or brought back to the front.
-      If it changed, the new worker takes over and the page reloads itself once.
-   2) index.html is fetched network-first by the service worker, and when the app is
-      resumed we compare the server's ETag / Last-Modified, so HTML-only edits show
-      up without touching sw.js. */
+/* ---- Auto-update, without interrupting you ----
+   • index.html is fetched network-first by the service worker, so each launch already runs the latest page.
+   • sw.js is re-checked on launch, when the app comes back to the front, and every 15 minutes.
+   • When a new version takes over, the page does NOT reload while you're using it (a reload during
+     launch can leave an iPhone Home Screen app not responding to taps). It reloads quietly the next
+     time the app comes back from the background instead. */
+let updatePending = false;
+function applyPendingUpdate() {
+  if (!updatePending) return;
+  updatePending = false;
+  location.reload();
+}
+document.addEventListener('visibilitychange', () => {
+  // leaving the app: safe moment to swap onto the new version for next time it's shown
+  if (document.visibilityState === 'hidden' && updatePending) applyPendingUpdate();
+});
 if ('serviceWorker' in navigator) {
   let hasController = !!navigator.serviceWorker.controller;
-  let reloading = false;
   navigator.serviceWorker.addEventListener('controllerchange', () => {
-    if (!hasController) { hasController = true; return; } // first install: no reload needed
-    if (reloading) return;
-    reloading = true;
-    location.reload();
+    if (!hasController) { hasController = true; return; } // first install: nothing to reload
+    updatePending = true;                                   // apply when the app is next backgrounded
   });
   window.addEventListener('load', () => {
     navigator.serviceWorker.register('./sw.js', { updateViaCache: 'none' }).then((reg) => {
@@ -2420,23 +2427,24 @@ if ('serviceWorker' in navigator) {
         if (w) w.addEventListener('statechange', () => { if (w.state === 'installed') activate(w); });
       });
       const check = () => { if (navigator.onLine) reg.update().catch(() => {}); };
-      check();
+      setTimeout(check, 4000);  // let the app settle after launch first
       setInterval(check, 15 * 60 * 1000);
       document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') check(); });
     }).catch((err) => console.warn('Service worker registration failed:', err));
   });
 }
 (() => {
+  // HTML-only edits: compare the server's ETag / Last-Modified when the app comes back to the front
   let stamp = null, lastCheck = 0;
   const readStamp = () => fetch('./index.html', { method: 'HEAD', cache: 'no-store' })
     .then((r) => r.ok ? (r.headers.get('ETag') || r.headers.get('Last-Modified')) : null)
     .catch(() => null);
-  window.addEventListener('load', () => { readStamp().then((s) => { stamp = s; }); });
+  window.addEventListener('load', () => { setTimeout(() => readStamp().then((s) => { stamp = s; }), 3000); });
   document.addEventListener('visibilitychange', () => {
     if (document.visibilityState !== 'visible' || !navigator.onLine || !stamp) return;
     if (Date.now() - lastCheck < 30000) return;
     lastCheck = Date.now();
-    readStamp().then((s) => { if (s && s !== stamp) location.reload(); });
+    readStamp().then((s) => { if (s && s !== stamp) { stamp = s; updatePending = true; } });
   });
 })();
 

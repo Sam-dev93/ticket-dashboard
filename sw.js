@@ -4,12 +4,12 @@
  * Updating the app:
  *   • index.html is always fetched from the network first, so any change you
  *     upload shows the next time the app is opened (cache is only the offline fallback).
- *   • The page re-checks this file every time the app is opened or brought back
- *     to the front. Bump VERSION below whenever you deploy — the browser sees the
- *     byte change, installs this worker, and the page reloads itself onto it.
+ *   • The page re-checks this file when the app is opened or brought back to the
+ *     front. Bump VERSION below whenever you deploy — the new worker installs and the
+ *     page switches over quietly the next time the app goes to the background.
  *   • Google Sheets data is never cached.
  */
-const VERSION = '2026.09.24-6';
+const VERSION = '2026.09.24-7';
 const CACHE = `ticket-father-${VERSION}`;
 const SHELL = ['./', './index.html', './manifest.json', './icon-192.png', './icon-512.png'];
 
@@ -26,16 +26,12 @@ self.addEventListener('install', (event) => {
 self.addEventListener('activate', (event) => {
   event.waitUntil((async () => {
     const keys = await caches.keys();
-    const isUpgrade = keys.some((k) => k !== CACHE); // an older version was installed
     // Wipe every older cache — including the old 'ticket-father-v2'
     await Promise.all(keys.filter((k) => k !== CACHE).map((k) => caches.delete(k)));
     await self.clients.claim();
-    // On an upgrade, reload any open windows straight onto the new version.
-    // This matters when the page on screen is an old one with no auto-update code of its own.
-    if (isUpgrade) {
-      const wins = await self.clients.matchAll({ type: 'window', includeUncontrolled: true });
-      await Promise.all(wins.map((w) => (w.navigate ? w.navigate(w.url).catch(() => {}) : null)));
-    }
+    // No forced reload of open windows here: reloading an iPhone Home Screen app while it is
+    // launching can leave it not responding to taps. The page applies the update itself the
+    // next time the app goes to the background.
   })());
 });
 
