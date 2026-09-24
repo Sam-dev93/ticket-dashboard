@@ -9,7 +9,7 @@
  *     byte change, installs this worker, and the page reloads itself onto it.
  *   • Google Sheets data is never cached.
  */
-const VERSION = '2026.09.24-3';
+const VERSION = '2026.09.24-4';
 const CACHE = `ticket-father-${VERSION}`;
 const SHELL = ['./', './index.html', './manifest.json', './icon-192.png', './icon-512.png'];
 
@@ -49,7 +49,7 @@ self.addEventListener('fetch', (event) => {
   const url = new URL(req.url);
 
   // Google Sheets API → always network (never serve stale ticket data)
-  if (url.hostname.endsWith('googleapis.com')) {
+  if (url.hostname === 'sheets.googleapis.com') {
     event.respondWith(
       fetch(req).catch(() => new Response(JSON.stringify({ error: 'offline' }), { headers: { 'Content-Type': 'application/json' } }))
     );

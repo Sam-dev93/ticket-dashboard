@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <title>Ticket Father</title>
 <meta name="description" content="Season 2026–27 ticket management dashboard">
-<meta name="theme-color" id="themeColor" content="#F2F2F7">
+<meta name="theme-color" id="themeColor" content="#F2F2F6">
 <meta name="color-scheme" content="light dark">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
@@ -17,6 +17,9 @@
 <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png">
 <link rel="icon" type="image/png" sizes="512x512" href="./icon-512.png">
 <link rel="manifest" href="./manifest.json">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <!-- PDF export -->
 <script defer src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script defer src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
@@ -31,121 +34,128 @@
 </script>
 <style>
 :root {
-  --bg: #F2F2F7;
+  --bg: #F2F2F6;
   --card: #FFFFFF;
-  --label: #000000;
-  --sec: #8A8A8E;
-  --chev: #C4C4C7;
-  --sep: #E3E3E8;
-  --fill: rgba(118,118,128,0.12);
-  --track: #E9E9EE;
-  --red: #FF383C;
-  --orange: #FF8D28;
-  --green: #34C759;
-  --blue: #0088FF;
-  --indigo: #6155F5;
-  --teal: #00C3D0;
-  --purple: #CB30E0;
+  --label: #111114;
+  --sec: #6E6E76;
+  --ter: #A3A3AA;
+  --chev: #C4C4CA;
+  --sep: #ECECF0;
+  --fill: #F0F0F4;
+  --track: #E8E8EE;
+  --sub2: #F4F4F7;
+  --blue: #3A78F2;
+  --blue-bg: rgba(58,120,242,0.12);
+  --green: #1E9E62;
+  --green-bg: rgba(30,158,98,0.12);
+  --red: #E0463F;
+  --red-bg: rgba(224,70,63,0.10);
+  --orange: #E9812A;
+  --orange-bg: rgba(233,129,42,0.13);
+  --purple: #7B61FF;
+  --purple-bg: rgba(123,97,255,0.12);
+  --teal: #159DAE;
+  --teal-bg: rgba(21,157,174,0.12);
   --glass: rgba(255,255,255,0.72);
   --g-border: rgba(0,0,0,0.06);
   --g-shadow: inset 0 1px 0 rgba(255,255,255,0.9), 0 8px 28px rgba(0,0,0,0.10);
-  --seg-on: #FFFFFF;
-  --seg-sh: 0 2px 6px rgba(0,0,0,0.12);
-  --wash-top: #5FD3A0;
-  --wash: linear-gradient(180deg, #5FD3A0 0%, #A8E6C6 38%, #DCF3E6 66%, rgba(242,242,247,0) 100%);
-  --sheet-card: #FFFFFF;
-  --ring-bg: #1C1C1E;
-  --fade: linear-gradient(to bottom, rgba(242,242,247,0), rgba(242,242,247,0.75));
-  --edge: rgba(242,242,247,0.85);
   --pill: rgba(118,118,128,0.14);
-  --backdrop: rgba(0,0,0,0.25);
-  --sheet: #F2F2F7;
-  --grab: #C7C7CC;
+  --backdrop: rgba(0,0,0,0.32);
+  --sheet: #FFFFFF;
+  --grab: #D4D4DA;
+  --edge: rgba(242,242,246,0.92);
+  --fade: linear-gradient(to bottom, rgba(242,242,246,0), rgba(242,242,246,0.7));
+  --toast: rgba(40,40,44,0.92);
+  --toast-fg: #FFFFFF;
   color-scheme: light;
-  --font: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", system-ui, "Segoe UI", sans-serif;
-  --rounded: ui-rounded, "SF Pro Rounded", -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+  --font: "Figtree", "One UI Sans", "SamsungOne", -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
   --safe-top: env(safe-area-inset-top, 0px);
   --safe-bottom: env(safe-area-inset-bottom, 0px);
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
   --bg: #000000;
-  --card: #1C1C1E;
-  --label: #FFFFFF;
-  --sec: #98989F;
-  --chev: #5A5A5F;
-  --sep: #38383A;
-  --fill: rgba(118,118,128,0.24);
-  --track: #2C2C2E;
-  --red: #E0605A;
-  --orange: #DB8A4A;
-  --green: #4CB872;
-  --blue: #4A8FE0;
-  --indigo: #7F86E0;
-  --teal: #3FB3BE;
-  --purple: #B96AD0;
+  --card: #17171A;
+  --label: #F2F2F5;
+  --sec: #9A9AA2;
+  --ter: #65656D;
+  --chev: #55555C;
+  --sep: #26262B;
+  --fill: #222226;
+  --track: #2A2A2F;
+  --sub2: #232327;
+  --blue: #6E9EF5;
+  --blue-bg: rgba(110,158,245,0.16);
+  --green: #4CB985;
+  --green-bg: rgba(76,185,133,0.15);
+  --red: #E2706A;
+  --red-bg: rgba(226,112,106,0.15);
+  --orange: #DE995A;
+  --orange-bg: rgba(222,153,90,0.15);
+  --purple: #9C8DF2;
+  --purple-bg: rgba(156,141,242,0.15);
+  --teal: #56B5C0;
+  --teal-bg: rgba(86,181,192,0.15);
   --glass: rgba(44,44,48,0.72);
   --g-border: rgba(255,255,255,0.12);
   --g-shadow: inset 0 1px 0 rgba(255,255,255,0.14), 0 8px 28px rgba(0,0,0,0.5);
-  --seg-on: #636366;
-  --seg-sh: none;
-  --wash-top: #0B3A28;
-  --wash: linear-gradient(180deg, #0B3A28 0%, #08291D 36%, #041610 66%, rgba(0,0,0,0) 100%);
-  --sheet-card: #2C2C2E;
-  --ring-bg: #000000;
-  --fade: linear-gradient(to bottom, rgba(0,0,0,0), rgba(0,0,0,0.75));
-  --edge: rgba(0,0,0,0.85);
   --pill: rgba(0,0,0,0.40);
-  --backdrop: rgba(0,0,0,0.5);
-  --sheet: #1C1C1E;
-  --grab: #48484A;
+  --backdrop: rgba(0,0,0,0.55);
+  --sheet: #1E1E22;
+  --grab: #46464D;
+  --edge: rgba(0,0,0,0.92);
+  --fade: linear-gradient(to bottom, rgba(0,0,0,0), rgba(0,0,0,0.7));
+  --toast: rgba(58,58,64,0.95);
+  --toast-fg: #FFFFFF;
   color-scheme: dark;
   }
 }
 :root[data-theme="dark"] {
   --bg: #000000;
-  --card: #1C1C1E;
-  --label: #FFFFFF;
-  --sec: #98989F;
-  --chev: #5A5A5F;
-  --sep: #38383A;
-  --fill: rgba(118,118,128,0.24);
-  --track: #2C2C2E;
-  --red: #E0605A;
-  --orange: #DB8A4A;
-  --green: #4CB872;
-  --blue: #4A8FE0;
-  --indigo: #7F86E0;
-  --teal: #3FB3BE;
-  --purple: #B96AD0;
+  --card: #17171A;
+  --label: #F2F2F5;
+  --sec: #9A9AA2;
+  --ter: #65656D;
+  --chev: #55555C;
+  --sep: #26262B;
+  --fill: #222226;
+  --track: #2A2A2F;
+  --sub2: #232327;
+  --blue: #6E9EF5;
+  --blue-bg: rgba(110,158,245,0.16);
+  --green: #4CB985;
+  --green-bg: rgba(76,185,133,0.15);
+  --red: #E2706A;
+  --red-bg: rgba(226,112,106,0.15);
+  --orange: #DE995A;
+  --orange-bg: rgba(222,153,90,0.15);
+  --purple: #9C8DF2;
+  --purple-bg: rgba(156,141,242,0.15);
+  --teal: #56B5C0;
+  --teal-bg: rgba(86,181,192,0.15);
   --glass: rgba(44,44,48,0.72);
   --g-border: rgba(255,255,255,0.12);
   --g-shadow: inset 0 1px 0 rgba(255,255,255,0.14), 0 8px 28px rgba(0,0,0,0.5);
-  --seg-on: #636366;
-  --seg-sh: none;
-  --wash-top: #0B3A28;
-  --wash: linear-gradient(180deg, #0B3A28 0%, #08291D 36%, #041610 66%, rgba(0,0,0,0) 100%);
-  --sheet-card: #2C2C2E;
-  --ring-bg: #000000;
-  --fade: linear-gradient(to bottom, rgba(0,0,0,0), rgba(0,0,0,0.75));
-  --edge: rgba(0,0,0,0.85);
   --pill: rgba(0,0,0,0.40);
-  --backdrop: rgba(0,0,0,0.5);
-  --sheet: #1C1C1E;
-  --grab: #48484A;
+  --backdrop: rgba(0,0,0,0.55);
+  --sheet: #1E1E22;
+  --grab: #46464D;
+  --edge: rgba(0,0,0,0.92);
+  --fade: linear-gradient(to bottom, rgba(0,0,0,0), rgba(0,0,0,0.7));
+  --toast: rgba(58,58,64,0.95);
+  --toast-fg: #FFFFFF;
   color-scheme: dark;
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
 html, body { height: 100%; overflow: hidden; background: var(--bg); }
-html.home-top { background: var(--wash-top); }
 body {
-  font-family: var(--font); color: var(--label);
+  font-family: var(--font); color: var(--label); font-size: 16px;
   -webkit-font-smoothing: antialiased; -webkit-tap-highlight-color: transparent; -webkit-text-size-adjust: 100%;
   user-select: none; -webkit-user-select: none; touch-action: manipulation;
 }
 button { font: inherit; color: inherit; background: none; border: none; cursor: pointer; padding: 0; text-align: inherit; }
-button:focus-visible { outline: 2px solid var(--blue); outline-offset: 2px; }
+button:focus-visible, a:focus-visible { outline: 2px solid var(--blue); outline-offset: 2px; }
 button:disabled { cursor: default; }
 .press { transition: transform .15s ease, opacity .15s ease; }
 .press:active { transform: scale(0.97); opacity: 0.85; }
@@ -159,142 +169,132 @@ button:disabled { cursor: default; }
 .scroll { position: absolute; inset: 0; overflow-y: auto; overflow-x: hidden; -webkit-overflow-scrolling: touch; overscroll-behavior-y: contain; }
 .page {
   position: relative; max-width: 560px; margin: 0 auto;
-  padding: calc(var(--safe-top) + 60px) 16px calc(var(--safe-bottom) + 112px);
-  display: flex; flex-direction: column; gap: 14px;
+  padding: 0 12px calc(var(--safe-bottom) + 112px);
+  display: flex; flex-direction: column; gap: 10px;
 }
-.wash { position: absolute; left: 0; right: 0; top: 0; height: calc(var(--safe-top) + 470px); background: var(--wash); pointer-events: none; }
 .view.push { z-index: 10; display: block; visibility: hidden; transform: translateX(100%); transition: transform .38s cubic-bezier(.2,.9,.3,1), visibility 0s linear .38s; }
 .view.push.open { visibility: visible; transform: none; transition: transform .38s cubic-bezier(.2,.9,.3,1); }
 
-/* ---------- Floating nav (Liquid Glass controls) ---------- */
-.nav {
-  position: absolute; z-index: 6; left: 0; right: 0; top: 0;
-  padding: calc(var(--safe-top) + 6px) 16px 10px;
-  display: flex; align-items: center; justify-content: space-between; gap: 8px; pointer-events: none;
-}
-.nav > * { pointer-events: auto; }
-.nav::before {
-  content: ""; position: absolute; inset: 0; pointer-events: none; opacity: 0; transition: opacity .2s ease;
-  background: linear-gradient(to bottom, var(--edge) 0%, var(--edge) 55%, transparent 100%);
-  -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
-  -webkit-mask-image: linear-gradient(to bottom, #000 55%, transparent); mask-image: linear-gradient(to bottom, #000 55%, transparent);
-}
-.view.scrolled .nav::before { opacity: 1; }
-.ctitle {
-  position: absolute; left: 76px; right: 76px; top: calc(var(--safe-top) + 6px); height: 44px; line-height: 44px;
-  text-align: center; font-size: 17px; font-weight: 600; opacity: 0; transition: opacity .2s ease; pointer-events: none;
-  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-}
-.view.scrolled .ctitle { opacity: 1; }
-.nav-group { display: flex; gap: 8px; }
-.glass {
-  background: var(--glass); border: 1px solid var(--g-border); box-shadow: var(--g-shadow);
-  -webkit-backdrop-filter: blur(20px) saturate(180%); backdrop-filter: blur(20px) saturate(180%);
-}
-.circ { width: 44px; height: 44px; border-radius: 999px; display: flex; align-items: center; justify-content: center; color: var(--label); flex-shrink: 0; }
-.pillgroup { display: flex; padding: 0 4px; border-radius: 999px; }
-.pillgroup button { width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; color: var(--label); }
-.pillgroup button.on { color: var(--blue); }
+/* ---------- One UI header: big viewing area, then a toolbar ---------- */
+.hero-head { min-height: calc(var(--safe-top) + 200px); display: flex; flex-direction: column; justify-content: flex-end; padding: calc(var(--safe-top) + 40px) 14px 16px; }
+.hero-head.short { min-height: calc(var(--safe-top) + 180px); }
+.hero-head h1 { font-size: 36px; font-weight: 700; letter-spacing: -0.4px; line-height: 1.1; }
+.hero-head p { margin-top: 8px; font-size: 15px; color: var(--sec); }
+.toolbar { display: flex; align-items: center; justify-content: space-between; min-height: 44px; margin: -4px 0 4px; padding: 0 0 0 8px; }
+.toolbar .icons { display: flex; margin-left: auto; }
+.tb { width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; color: var(--label); border-radius: 999px; }
+.tb:active { background: var(--fill); }
+.tb.on { color: var(--blue); }
 .spin svg { animation: spin 1s linear infinite; }
 @keyframes spin { to { transform: rotate(360deg); } }
 
-/* ---------- Type ---------- */
-h1.large { font-size: 34px; font-weight: 700; letter-spacing: 0.3px; line-height: 1.15; padding: 0 6px; }
-.sub { font-size: 15px; color: var(--sec); padding: 0 6px; margin-top: -10px; }
-.shead { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 6px 6px 0; }
-.shead h2 { font-size: 22px; font-weight: 700; flex: 1; }
-.shead .r { font-size: 17px; color: var(--sec); }
-.shead .link { font-size: 17px; color: var(--blue); display: flex; align-items: center; gap: 4px; }
-.shead .ic { display: flex; }
-.day { font-size: 20px; font-weight: 700; padding: 8px 6px 0; }
+/* compact bar when scrolled */
+.nav {
+  position: absolute; z-index: 6; left: 0; right: 0; top: 0;
+  padding: calc(var(--safe-top) + 4px) 8px 6px 20px; min-height: calc(var(--safe-top) + 54px);
+  display: flex; align-items: center; gap: 4px;
+  background: var(--edge); -webkit-backdrop-filter: blur(20px) saturate(160%); backdrop-filter: blur(20px) saturate(160%);
+  opacity: 0; pointer-events: none; transition: opacity .2s ease;
+}
+.view.scrolled .nav { opacity: 1; pointer-events: auto; }
+.nav .ctitle { flex: 1; font-size: 20px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.nav .icons { display: flex; }
+
+/* ---------- Section labels ---------- */
+.shead { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; padding: 12px 14px 0; }
+.shead h2 { font-size: 14px; font-weight: 700; color: var(--sec); flex: 1; }
+.shead .r { font-size: 14px; font-weight: 600; color: var(--sec); }
+.shead .link { font-size: 14px; font-weight: 700; color: var(--blue); display: flex; align-items: center; gap: 4px; }
+.day { font-size: 14px; font-weight: 700; color: var(--sec); padding: 12px 14px 0; }
 
 /* ---------- Cards & lists ---------- */
 .card { background: var(--card); border-radius: 26px; }
-.cardpad { padding: 16px 16px 18px; display: flex; flex-direction: column; gap: 12px; width: 100%; text-align: left; }
+.cardpad { padding: 18px 18px 16px; display: flex; flex-direction: column; gap: 12px; width: 100%; text-align: left; }
 .list { background: var(--card); border-radius: 26px; overflow: hidden; }
-.row { position: relative; display: flex; align-items: center; gap: 12px; padding: 0 14px 0 16px; min-height: 62px; width: 100%; text-align: left; }
-button.row:active, .row.tap:active { background: var(--fill); }
-.row::after { content: ""; position: absolute; left: 64px; right: 0; bottom: 0; height: 1px; background: var(--sep); }
+.row { position: relative; display: flex; align-items: center; gap: 14px; padding: 12px 16px; min-height: 64px; width: 100%; text-align: left; }
+button.row:active, a.row:active { background: var(--fill); }
+.row::after { content: ""; position: absolute; left: 70px; right: 20px; bottom: 0; height: 1px; background: var(--sep); }
 .row:last-child::after { display: none; }
-.row.plain::after { left: 16px; }
-.row.tiled { min-height: 52px; gap: 14px; }
-.row.tiled::after { left: 60px; }
-.row .main { flex: 1; min-width: 0; padding: 9px 0; }
-.row .t { font-size: 17px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.row .s { font-size: 14px; color: var(--sec); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.row .v { font-size: 17px; color: var(--sec); white-space: nowrap; }
+.row.plain::after { left: 20px; }
+.row.icon::after { left: 68px; }
+.row .main { flex: 1; min-width: 0; }
+.row .t { font-size: 16px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.row .s { font-size: 13px; color: var(--sec); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.row .sold { color: var(--green); font-weight: 600; }
+.row .v { font-size: 16px; color: var(--sec); white-space: nowrap; }
 .row .right { text-align: right; flex-shrink: 0; }
-.row .right b { display: block; font-size: 17px; font-weight: 600; }
-.row .right small { display: block; font-size: 13px; color: var(--sec); }
+.row .right b { display: block; font-size: 17px; font-weight: 700; }
+.row .right small { display: block; font-size: 12px; color: var(--sec); }
 .chev { color: var(--chev); display: flex; flex-shrink: 0; }
-.soldout { display: flex; align-items: center; gap: 3px; font-size: 15px; font-weight: 600; color: var(--green); white-space: nowrap; }
-.bar { height: 4px; border-radius: 999px; background: var(--track); overflow: hidden; margin-top: 6px; }
+.bar { height: 6px; border-radius: 999px; background: var(--track); overflow: hidden; margin-top: 6px; }
 .bar i { display: block; height: 100%; border-radius: 999px; }
-.empty { padding: 22px 18px; text-align: center; color: var(--sec); font-size: 15px; line-height: 1.45; }
+.bar.big { height: 10px; margin-top: 6px; }
+.empty { padding: 24px 18px; text-align: center; color: var(--sec); font-size: 15px; line-height: 1.45; }
 
-.badge { width: 36px; height: 36px; border-radius: 10px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 11px; font-weight: 800; letter-spacing: 0.3px; }
+.badge { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 11px; font-weight: 800; letter-spacing: 0.2px; }
 .badge.edge { box-shadow: inset 0 0 0 1px rgba(0,0,0,0.12); }
-.badge.xl { width: 76px; height: 76px; border-radius: 22px; font-size: 20px; }
-.tile { --c: var(--blue); width: 30px; height: 30px; border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;
-  background: linear-gradient(180deg, color-mix(in srgb, var(--c) 78%, white), var(--c)); color: #FFFFFF; }
-@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .tile { background: #121214; color: var(--c); border: 1px solid rgba(255,255,255,0.07); } }
-:root[data-theme="dark"] .tile { background: #121214; color: var(--c); border: 1px solid rgba(255,255,255,0.07); }
+.badge.lg { width: 48px; height: 48px; font-size: 13px; }
+.badge.xl { width: 60px; height: 60px; font-size: 16px; }
+.ico { width: 38px; height: 38px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.ico.sm { width: 34px; height: 34px; }
 
-.chead { display: flex; align-items: center; gap: 6px; }
-.chead .ic { display: flex; }
-.chead .ct { flex: 1; font-size: 17px; font-weight: 600; }
-.chead .cr { font-size: 15px; color: var(--sec); }
-.cols { display: flex; align-items: stretch; }
-.cols > div + div { border-left: 1px solid var(--sep); padding-left: 12px; margin-left: 12px; }
-.cols .l { font-size: 15px; font-weight: 600; }
-.cols .v {  font-size: 22px; font-weight: 600; font-variant-numeric: tabular-nums; white-space: nowrap; }
-.cols.sm .l { font-size: 13px; }
-.cols.sm .v { font-size: 17px; }
-.big {  font-size: 36px; font-weight: 600; letter-spacing: -0.6px; font-variant-numeric: tabular-nums; line-height: 1.15; }
-.muted { font-size: 15px; color: var(--sec); }
-.split { display: flex; align-items: flex-end; justify-content: space-between; gap: 12px; }
+/* stat tiles */
+.tiles { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+.tilecard { background: var(--card); border-radius: 24px; padding: 14px 16px; display: flex; flex-direction: column; gap: 10px; min-width: 0; text-align: left; }
+.tilecard.row-style { flex-direction: row; align-items: center; gap: 12px; }
+.tilecard .l { font-size: 13px; font-weight: 600; color: var(--sec); }
+.tilecard .v { font-size: 24px; font-weight: 800; letter-spacing: -0.4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.tilecard.row-style .v { font-size: 20px; }
+.hero-l { font-size: 14px; font-weight: 600; color: var(--sec); }
+.hero-v { font-size: 32px; font-weight: 800; letter-spacing: -0.6px; line-height: 1.15; font-variant-numeric: tabular-nums; }
+.meta { display: flex; justify-content: space-between; gap: 12px; font-size: 13px; color: var(--sec); }
+.meta b { color: var(--label); }
+.cells { display: flex; gap: 6px; }
+.cells > div { flex: 1; min-width: 0; background: var(--sub2); border-radius: 14px; padding: 8px 10px; }
+.cells .l { font-size: 11px; font-weight: 700; color: var(--sec); }
+.cells .v { font-size: 15px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-variant-numeric: tabular-nums; }
+.stats4 { display: flex; }
+.stats4 > div { flex: 1; text-align: center; min-width: 0; }
+.stats4 .v { font-size: 19px; font-weight: 800; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.stats4 .l { font-size: 12px; font-weight: 600; color: var(--sec); }
 
-.ring { position: relative; width: 68px; height: 68px; border-radius: 50%; background: var(--ring-bg); flex-shrink: 0; }
-.ring svg { transform: rotate(-90deg); }
-.ring b { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; color: #FFFFFF; font-size: 13px; font-weight: 700; }
-.minibars { display: flex; align-items: flex-end; gap: 4px; height: 44px; flex-shrink: 0; }
-.minibars i { width: 6px; border-radius: 3px; background: var(--track); }
-.segs { display: flex; gap: 3px; }
-.segs i { flex: 1; height: 8px; border-radius: 999px; background: var(--track); }
-
-/* segmented control */
-.seg { display: flex; padding: 3px; border-radius: 999px; background: var(--fill); }
-.seg button { text-align: center; flex: 1; height: 34px; border-radius: 999px; font-size: 14px; font-weight: 500; transition: background .2s ease; }
-.seg button[aria-pressed="true"] { background: var(--seg-on); box-shadow: var(--seg-sh); font-weight: 600; }
+/* filter chips */
+.chips { display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none; padding: 2px 2px 4px; }
+.chips::-webkit-scrollbar { display: none; }
+.chips button { flex-shrink: 0; height: 36px; padding: 0 16px; border-radius: 999px; font-size: 14px; font-weight: 600; white-space: nowrap; background: var(--card); border: 1px solid var(--sep); }
+.chips button[aria-pressed="true"] { background: var(--blue); color: #FFFFFF; border-color: transparent; }
 
 /* search */
-.search { display: none; align-items: center; gap: 8px; height: 44px; border-radius: 999px; padding: 0 8px 0 14px; background: var(--fill); color: var(--sec); }
+.search { display: none; align-items: center; gap: 8px; height: 48px; border-radius: 999px; padding: 0 8px 0 16px; background: var(--card); color: var(--sec); }
 .search.show { display: flex; }
-.search input { flex: 1; min-width: 0; border: none; background: none; font: inherit; font-size: 17px; color: var(--label); outline: none; user-select: text; -webkit-user-select: text; }
-.search button { width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; color: var(--sec); }
+.search input { flex: 1; min-width: 0; border: none; background: none; font: inherit; font-size: 16px; color: var(--label); outline: none; user-select: text; -webkit-user-select: text; }
+.search button { width: 34px; height: 34px; display: flex; align-items: center; justify-content: center; color: var(--sec); }
 
-/* menu */
-.menu { position: absolute; z-index: 30; right: 16px; top: calc(var(--safe-top) + 58px); min-width: 230px; border-radius: 22px; padding: 6px; display: none; flex-direction: column; }
+/* menu (One UI pop-up) */
+.menu { position: absolute; z-index: 30; right: 12px; min-width: 220px; border-radius: 24px; padding: 8px 0; display: none; flex-direction: column; background: var(--card); box-shadow: 0 10px 34px rgba(0,0,0,0.22); }
 .menu.show { display: flex; animation: pop .18s ease; }
-.menu button { display: flex; align-items: center; justify-content: space-between; gap: 12px; height: 44px; padding: 0 12px; border-radius: 14px; font-size: 17px; }
+.menu button { display: flex; align-items: center; justify-content: space-between; gap: 12px; height: 48px; padding: 0 20px; font-size: 16px; }
 .menu button:active { background: var(--fill); }
 .menu .tick { color: var(--blue); display: flex; }
 @keyframes pop { from { opacity: 0; transform: scale(.94); } to { opacity: 1; transform: none; } }
 
-/* team header */
-.team-hero { display: flex; flex-direction: column; align-items: center; gap: 8px; padding-bottom: 4px; text-align: center; }
-.team-hero h1 { font-size: 28px; font-weight: 700; }
-.team-hero p { margin-top: -6px; font-size: 15px; color: var(--sec); }
+/* radio (appearance) */
+.radio { width: 22px; height: 22px; border-radius: 50%; border: 2px solid var(--ter); flex-shrink: 0; }
+[aria-checked="true"] .radio { border: 7px solid var(--blue); }
 
 /* month chart */
-.chart { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); align-items: end; height: 118px; }
+.chart { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); align-items: end; height: 118px; margin-top: 4px; }
 .chart button { display: flex; flex-direction: column; align-items: center; justify-content: flex-end; gap: 6px; height: 100%; }
-.chart i { display: block; width: 12px; border-radius: 6px; background: var(--track); }
-.chart span { font-size: 12px; color: var(--sec); }
-.chart button[aria-pressed="true"] span { color: var(--label); font-weight: 700; }
+.chart i { display: block; width: 14px; border-radius: 7px; background: var(--track); }
+.chart span { font-size: 11px; font-weight: 600; color: var(--sec); }
+.chart button[aria-pressed="true"] span { color: var(--label); font-weight: 800; }
 
-/* ---------- Tab bar ---------- */
+/* ---------- iOS 27 tab bar (Liquid Glass) ---------- */
 .bottom-fade { position: fixed; z-index: 15; left: 0; right: 0; bottom: 0; height: calc(var(--safe-bottom) + 90px); background: var(--fade); pointer-events: none; }
+.glass {
+  background: var(--glass); border: 1px solid var(--g-border); box-shadow: var(--g-shadow);
+  -webkit-backdrop-filter: blur(20px) saturate(180%); backdrop-filter: blur(20px) saturate(180%);
+}
 .tabbar {
   position: fixed; z-index: 20; left: 0; right: 0; margin: 0 auto;
   bottom: max(10px, calc(var(--safe-bottom) - 10px));
@@ -305,80 +305,72 @@ button.row:active, .row.tap:active { background: var(--fill); }
 .tab { position: relative; z-index: 1; flex: 1; height: 54px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; font-size: 10px; font-weight: 600; color: var(--label); }
 .tab[aria-selected="true"] { color: var(--blue); }
 
-/* ---------- Sheets ---------- */
+/* ---------- One UI bottom sheets ---------- */
 .layer { position: fixed; inset: 0; z-index: 40; pointer-events: none; visibility: hidden; transition: visibility 0s linear .38s; }
 .layer.open { pointer-events: auto; visibility: visible; transition: none; }
 .backdrop { position: absolute; inset: 0; background: var(--backdrop); opacity: 0; transition: opacity .3s ease; }
 .layer.open .backdrop { opacity: 1; }
 .sheet {
-  position: absolute; left: 8px; right: 8px; margin: 0 auto; max-width: 560px;
-  top: calc(var(--safe-top) + 12px); bottom: 8px;
-  border-radius: 38px; background: var(--sheet); display: flex; flex-direction: column; overflow: hidden;
+  position: absolute; left: 10px; right: 10px; margin: 0 auto; max-width: 560px;
+  top: calc(var(--safe-top) + 48px); bottom: calc(10px + var(--safe-bottom) * 0.5);
+  border-radius: 32px; background: var(--sheet); display: flex; flex-direction: column; overflow: hidden;
   box-shadow: 0 -8px 40px rgba(0,0,0,0.25);
   transform: translateY(110%); transition: transform .38s cubic-bezier(.2,.9,.3,1);
 }
 .sheet.medium { top: auto; max-height: calc(100% - var(--safe-top) - 40px); }
 .layer.open .sheet { transform: none; }
 .sheet.dragging { transition: none; }
-.sheet-head { padding: 8px 16px 8px; flex-shrink: 0; touch-action: none; }
-.grab { width: 36px; height: 5px; border-radius: 999px; background: var(--grab); margin: 0 auto 8px; }
-.sh-row { display: flex; align-items: center; gap: 10px; }
-.sh-title { flex: 1; text-align: center; min-width: 0; }
-.sh-title b { display: block; font-size: 17px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.sh-title span { display: block; font-size: 13px; color: var(--sec); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.sheet-body { flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; padding: 6px 16px calc(18px + var(--safe-bottom)); display: flex; flex-direction: column; gap: 14px; }
-.sheet .card, .sheet .list { background: var(--sheet-card); }
+.sheet-head { position: relative; padding: 10px 12px 2px; flex-shrink: 0; touch-action: none; min-height: 54px; }
+.grab { width: 40px; height: 4px; border-radius: 999px; background: var(--grab); margin: 0 auto; }
+.sheet-head .tb { position: absolute; right: 8px; top: 6px; }
+/* min-height:0 lets the list shrink to the sheet and scroll (the stock wouldn't scroll before) */
+.sheet-body { flex: 1 1 auto; min-height: 0; overflow-y: auto; -webkit-overflow-scrolling: touch; overscroll-behavior: contain; touch-action: pan-y; padding: 6px 16px 16px; display: flex; flex-direction: column; gap: 12px; }
+.sheet-foot { flex-shrink: 0; display: flex; gap: 10px; padding: 10px 16px calc(14px + var(--safe-bottom) * 0.5); border-top: 1px solid var(--sep); }
+.sheet .list, .sheet .card { background: var(--sub2); }
+.sheet .row::after { background: var(--sep); }
+.sheet-title { text-align: center; padding-top: 4px; display: flex; flex-direction: column; align-items: center; gap: 8px; }
+.sheet-title h2 { font-size: 22px; font-weight: 800; letter-spacing: -0.3px; }
+.sheet-title p { margin-top: -6px; font-size: 14px; color: var(--sec); }
+.sheet .shead { padding: 4px 4px 0; }
+.btn { flex: 1; height: 50px; border-radius: 999px; font-size: 16px; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 8px; }
+.btn.tint { background: var(--blue-bg); color: var(--blue); }
+.btn.fill { background: var(--blue); color: #FFFFFF; }
+.btn:disabled { opacity: 0.4; }
+.btn-small { height: 40px; padding: 0 20px; border-radius: 999px; background: var(--blue); color: #FFFFFF; font-size: 15px; font-weight: 700; }
 .months { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; }
-.months button { text-align: center; height: 46px; border-radius: 999px; background: var(--sheet-card); font-size: 16px; }
-.months button[aria-pressed="true"] { background: var(--blue); color: #FFFFFF; font-weight: 600; }
-.btn-primary { width: 100%; height: 54px; border-radius: 999px; background: var(--blue); color: #FFFFFF; font-size: 17px; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: inset 0 1px 0 rgba(255,255,255,0.3); }
-.btn-primary:disabled { opacity: 0.4; }
-.btn-small { height: 36px; padding: 0 16px; border-radius: 999px; background: var(--blue); color: #FFFFFF; font-size: 15px; font-weight: 600; }
+.months button { text-align: center; height: 46px; border-radius: 999px; background: var(--sub2); font-size: 15px; font-weight: 600; }
+.months button[aria-pressed="true"] { background: var(--blue); color: #FFFFFF; }
 .loading-box { padding: 48px 0; display: flex; flex-direction: column; align-items: center; gap: 14px; color: var(--sec); font-size: 15px; text-align: center; }
-.spinner { width: 28px; height: 28px; border-radius: 50%; border: 3px solid var(--track); border-top-color: var(--sec); animation: spin .8s linear infinite; }
+.spinner { width: 30px; height: 30px; border-radius: 50%; border: 3px solid var(--track); border-top-color: var(--blue); animation: spin .8s linear infinite; }
 
 /* ---------- Status ---------- */
-.progress { display: none; padding: 0 6px; }
+.progress { display: none; padding: 0 4px 4px; }
 body.loading .progress { display: block; }
-.progress .track { height: 4px; border-radius: 999px; background: var(--fill); overflow: hidden; }
+.progress .track { height: 6px; border-radius: 999px; background: var(--track); overflow: hidden; }
 .progress i { display: block; height: 100%; width: 0; border-radius: 999px; background: var(--blue); transition: width .3s ease; }
 .progress p { font-size: 13px; color: var(--sec); margin-top: 6px; }
 #statusMessages { display: flex; flex-direction: column; gap: 10px; }
 #statusMessages:empty { display: none; }
-.banner { display: flex; gap: 12px; align-items: flex-start; padding: 14px 16px; font-size: 14px; line-height: 1.45; width: 100%; text-align: left; }
+.banner { display: flex; gap: 12px; align-items: flex-start; padding: 16px; font-size: 14px; line-height: 1.45; width: 100%; text-align: left; }
 .banner .ic { color: var(--red); display: flex; padding-top: 1px; }
 .banner small { display: block; margin-top: 6px; color: var(--sec); }
 .toast {
-  position: fixed; z-index: 60; left: 50%; top: calc(var(--safe-top) + 8px);
-  transform: translate(-50%, -150%); transition: transform .35s cubic-bezier(.2,.9,.3,1);
-  border-radius: 999px; padding: 0 8px 0 18px; min-height: 48px; font-size: 15px; font-weight: 600;
+  position: fixed; z-index: 60; left: 50%; bottom: calc(max(10px, calc(var(--safe-bottom) - 10px)) + 76px);
+  transform: translate(-50%, 20px); opacity: 0; transition: transform .3s ease, opacity .3s ease; pointer-events: none;
+  border-radius: 22px; padding: 0 8px 0 18px; min-height: 46px; font-size: 14px; font-weight: 600;
+  background: var(--toast); color: var(--toast-fg);
   display: flex; gap: 10px; align-items: center; max-width: calc(100% - 32px); white-space: nowrap;
 }
-.toast.show { transform: translate(-50%, 0); }
+.toast.show { transform: translate(-50%, 0); opacity: 1; pointer-events: auto; }
 .toast span { overflow: hidden; text-overflow: ellipsis; padding-right: 10px; }
-.toast button { color: var(--blue); font-weight: 600; padding: 0 10px; height: 40px; }
-.offline-pill { display: none; position: fixed; z-index: 16; left: 50%; transform: translateX(-50%); top: calc(var(--safe-top) + 10px); height: 36px; padding: 0 14px; border-radius: 999px; align-items: center; gap: 6px; font-size: 13px; font-weight: 600; color: var(--sec); white-space: nowrap; }
+.toast button { color: #8DB6FF; font-weight: 700; padding: 0 10px; height: 40px; }
+.offline-pill { display: none; position: fixed; z-index: 16; left: 50%; transform: translateX(-50%); top: calc(var(--safe-top) + 10px); height: 34px; padding: 0 14px; border-radius: 999px; align-items: center; gap: 6px; font-size: 13px; font-weight: 600; color: var(--sec); white-space: nowrap; }
 body.offline .offline-pill { display: flex; }
-.install { position: fixed; z-index: 25; left: 16px; right: 16px; margin: 0 auto; max-width: 440px; bottom: calc(max(10px, calc(var(--safe-bottom) - 10px)) + 74px); border-radius: 26px; padding: 10px 10px 10px 16px; display: none; align-items: center; gap: 10px; font-size: 14px; }
+.install { position: fixed; z-index: 25; left: 16px; right: 16px; margin: 0 auto; max-width: 440px; bottom: calc(max(10px, calc(var(--safe-bottom) - 10px)) + 74px); border-radius: 26px; padding: 10px 10px 10px 18px; display: none; align-items: center; gap: 10px; font-size: 14px; }
 .install.show { display: flex; }
 .install p { flex: 1; color: var(--sec); }
 .install b { color: var(--label); }
-
-/* ---------- iOS typography: SF Pro with Apple's tracking per point size ---------- */
-body { font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro", system-ui, "Helvetica Neue", sans-serif; font-optical-sizing: auto; text-rendering: optimizeLegibility; font-kerning: normal; letter-spacing: -0.43px; }
-h1.large, .big { letter-spacing: 0.37px; }
-.team-hero h1 { letter-spacing: 0.36px; }
-.shead h2, .cols .v { letter-spacing: -0.26px; }
-.day, .sheet .shead h2 { letter-spacing: -0.45px; }
-.row .t, .row .v, .row .right b, .chead .ct, .shead .r, .shead .link, .sh-title b, .menu button, .btn-primary, .search input, .toast { letter-spacing: -0.43px; }
-.months button { letter-spacing: -0.31px; }
-.sub, .muted, .chead .cr, .cols .l, .soldout, .banner, .install { letter-spacing: -0.23px; }
-.row .s, .seg button { letter-spacing: -0.15px; }
-.row .right small, .progress p, .sh-title span, .cols.sm .l, .cols.sm .v { letter-spacing: -0.08px; }
-.chart span, .badge { letter-spacing: 0; }
-.tab { letter-spacing: 0.12px; }
-.row .s + .s { margin-top: 1px; }
-.row .right small .soldout, .row .right .soldout + small { display: block; text-align: right; }
+.muted { font-size: 14px; color: var(--sec); }
 </style>
 </head>
 <body>
@@ -386,89 +378,66 @@ h1.large, .big { letter-spacing: 0.37px; }
 
   <!-- ================= HOME ================= -->
   <section class="view active" id="view-home" aria-label="Home">
-    <div class="nav">
-      <div class="ctitle">Ticket Father</div>
-      <span></span>
-      <button class="circ glass press" id="refreshBtn" onclick="refreshDashboard()" aria-label="Refresh data"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 11a8 8 0 1 0-2.3 5.7"></path><path d="M20 5v6h-6"></path></svg></button>
-    </div>
-    <div class="scroll">
-      <div class="wash" aria-hidden="true"></div>
-      <div class="page">
-        <h1 class="large">Ticket Father</h1>
-        <div class="progress" aria-live="polite"><div class="track"><i id="progressBar"></i></div><p id="progressText">Loading…</p></div>
-        <div id="statusMessages"></div>
-        <div id="homeBody" style="display:flex;flex-direction:column;gap:14px"></div>
-      </div>
-    </div>
+    <div class="nav"><div class="ctitle">Ticket Father</div><div class="icons"><button class="tb press refreshBtn" onclick="refreshDashboard()" aria-label="Refresh data"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 11a8 8 0 1 0-2.3 5.7"></path><path d="M20 5v6h-6"></path></svg></button></div></div>
+    <div class="scroll"><div class="page">
+      <header class="hero-head"><h1>Ticket Father</h1><p id="homeSub">Season 2026–27</p></header>
+      <div class="toolbar"><span></span><div class="icons"><button class="tb press refreshBtn" onclick="refreshDashboard()" aria-label="Refresh data"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 11a8 8 0 1 0-2.3 5.7"></path><path d="M20 5v6h-6"></path></svg></button></div></div>
+      <div class="progress" aria-live="polite"><div class="track"><i id="progressBar"></i></div><p id="progressText">Loading…</p></div>
+      <div id="statusMessages"></div>
+      <div id="homeBody" style="display:flex;flex-direction:column;gap:10px"></div>
+    </div></div>
   </section>
 
   <!-- ================= MATCHES ================= -->
   <section class="view" id="view-matches" aria-label="Matches">
-    <div class="nav">
-      <div class="ctitle">Matches</div>
-      <span></span>
-      <div class="pillgroup glass">
-        <button class="press" onclick="toggleSearch('matches')" aria-label="Search matches"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="M20 20l-4-4"></path></svg></button>
-        <button class="press" id="filterBtn" onclick="toggleMenu('filterMenu')" aria-label="Filter matches"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h16M7 12h10M10 18h4"></path></svg></button>
+    <div class="nav"><div class="ctitle">Matches</div><div class="icons">
+      <button class="tb press" onclick="toggleSearch('matches')" aria-label="Search matches"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="M20 20l-4-4"></path></svg></button>
+      <button class="tb press filterBtn" onclick="toggleMenu('filterMenu', this)" aria-label="Filter matches"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h16M7 12h10M10 18h4"></path></svg></button></div></div>
+    <div class="menu" id="filterMenu" role="menu"></div>
+    <div class="scroll"><div class="page">
+      <header class="hero-head short"><h1>Matches</h1><p id="matchesSub">&nbsp;</p></header>
+      <div class="toolbar"><span></span><div class="icons">
+        <button class="tb press" onclick="toggleSearch('matches')" aria-label="Search matches"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="M20 20l-4-4"></path></svg></button>
+        <button class="tb press filterBtn" onclick="toggleMenu('filterMenu', this)" aria-label="Filter matches"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h16M7 12h10M10 18h4"></path></svg></button></div></div>
+      <label class="search" id="matchSearch"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="M20 20l-4-4"></path></svg><input type="search" placeholder="Search all matches" oninput="setMatchQuery(this.value)" autocomplete="off"><button onclick="toggleSearch('matches')" aria-label="Clear search"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M9 9l6 6M15 9l-6 6"></path></svg></button></label>
+      <div class="chips" role="group" aria-label="Period" id="periodSeg">
+        <button data-days="3" onclick="setUpcomingPeriod(3)" aria-pressed="false">3 days</button>
+        <button data-days="7" onclick="setUpcomingPeriod(7)" aria-pressed="true">7 days</button>
+        <button data-days="14" onclick="setUpcomingPeriod(14)" aria-pressed="false">14 days</button>
+        <button data-days="30" onclick="setUpcomingPeriod(30)" aria-pressed="false">30 days</button>
       </div>
-    </div>
-    <div class="menu glass" id="filterMenu" role="menu"></div>
-    <div class="scroll">
-      <div class="page">
-        <h1 class="large">Matches</h1>
-        <p class="sub" id="matchesSub">&nbsp;</p>
-        <label class="search" id="matchSearch"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="M20 20l-4-4"></path></svg><input type="search" placeholder="Search all matches" oninput="setMatchQuery(this.value)" autocomplete="off"><button onclick="toggleSearch('matches')" aria-label="Clear search"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M9 9l6 6M15 9l-6 6"></path></svg></button></label>
-        <div class="seg" role="group" aria-label="Period" id="periodSeg">
-          <button data-days="3" onclick="setUpcomingPeriod(3)" aria-pressed="false">3 days</button>
-          <button data-days="7" onclick="setUpcomingPeriod(7)" aria-pressed="true">7 days</button>
-          <button data-days="14" onclick="setUpcomingPeriod(14)" aria-pressed="false">14 days</button>
-          <button data-days="30" onclick="setUpcomingPeriod(30)" aria-pressed="false">30 days</button>
-        </div>
-        <div id="upcomingMatches" style="display:flex;flex-direction:column;gap:12px"></div>
-      </div>
-    </div>
+      <div id="upcomingMatches" style="display:flex;flex-direction:column;gap:10px"></div>
+    </div></div>
   </section>
 
   <!-- ================= TEAMS ================= -->
   <section class="view" id="view-teams" aria-label="Teams">
-    <div class="nav">
-      <div class="ctitle">Teams</div>
-      <span></span>
-      <div class="pillgroup glass">
-        <button class="press" onclick="toggleSearch('teams')" aria-label="Search teams"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="M20 20l-4-4"></path></svg></button>
+    <div class="nav"><div class="ctitle">Teams</div><div class="icons"><button class="tb press" onclick="toggleSearch('teams')" aria-label="Search teams"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="M20 20l-4-4"></path></svg></button></div></div>
+    <div class="scroll"><div class="page">
+      <header class="hero-head short"><h1>Teams</h1><p id="teamsSub">&nbsp;</p></header>
+      <div class="toolbar"><span></span><div class="icons"><button class="tb press" onclick="toggleSearch('teams')" aria-label="Search teams"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="M20 20l-4-4"></path></svg></button></div></div>
+      <label class="search" id="teamSearch"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="M20 20l-4-4"></path></svg><input type="search" placeholder="Search teams" oninput="setTeamQuery(this.value)" autocomplete="off"><button onclick="toggleSearch('teams')" aria-label="Clear search"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M9 9l6 6M15 9l-6 6"></path></svg></button></label>
+      <div class="chips" role="group" aria-label="Sort teams" id="sortSeg">
+        <button data-sort="profit" onclick="setTeamSort('profit')" aria-pressed="true">Profit</button>
+        <button data-sort="az" onclick="setTeamSort('az')" aria-pressed="false">A–Z</button>
+        <button data-sort="left" onclick="setTeamSort('left')" aria-pressed="false">Tickets left</button>
       </div>
-    </div>
-    <div class="scroll">
-      <div class="page">
-        <h1 class="large">Teams</h1>
-        <p class="sub" id="teamsSub">&nbsp;</p>
-        <label class="search" id="teamSearch"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="M20 20l-4-4"></path></svg><input type="search" placeholder="Search teams" oninput="setTeamQuery(this.value)" autocomplete="off"><button onclick="toggleSearch('teams')" aria-label="Clear search"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M9 9l6 6M15 9l-6 6"></path></svg></button></label>
-        <div class="seg" role="group" aria-label="Sort teams" id="sortSeg">
-          <button data-sort="profit" onclick="setTeamSort('profit')" aria-pressed="true">Profit</button>
-          <button data-sort="az" onclick="setTeamSort('az')" aria-pressed="false">A–Z</button>
-          <button data-sort="left" onclick="setTeamSort('left')" aria-pressed="false">Tickets left</button>
-        </div>
-        <div id="teamsContainer"></div>
-      </div>
-    </div>
+      <div id="teamsContainer"></div>
+    </div></div>
   </section>
 
   <!-- ================= TEAM DETAIL (pushed) ================= -->
   <section class="view push" id="view-team" aria-label="Team">
-    <div class="nav">
-      <div class="ctitle" id="teamCTitle"></div>
-      <button class="circ glass press" onclick="closeTeam()" aria-label="Back to Teams"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"></path></svg></button>
-      <button class="circ glass press" id="teamExportBtn" aria-label="Export team PDF"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a1 1 0 0 0-1 1v16a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V8z"></path><path d="M14 3v5h5M9 13h6M9 17h6"></path></svg></button>
-    </div>
-    <div class="scroll"><div class="page" id="teamBody" style="padding-top: calc(var(--safe-top) + 64px)"></div></div>
+    <div class="nav"><button class="tb press" onclick="closeTeam()" aria-label="Back to Teams" style="margin-left:-12px"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"></path></svg></button><div class="ctitle" id="teamCTitle"></div><div class="icons"><button class="tb press teamExportBtn" aria-label="Export team PDF"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a1 1 0 0 0-1 1v16a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V8z"></path><path d="M14 3v5h5M9 13h6M9 17h6"></path></svg></button></div></div>
+    <div class="scroll"><div class="page" id="teamBody"></div></div>
   </section>
 
   <!-- ================= REPORTS ================= -->
   <section class="view" id="view-reports" aria-label="Reports">
     <div class="nav"><div class="ctitle">Reports</div></div>
     <div class="scroll"><div class="page">
-      <h1 class="large">Reports</h1>
-      <div id="reportsBody" style="display:flex;flex-direction:column;gap:14px"></div>
+      <header class="hero-head short"><h1>Reports</h1><p>Season 2026–27</p></header>
+      <div id="reportsBody" style="display:flex;flex-direction:column;gap:10px"></div>
     </div></div>
   </section>
 </div>
@@ -488,15 +457,15 @@ h1.large, .big { letter-spacing: 0.37px; }
 <div class="layer" id="matchPopupOverlay">
   <div class="backdrop" onclick="closeMatchPopup()"></div>
   <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="popupMatchTitle">
-    <div class="sheet-head">
-      <div class="grab"></div>
-      <div class="sh-row">
-        <button class="circ glass press" onclick="closeMatchPopup()" aria-label="Close"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"></path></svg></button>
-        <div class="sh-title"><b id="popupMatchTitle">Loading…</b><span id="popupMatchDate"></span></div>
-        <button class="circ glass press" id="matchShareBtn" onclick="shareMatch()" aria-label="Share match summary"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12M8 7l4-4 4 4"></path><path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7"></path></svg></button>
-      </div>
+    <div class="sheet-head"><div class="grab"></div><button class="tb press" id="matchShareBtn" onclick="shareMatch()" aria-label="Share match summary"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12M8 7l4-4 4 4"></path><path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7"></path></svg></button></div>
+    <div class="sheet-body" id="matchScroll">
+      <div class="sheet-title"><div id="popupBadge"></div><h2 id="popupMatchTitle">Loading…</h2><p id="popupMatchDate"></p></div>
+      <div id="matchPopupContent" style="display:flex;flex-direction:column;gap:12px"></div>
     </div>
-    <div class="sheet-body" id="matchPopupContent"></div>
+    <div class="sheet-foot">
+      <button class="btn tint press" id="copySeatsBtn" onclick="copySeats()" disabled><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2.5"></rect><path d="M5 15V6a2 2 0 0 1 2-2h8"></path></svg>Copy seats</button>
+      <button class="btn fill press" onclick="closeMatchPopup()">Close</button>
+    </div>
   </div>
 </div>
 
@@ -504,25 +473,22 @@ h1.large, .big { letter-spacing: 0.37px; }
 <div class="layer" id="pdfExportModal">
   <div class="backdrop" onclick="closePDFExportModal()"></div>
   <div class="sheet medium" role="dialog" aria-modal="true" aria-labelledby="exportTitle">
-    <div class="sheet-head">
-      <div class="grab"></div>
-      <div class="sh-row">
-        <button class="circ glass press" onclick="closePDFExportModal()" aria-label="Close"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"></path></svg></button>
-        <div class="sh-title"><b id="exportTitle">Export PDF</b><span id="exportSub"></span></div>
-        <span style="width:44px"></span>
-      </div>
+    <div class="sheet-head"><div class="grab"></div></div>
+    <div class="sheet-body">
+      <div class="sheet-title"><h2 id="exportTitle">Export PDF</h2><p id="exportSub"></p></div>
+      <div id="pdfExportContent" style="display:flex;flex-direction:column;gap:12px"></div>
     </div>
-    <div class="sheet-body" id="pdfExportContent"></div>
+    <div class="sheet-foot" id="exportFoot"></div>
   </div>
 </div>
 
 <div id="installBanner" class="install glass">
   <p><b>Add Ticket Father</b><br>to your Home Screen</p>
   <button class="btn-small press" onclick="installPWA()">Install</button>
-  <button class="circ press" onclick="hideInstallBanner()" aria-label="Dismiss"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"></path></svg></button>
+  <button class="tb press" onclick="hideInstallBanner()" aria-label="Dismiss"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"></path></svg></button>
 </div>
 
-<div class="toast glass" id="toast" role="status" aria-live="polite"></div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
 
 <script>
 // ===================== Data: Google Sheets (unchanged) =====================
@@ -1674,13 +1640,13 @@ h1.large, .big { letter-spacing: 0.37px; }
    Data loading, parsing and PDF generation further down are unchanged
    from the previous version (apart from the season label).
    ===================================================================== */
-const APP_VERSION = '2026.09.24-3';
+const APP_VERSION = '2026.09.24-4';
 const SEASON_START = 2026;                 // season 2026–27 (Aug 2026 – Jul 2027)
 const SEASON_LABEL = '2026–27';
 const CACHE_KEY = 'tf-cache-v1';
 
 const $ = (id) => document.getElementById(id);
-const ICON = {"home": "<path d=\"M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z\"></path>", "cal": "<rect x=\"3\" y=\"5\" width=\"18\" height=\"16\" rx=\"3\"></rect><path d=\"M3 10h18M8 3v4M16 3v4\"></path>", "shield": "<path d=\"M12 3l8 3v6c0 4.5-3.4 8.2-8 9-4.6-.8-8-4.5-8-9V6z\"></path>", "chart": "<path d=\"M4 20V10M10 20V4M16 20v-7M22 20H2\"></path>", "refresh": "<path d=\"M20 11a8 8 0 1 0-2.3 5.7\"></path><path d=\"M20 5v6h-6\"></path>", "search": "<circle cx=\"11\" cy=\"11\" r=\"7\"></circle><path d=\"M20 20l-4-4\"></path>", "filter": "<path d=\"M4 6h16M7 12h10M10 18h4\"></path>", "back": "<path d=\"M15 5l-7 7 7 7\"></path>", "chev": "<path d=\"M9 6l6 6-6 6\"></path>", "doc": "<path d=\"M14 3H6a1 1 0 0 0-1 1v16a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V8z\"></path><path d=\"M14 3v5h5M9 13h6M9 17h6\"></path>", "close": "<path d=\"M6 6l12 12M18 6 6 18\"></path>", "xcircle": "<circle cx=\"12\" cy=\"12\" r=\"9\"></circle><path d=\"M9 9l6 6M15 9l-6 6\"></path>", "check": "<path d=\"M5 12.5l4.5 4.5L19 7.5\"></path>", "ticket": "<path d=\"M4 6h16v4a2 2 0 0 0 0 4v4H4v-4a2 2 0 0 0 0-4z\"></path><path d=\"M14 7v2M14 11v2M14 15v2\"></path>", "trend": "<path d=\"M4 16l5-5 4 4 7-7\"></path><path d=\"M15 8h5v5\"></path>", "alert": "<circle cx=\"12\" cy=\"12\" r=\"9\"></circle><path d=\"M12 7.5v5M12 16h.01\"></path>", "pound": "<path d=\"M16 6.5A3.5 3.5 0 0 0 9.5 8v4.5c0 3-1.5 5-3 6.5H17\"></path><path d=\"M7 12.5h7\"></path>", "bag": "<path d=\"M5 8h14l-1 12H6z\"></path><path d=\"M9 8V6a3 3 0 0 1 6 0v2\"></path>", "copy": "<rect x=\"9\" y=\"9\" width=\"11\" height=\"11\" rx=\"2.5\"></rect><path d=\"M5 15V6a2 2 0 0 1 2-2h8\"></path>", "share": "<path d=\"M12 3v12M8 7l4-4 4 4\"></path><path d=\"M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7\"></path>", "sun": "<circle cx=\"12\" cy=\"12\" r=\"4\"></circle><path d=\"M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4\"></path>", "moon": "<path d=\"M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z\"></path>", "auto": "<circle cx=\"12\" cy=\"12\" r=\"9\"></circle><path d=\"M12 3a9 9 0 0 1 0 18z\" fill=\"currentColor\"></path>", "wifioff": "<path d=\"M2 8.5a15 15 0 0 1 4-2.6M9.5 5.2A15 15 0 0 1 22 8.5M5 12a10 10 0 0 1 3.5-2.2M15 10a10 10 0 0 1 4 2M8.5 15.5a5 5 0 0 1 7 0M12 19h.01M3 3l18 18\"></path>"};
+const ICON = {"home": "<path d=\"M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z\"></path>", "cal": "<rect x=\"3\" y=\"5\" width=\"18\" height=\"16\" rx=\"3\"></rect><path d=\"M3 10h18M8 3v4M16 3v4\"></path>", "shield": "<path d=\"M12 3l8 3v6c0 4.5-3.4 8.2-8 9-4.6-.8-8-4.5-8-9V6z\"></path>", "chart": "<path d=\"M4 20V10M10 20V4M16 20v-7M22 20H2\"></path>", "refresh": "<path d=\"M20 11a8 8 0 1 0-2.3 5.7\"></path><path d=\"M20 5v6h-6\"></path>", "search": "<circle cx=\"11\" cy=\"11\" r=\"7\"></circle><path d=\"M20 20l-4-4\"></path>", "filter": "<path d=\"M4 6h16M7 12h10M10 18h4\"></path>", "back": "<path d=\"M15 5l-7 7 7 7\"></path>", "chev": "<path d=\"M9 6l6 6-6 6\"></path>", "doc": "<path d=\"M14 3H6a1 1 0 0 0-1 1v16a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V8z\"></path><path d=\"M14 3v5h5M9 13h6M9 17h6\"></path>", "close": "<path d=\"M6 6l12 12M18 6 6 18\"></path>", "xcircle": "<circle cx=\"12\" cy=\"12\" r=\"9\"></circle><path d=\"M9 9l6 6M15 9l-6 6\"></path>", "check": "<path d=\"M5 12.5l4.5 4.5L19 7.5\"></path>", "ticket": "<path d=\"M4 6h16v4a2 2 0 0 0 0 4v4H4v-4a2 2 0 0 0 0-4z\"></path><path d=\"M14 7v2M14 11v2M14 15v2\"></path>", "trend": "<path d=\"M4 16l5-5 4 4 7-7\"></path><path d=\"M15 8h5v5\"></path>", "alert": "<circle cx=\"12\" cy=\"12\" r=\"9\"></circle><path d=\"M12 7.5v5M12 16h.01\"></path>", "pound": "<path d=\"M16 6.5A3.5 3.5 0 0 0 9.5 8v4.5c0 3-1.5 5-3 6.5H17\"></path><path d=\"M7 12.5h7\"></path>", "bag": "<path d=\"M5 8h14l-1 12H6z\"></path><path d=\"M9 8V6a3 3 0 0 1 6 0v2\"></path>", "copy": "<rect x=\"9\" y=\"9\" width=\"11\" height=\"11\" rx=\"2.5\"></rect><path d=\"M5 15V6a2 2 0 0 1 2-2h8\"></path>", "share": "<path d=\"M12 3v12M8 7l4-4 4 4\"></path><path d=\"M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7\"></path>", "sun": "<circle cx=\"12\" cy=\"12\" r=\"4\"></circle><path d=\"M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4\"></path>", "moon": "<path d=\"M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z\"></path>", "auto": "<circle cx=\"12\" cy=\"12\" r=\"9\"></circle><path d=\"M12 3a9 9 0 0 1 0 18z\" fill=\"currentColor\"></path>", "wifioff": "<path d=\"M2 8.5a15 15 0 0 1 4-2.6M9.5 5.2A15 15 0 0 1 22 8.5M5 12a10 10 0 0 1 3.5-2.2M15 10a10 10 0 0 1 4 2M8.5 15.5a5 5 0 0 1 7 0M12 19h.01M3 3l18 18\"></path>", "backarrow": "<path d=\"M19 12H5M11 6l-6 6 6 6\"></path>"};
 function ic(name, size = 20, w = 2) {
   return `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="${w}" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICON[name]}</svg>`;
 }
@@ -1772,7 +1738,6 @@ function badge(name, cls = '') {
   const edge = b.bg.toUpperCase() === '#FFFFFF' ? ' edge' : '';
   return `<div class="badge${edge} ${cls}" style="background:${b.bg};color:${b.fg}" aria-hidden="true">${esc(b.code)}</div>`;
 }
-function tile(icon, colVar) { return `<span class="tile" style="--c:var(--${colVar})">${ic(icon, 17, 2.2)}</span>`; }
 function chev(size = 14) { return `<span class="chev">${ic('chev', size, 2.6)}</span>`; }
 function chead(icon, colVar, title, right, withChev = true) {
   return `<div class="chead"><span class="ic" style="color:var(--${colVar})">${ic(icon, 19, 2.3)}</span><span class="ct" style="color:var(--${colVar})">${esc(title)}</span><span class="cr">${esc(right || '')}</span>${withChev ? chev(13) : ''}</div>`;
@@ -1781,6 +1746,20 @@ function cols(items, sm) {
   return `<div class="cols${sm ? ' sm' : ''}">` + items.map(([l, colVar, v, vcol]) =>
     `<div><div class="l" style="color:var(--${colVar})">${esc(l)}</div><div class="v"${vcol ? ` style="color:${vcol}"` : ''}>${esc(v)}</div></div>`).join('') + '</div>';
 }
+
+function ico(icon, colVar, size) {
+  const st = size ? `;width:${size}px;height:${size}px` : '';
+  return `<span class="ico" style="background:var(--${colVar}-bg);color:var(--${colVar})${st}">${ic(icon, size ? Math.round(size * 0.5) : 19, 2.2)}</span>`;
+}
+function tile(icon, colVar) { return ico(icon, colVar); }
+function statTile(icon, colVar, label, value, onclick, rowStyle, vcol) {
+  const tag = onclick ? 'button' : 'div';
+  return `<${tag} class="tilecard${rowStyle ? ' row-style' : ''}${onclick ? ' press' : ''}"${onclick ? ` onclick="${onclick}"` : ''}>${ico(icon, colVar, rowStyle ? 36 : 34)}<div style="min-width:0"><div class="l">${esc(label)}</div><div class="v num"${vcol ? ` style="color:${vcol}"` : ''}>${esc(value)}</div></div></${tag}>`;
+}
+function cells(items) {
+  return `<div class="cells">${items.map(([l, v, c]) => `<div><div class="l">${esc(l)}</div><div class="v"${c ? ` style="color:${c}"` : ''}>${esc(v)}</div></div>`).join('')}</div>`;
+}
+
 
 /* ---------- State ---------- */
 let currentTab = 'home';
@@ -1826,42 +1805,6 @@ function ringSVG(pct) {
     <circle cx="34" cy="34" r="${r}" fill="none" stroke="var(--green)" stroke-width="8" stroke-linecap="round" stroke-dasharray="${d.toFixed(1)} ${c.toFixed(1)}"></circle></svg><b>${pct}%</b></div>`;
 }
 
-function renderHome() {
-  const D = dashboardData, loaded = hasData();
-  const total = D.totalTickets, avail = D.availableTickets, sold = Math.max(0, total - avail);
-  const pct = total ? Math.round((sold / total) * 100) : 0;
-  const dash = loaded ? null : '—';
-
-  // mini bars: the last 6 season months up to now
-  const nowKey = `${new Date().getFullYear()}-${String(new Date().getMonth() + 1).padStart(2, '0')}`;
-  const months = monthlyStats().filter((m) => m.value <= nowKey).slice(-6);
-  const max = Math.max(1, ...months.map((m) => Math.abs(m.profit)));
-  const bars = (months.length ? months : Array.from({ length: 6 }, () => ({ profit: 0 }))).map((m) =>
-    `<i style="height:${m.profit ? Math.max(6, Math.round(Math.abs(m.profit) / max * 44)) : 6}px;${m.profit ? `background:${pcol(m.profit)}` : ''}"></i>`).join('');
-
-  // still to sell in the next 7 days
-  const soon = allMatches().filter((x) => x.d && isWithinPeriod(x.m.date, 7) && x.m.tickets > 0).sort((a, b) => a.d - b.d);
-  let soonHTML;
-  if (!loaded) soonHTML = `<div class="empty">${document.body.classList.contains('loading') ? 'Loading your sheets…' : 'No data yet — tap refresh to load your sheets.'}</div>`;
-  else if (!soon.length) soonHTML = `<div class="row plain"><span class="tile" style="--c:var(--green)">${ic('check', 17, 2.6)}</span><div class="main"><div class="t">All sold</div><div class="s">Nothing left to sell in the next 7 days</div></div></div>`;
-  else soonHTML = soon.map((x) => `<button class="row" onclick="openMatchRef(${reg(x.team.name, x.m)})">${badge(x.team.name)}<div class="main"><div class="t">${esc(formatMatchName(x.m.name))}</div><div class="s">${dayShort(x.d)} · ${relDay(x.d)}</div>${soldLine(x.m)}</div>${availRight(x.m)}${chev()}</button>`).join('');
-
-  $('homeBody').innerHTML = `
-    <div class="shead"><h2>Season ${SEASON_LABEL}</h2></div>
-    <button class="card cardpad press" onclick="switchTab('matches')" aria-label="Tickets: ${sold} sold, ${avail} available of ${total}">
-      ${chead('ticket', 'blue', 'Tickets', updatedLabel())}
-      <div class="split">${cols([['Sold', 'green', dash || sold], ['Available', 'orange', dash || avail], ['Total', 'blue', dash || total]])}${ringSVG(pct)}</div>
-    </button>
-    <button class="card cardpad press" onclick="switchTab('reports')" aria-label="Net profit ${loaded ? signed(D.netProfit) : 'not loaded'}">
-      ${chead('trend', 'green', 'Net Profit', 'Season')}
-      <div class="split"><div><div class="big" ${loaded && D.netProfit < 0 ? 'style="color:var(--red)"' : ''}>${loaded ? signed(D.netProfit) : '—'}</div>
-      <div class="muted">${loaded ? `${formatCurrency(D.totalSales)} sales · ${formatCurrency(D.totalSpent)} spent` : 'Sales and spend appear here'}</div></div>
-      <div class="minibars" aria-hidden="true">${bars}</div></div>
-    </button>
-    <div class="shead"><span class="ic" style="color:var(--orange)">${ic('alert', 21, 2.3)}</span><h2>Still to Sell</h2><button class="link" onclick="setUpcomingPeriod(7);switchTab('matches')">Next 7 days</button></div>
-    <div class="list">${soonHTML}</div>`;
-}
-
 function setUpcomingPeriod(days) {
   selectedUpcomingPeriod = days;
   document.querySelectorAll('#periodSeg button').forEach((b) => b.setAttribute('aria-pressed', String(+b.dataset.days === days)));
@@ -1870,10 +1813,6 @@ function setUpcomingPeriod(days) {
 function setMatchFilter(f) { matchFilter = f; closeMenus(); renderMatches(); }
 function setMatchQuery(q) { matchQuery = q; renderMatches(); }
 
-function matchRow(x, showDate) {
-  const sub = showDate ? `${dayShort(x.d)} · ${esc(x.team.name)}` : esc(x.team.name);
-  return `<button class="row" onclick="openMatchRef(${reg(x.team.name, x.m)})">${badge(x.team.name)}<div class="main"><div class="t">${esc(formatMatchName(x.m.name))}</div><div class="s">${sub}</div>${soldLine(x.m)}</div>${availRight(x.m)}${chev()}</button>`;
-}
 function renderMatches() {
   const q = matchQuery.trim().toLowerCase();
   let items = allMatches().filter((x) => x.d);
@@ -1886,7 +1825,7 @@ function renderMatches() {
   const filterName = { all: '', unsold: ' · unsold', soldout: ' · sold out' }[matchFilter];
   $('matchesSub').textContent = q ? `${plural(items.length, 'result')}${filterName}` : `Next ${selectedUpcomingPeriod} days · ${plural(items.length, 'match')}${filterName}`;
   $('periodSeg').classList.toggle('hidden', !!q);
-  $('filterBtn').classList.toggle('on', matchFilter !== 'all');
+  document.querySelectorAll('.filterBtn').forEach((b) => b.classList.toggle('on', matchFilter !== 'all'));
   $('filterMenu').innerHTML = [['all', 'All matches'], ['unsold', 'Unsold'], ['soldout', 'Sold out']].map(([k, l]) =>
     `<button role="menuitemradio" aria-checked="${matchFilter === k}" onclick="setMatchFilter('${k}')"><span>${l}</span><span class="tick">${matchFilter === k ? ic('check', 18, 2.6) : ''}</span></button>`).join('');
 
@@ -1955,67 +1894,210 @@ function closeTeam(instant) {
   v.classList.remove('open');
   currentTeam = null;
 }
+/* ---------- Reports ---------- */
+let chartMonth = null;
+function pickChartMonth(v) { chartMonth = chartMonth === v ? null : v; renderReports(); }
+function renderHome() {
+  const D = dashboardData, loaded = hasData();
+  const total = D.totalTickets, avail = D.availableTickets, sold = Math.max(0, total - avail);
+  const pct = total ? Math.round((sold / total) * 100) : 0;
+  $('homeSub').textContent = `Season ${SEASON_LABEL}` + (lastUpdated ? ` · Updated ${updatedLabel()}` : '');
+
+  const soon = allMatches().filter((x) => x.d && isWithinPeriod(x.m.date, 7) && x.m.tickets > 0).sort((a, b) => a.d - b.d);
+  let soonHTML;
+  if (!loaded) soonHTML = `<div class="empty">${document.body.classList.contains('loading') ? 'Loading your sheets…' : 'No data yet — tap refresh to load your sheets.'}</div>`;
+  else if (!soon.length) soonHTML = `<div class="row plain">${ico('check', 'green')}<div class="main"><div class="t">All sold</div><div class="s">Nothing left to sell in the next 7 days</div></div></div>`;
+  else soonHTML = soon.map((x) => `<button class="row" onclick="openMatchRef(${reg(x.team.name, x.m)})">${badge(x.team.name)}<div class="main"><div class="t">${esc(formatMatchName(x.m.name))}</div><div class="s">${dayShort(x.d)} · ${relDay(x.d)}</div>${soldLine(x.m)}</div>${availRight(x.m)}</button>`).join('');
+
+  $('homeBody').innerHTML = `
+    <button class="card cardpad press" onclick="switchTab('reports')" aria-label="Net profit ${loaded ? signed(D.netProfit) : 'not loaded'}">
+      <div style="display:flex;align-items:center;gap:14px">${ico('trend', loaded && D.netProfit < 0 ? 'red' : 'green', 44)}
+        <div><div class="hero-l">Net profit</div><div class="hero-v" style="color:${loaded ? pcol(D.netProfit) : 'var(--label)'}">${loaded ? signed(D.netProfit) : '—'}</div></div></div>
+      <div><div class="meta"><span><b class="num">${loaded ? sold : '—'}</b> of ${loaded ? total : '—'} sold</span><span class="num">${pct}%</span></div>
+        <div class="bar big"><i style="width:${pct}%;background:var(--green)"></i></div></div>
+      <div class="meta" style="justify-content:flex-start;gap:16px"><span>${loaded ? formatCurrency(D.totalSales) : '—'} sales</span><span>${loaded ? formatCurrency(D.totalSpent) : '—'} spent</span></div>
+    </button>
+    <div class="tiles">
+      ${statTile('ticket', 'blue', 'Total tickets', loaded ? total : '—', "switchTab('matches')")}
+      ${statTile('alert', 'orange', 'Available', loaded ? avail : '—', "switchTab('matches')")}
+      ${statTile('bag', 'green', 'Sold', loaded ? sold : '—', "switchTab('matches')")}
+      ${statTile('pound', 'purple', 'Spent', loaded ? formatCurrency(D.totalSpent) : '—', "switchTab('teams')")}
+    </div>
+    <div class="shead"><h2>Still to sell · next 7 days</h2><button class="link" onclick="setUpcomingPeriod(7);switchTab('matches')">See all</button></div>
+    <div class="list">${soonHTML}</div>`;
+}
+
+function matchRow(x, showDate) {
+  const sub = showDate ? `${dayShort(x.d)} · ${esc(x.team.name)}` : esc(x.team.name);
+  return `<button class="row" onclick="openMatchRef(${reg(x.team.name, x.m)})">${badge(x.team.name)}<div class="main"><div class="t">${esc(formatMatchName(x.m.name))}</div><div class="s">${sub}</div>${soldLine(x.m)}</div>${availRight(x.m)}</button>`;
+}
+
 function teamMatchCard(team, m) {
   const d = parseDMY(m.date);
   const played = d && daysFromToday(d) < 0;
-  return `<button class="card cardpad press" style="gap:12px;padding:14px 16px 16px" onclick="openMatchRef(${reg(team.name, m)})">
-    <div style="display:flex;align-items:center;gap:8px;width:100%"><div style="flex:1;min-width:0"><div style="font-size:17px;font-weight:600">${esc(formatMatchName(m.name))}</div>
-    <div class="muted" style="font-size:14px">${d ? dayShort(d) : esc(m.date)} · ${played ? 'played' : (m.tickets ? `${m.tickets} of ${m.total} available` : `sold out`)}</div></div>${chev(13)}</div>
-    ${cols([['Sold', 'green', `${m.sold} of ${m.total}`], ['Spent', 'orange', formatCurrency(m.spent)], ['Sold for', 'blue', formatCurrency(m.sales)], ['Profit', m.profit >= 0 ? 'green' : 'red', signed(m.profit)]], true)}
+  return `<button class="card cardpad press" style="gap:12px;padding:14px 14px 14px 16px" onclick="openMatchRef(${reg(team.name, m)})">
+    <div style="display:flex;align-items:center;gap:8px;width:100%"><div style="flex:1;min-width:0"><div style="font-size:16px;font-weight:700">${esc(formatMatchName(m.name))}</div>
+    <div style="font-size:13px;color:var(--sec);margin-top:2px">${d ? dayShort(d) : esc(m.date)} · ${played ? 'played' : (m.tickets ? `${m.tickets} of ${m.total} available` : 'sold out')}</div></div>${chev(14)}</div>
+    ${cells([['Sold', `${m.sold} of ${m.total}`], ['Spent', formatCurrency(m.spent)], ['Sold for', formatCurrency(m.sales)], ['Profit', signed(m.profit), pcol(m.profit)]])}
   </button>`;
 }
+
 function renderTeamDetail() {
   const team = dashboardData.teams.find((t) => t.name === currentTeam);
-  if (!team) { $('teamBody').innerHTML = `<div class="card empty">This team isn't in the latest data.</div>`; return; }
+  const back = `<div class="toolbar" style="padding-left:0"><button class="tb press" onclick="closeTeam()" aria-label="Back to Teams" style="margin-left:-6px">${ic('backarrow', 22, 2.2)}</button><div class="icons"><button class="tb press teamExportBtn" aria-label="Export team PDF">${ic('doc', 22, 2)}</button></div></div>`;
+  if (!team) { $('teamBody').innerHTML = `<header class="hero-head short"><h1>Team</h1></header>${back}<div class="card empty">This team isn't in the latest data.</div>`; return; }
   const left = teamLeft(team), totalM = team.matches.reduce((s, m) => s + m.total, 0);
   $('teamCTitle').textContent = team.name;
-  $('teamExportBtn').onclick = () => exportTeamPDF(team.name);
   const withD = team.matches.map((m) => ({ m, d: parseDMY(m.date) }));
   const upcoming = withD.filter((x) => !x.d || daysFromToday(x.d) >= 0).sort((a, b) => (a.d || 0) - (b.d || 0));
   const played = withD.filter((x) => x.d && daysFromToday(x.d) < 0).sort((a, b) => b.d - a.d);
   $('teamBody').innerHTML = `
-    <div class="team-hero">${badge(team.name, 'xl')}<h1>${esc(team.name)}</h1><p>${plural(team.matches.length, 'match')} · ${team.totalTickets} tickets</p></div>
-    <div class="list">
-      <div class="row tiled">${tile('pound', 'orange')}<span class="main t">Spent</span><span class="v num">${formatCurrency(team.totalSpent)}</span></div>
-      <div class="row tiled">${tile('bag', 'blue')}<span class="main t">Sales</span><span class="v num">${formatCurrency(team.totalSales)}</span></div>
-      <div class="row tiled">${tile('ticket', 'indigo')}<span class="main t">Available</span><span class="v num">${left} of ${totalM}</span></div>
-      <div class="row tiled">${tile('trend', team.netProfit >= 0 ? 'green' : 'red')}<span class="main t">Profit</span><span class="v num" style="color:${pcol(team.netProfit)};font-weight:600">${signed(team.netProfit)}</span></div>
+    <header class="hero-head" style="align-items:flex-start;gap:12px">${badge(team.name, 'xl')}<div><h1>${esc(team.name)}</h1><p style="margin-top:4px">${plural(team.matches.length, 'match')} · ${team.totalTickets} tickets</p></div></header>
+    ${back}
+    <div class="tiles">
+      ${statTile('pound', 'orange', 'Spent', formatCurrency(team.totalSpent), '', true)}
+      ${statTile('bag', 'blue', 'Sales', formatCurrency(team.totalSales), '', true)}
+      ${statTile('ticket', 'purple', 'Available', `${left} of ${totalM}`, '', true)}
+      ${statTile('trend', team.netProfit >= 0 ? 'green' : 'red', 'Profit', signed(team.netProfit), '', true, pcol(team.netProfit))}
     </div>
     ${upcoming.length ? `<div class="shead"><h2>Upcoming</h2><span class="r">${upcoming.length}</span></div>${upcoming.map((x) => teamMatchCard(team, x.m)).join('')}` : ''}
     ${played.length ? `<div class="shead"><h2>Played</h2><span class="r">${played.length}</span></div>${played.map((x) => teamMatchCard(team, x.m)).join('')}` : ''}
     ${!team.matches.length ? '<div class="card empty">No matches listed yet.</div>' : ''}`;
+  document.querySelectorAll('.teamExportBtn').forEach((b) => { b.onclick = () => exportTeamPDF(team.name); });
 }
 
-/* ---------- Reports ---------- */
-let chartMonth = null;
-function pickChartMonth(v) { chartMonth = chartMonth === v ? null : v; renderReports(); }
 function renderReports() {
   const stats = monthlyStats();
   const max = Math.max(1, ...stats.map((m) => Math.abs(m.profit)));
   const sel = stats.find((m) => m.value === chartMonth);
   const head = sel
-    ? `<span class="big" style="font-size:30px;${sel.profit < 0 ? 'color:var(--red)' : ''}">${signed(sel.profit)}</span><span class="muted">${sel.label} · ${plural(sel.count, 'match')}</span>`
-    : `<span class="big" style="font-size:30px;${dashboardData.netProfit < 0 ? 'color:var(--red)' : ''}">${hasData() ? signed(dashboardData.netProfit) : '—'}</span><span class="muted">this season</span>`;
+    ? `<span class="hero-v" style="font-size:28px;color:${pcol(sel.profit)}">${signed(sel.profit)}</span><span class="muted">${sel.label} · ${plural(sel.count, 'match')}</span>`
+    : `<span class="hero-v" style="font-size:28px">${hasData() ? signed(dashboardData.netProfit) : '—'}</span><span class="muted">this season</span>`;
   const bars = stats.map((m) => {
     const h = m.profit ? Math.max(6, Math.round(Math.abs(m.profit) / max * 90)) : 6;
-    return `<button onclick="pickChartMonth('${m.value}')" aria-pressed="${m.value === chartMonth}" aria-label="${m.label}: ${m.count ? signed(m.profit) : 'no matches'}"><i style="height:${h}px;${m.profit ? `background:${pcol(m.profit)}` : ''}"></i><span>${m.short[0]}</span></button>`;
+    return `<button onclick="pickChartMonth('${m.value}')" aria-pressed="${m.value === chartMonth}" aria-label="${m.label}: ${m.count ? signed(m.profit) : 'no matches'}"><i style="height:${h}px;${m.profit ? `background:${m.profit >= 0 ? 'var(--blue)' : 'var(--red)'}` : ''}"></i><span>${m.short[0]}</span></button>`;
   }).join('');
   const pref = getThemePref() || 'auto';
-  const modes = [['auto', 'Automatic', 'auto'], ['light', 'Light', 'sun'], ['dark', 'Dark', 'moon']];
+  const modes = [['auto', 'System default'], ['light', 'Light'], ['dark', 'Dark']];
   $('reportsBody').innerHTML = `
-    <div class="card cardpad" style="gap:10px">${chead('chart', 'green', 'Profit by Month', SEASON_LABEL, false)}
+    <div class="card cardpad" style="gap:6px"><div class="hero-l">Profit by month</div>
       <div style="display:flex;align-items:baseline;gap:8px;flex-wrap:wrap">${head}</div>
       <div class="chart">${bars}</div></div>
     <div class="shead"><h2>Export PDF</h2></div>
     <div class="list">
-      <button class="row tiled" onclick="exportAllDataPDF()">${tile('doc', 'blue')}<span class="main t">All Teams Summary</span>${chev()}</button>
-      <button class="row tiled" onclick="showMonthlyReportOptions()">${tile('cal', 'red')}<span class="main t">Monthly Report</span>${chev()}</button>
-      <button class="row tiled" onclick="showTeamExportOptions()">${tile('shield', 'green')}<span class="main t">Single Team</span>${chev()}</button>
+      <button class="row icon" onclick="exportAllDataPDF()">${ico('doc', 'blue')}<div class="main"><div class="t">All teams summary</div><div class="s">Every team and match</div></div></button>
+      <button class="row icon" onclick="showMonthlyReportOptions()">${ico('cal', 'red')}<div class="main"><div class="t">Monthly report</div><div class="s">Pick a month</div></div></button>
+      <button class="row icon" onclick="showTeamExportOptions()">${ico('shield', 'green')}<div class="main"><div class="t">Single team</div><div class="s">Choose from ${plural(dashboardData.teams.length, 'team')}</div></div></button>
     </div>
     <div class="shead"><h2>Appearance</h2></div>
-    <div class="list">${modes.map(([k, l, icn]) => `<button class="row tiled" role="menuitemradio" aria-checked="${pref === k}" onclick="setThemePref('${k}')">${tile(icn, 'indigo')}<span class="main t">${l}</span><span style="color:var(--blue);display:flex">${pref === k ? ic('check', 20, 2.6) : ''}</span></button>`).join('')}</div>
-    <p style="text-align:center;font-size:13px;color:var(--sec);padding:4px 0">Version ${APP_VERSION}${lastUpdated ? ` · Updated ${updatedLabel()}` : ''}<br>Updates automatically</p>`;
+    <div class="list" role="radiogroup" aria-label="Appearance">${modes.map(([k, l]) => `<button class="row plain" style="min-height:56px" role="radio" aria-checked="${pref === k}" onclick="setThemePref('${k}')"><span class="main t" style="font-weight:500">${l}</span><span class="radio"></span></button>`).join('')}</div>
+    <p style="text-align:center;font-size:13px;color:var(--sec);padding:6px 0">Version ${APP_VERSION}${lastUpdated ? ` · Updated ${updatedLabel()}` : ''}<br>Updates automatically</p>`;
 }
+
+async function openMatchPopup(teamName, matchName, matchDate) {
+  lastMatchArgs = [teamName, matchName, matchDate];
+  currentMatch = null;
+  const d = parseDMY(matchDate);
+  $('popupBadge').innerHTML = badge(teamName, 'lg');
+  $('popupMatchTitle').textContent = formatMatchName(matchName);
+  $('popupMatchDate').textContent = `${d ? dayShort(d) : matchDate} · ${teamName}`;
+  $('matchShareBtn').disabled = true;
+  $('copySeatsBtn').disabled = true;
+  matchLoading('Loading match details…');
+  openLayer('matchPopupOverlay');
+
+  try {
+    let teamSheetId = teamSheetCache.get(teamName);
+    if (!teamSheetId) {
+      matchLoading('Finding team sheet…');
+      teamSheetId = await findTeamSheetId(teamName);
+      if (teamSheetId) teamSheetCache.set(teamName, teamSheetId);
+    }
+    if (!teamSheetId) throw new Error(`Could not find spreadsheet for team "${teamName}". The team may not have a dedicated sheet yet.`);
+    matchLoading('Loading match data…');
+    const matchData = await loadMatchDetails(teamSheetId, matchName);
+    if (lastMatchArgs[1] !== matchName) return; // another match was opened meanwhile
+    displayMatchDetails(matchData, matchName);
+  } catch (error) {
+    console.error('❌ Error loading match details:', error);
+    $('matchPopupContent').innerHTML = `<div class="loading-box"><span style="color:var(--red)">${ic('alert', 32, 2)}</span>
+      <div style="color:var(--label);max-width:300px">${esc(error.message)}</div>
+      <button class="btn-small press" onclick="retryMatch()">Try again</button>
+      <div style="font-size:13px;max-width:300px">If this continues, the match sheet may not exist yet or there may be a connection issue.</div></div>`;
+  }
+}
+
+function displayMatchDetails(matchData, matchName) {
+  const { tickets, summary } = matchData;
+  currentMatch = { name: formatMatchName(matchName), date: lastMatchArgs ? lastMatchArgs[2] : '', tickets, summary };
+  const total = summary.totalTickets, sold = summary.soldTickets, avail = summary.availableTickets;
+  $('matchShareBtn').disabled = false;
+  $('copySeatsBtn').disabled = !avail;
+  const availT = tickets.map((t, i) => ({ t, i })).filter((x) => x.t.status !== 'Sold');
+  const soldT = tickets.map((t, i) => ({ t, i })).filter((x) => x.t.status === 'Sold');
+  $('matchPopupContent').innerHTML = `
+    <div class="card cardpad" style="gap:8px">
+      <div class="meta"><span class="hero-l">Profit</span><span>${sold} of ${total} sold</span></div>
+      <div class="hero-v" style="font-size:30px;color:${pcol(summary.profit)}">${signed(summary.profit)}</div>
+      <div class="bar" style="height:8px;margin-top:2px"><i style="width:${total ? Math.round(sold / total * 100) : 0}%;background:var(--green)"></i></div>
+      <div class="stats4" style="margin-top:8px">
+        <div><div class="v" style="color:var(--green)">${sold}</div><div class="l">Sold</div></div>
+        <div><div class="v" style="color:var(--orange)">${avail}</div><div class="l">Available</div></div>
+        <div><div class="v">${formatCurrency(summary.totalFV)}</div><div class="l">Total FV</div></div>
+        <div><div class="v">${formatCurrency(summary.totalSales)}</div><div class="l">Sold for</div></div>
+      </div>
+    </div>
+    ${availT.length ? `<div class="shead"><h2>Available · ${availT.length}</h2></div>
+    <div class="list">${availT.map(({ t, i }) => `<div class="row plain" style="min-height:50px;padding:10px 16px"><span class="main num" style="font-size:15px;font-weight:500">${esc(seatLabel(t, i))}</span><span class="num" style="color:var(--orange);font-weight:600;font-size:15px">FV ${formatCurrency(t.fv)}</span></div>`).join('')}</div>` : ''}
+    ${soldT.length ? `<div class="shead"><h2>Sold · ${soldT.length}</h2></div>
+    <div class="list">${soldT.map(({ t, i }) => `<div class="row plain" style="min-height:54px;padding:10px 16px"><span class="main num" style="font-size:15px;font-weight:500">${esc(seatLabel(t, i))}</span><div class="right num"><b style="color:var(--green);font-size:16px">${formatCurrency(t.soldFor)}</b><small>FV ${formatCurrency(t.fv)}</small></div></div>`).join('')}</div>` : ''}`;
+}
+
+function showMonthlyReportOptions() {
+  if (!needData()) return;
+  selectedMonth = null;
+  $('exportTitle').textContent = 'Monthly report';
+  $('exportSub').textContent = 'Choose a month to export';
+  renderMonthly();
+  openLayer('pdfExportModal');
+}
+function renderMonthly() {
+  const stats = monthlyStats();
+  const sel = stats.find((m) => m.value === selectedMonth);
+  $('pdfExportContent').innerHTML = `
+    <div class="months">${stats.map((m) => `<button class="press" aria-pressed="${m.value === selectedMonth}" onclick="selectMonth('${m.value}')">${m.short.split(' ')[0]}</button>`).join('')}</div>
+    ${sel ? `<div class="list">
+      <div class="row plain" style="min-height:48px"><span class="main t" style="font-weight:500">Matches</span><span class="v num">${sel.count}</span></div>
+      <div class="row plain" style="min-height:48px"><span class="main t" style="font-weight:500">Tickets</span><span class="v num">${sel.tickets}</span></div>
+      <div class="row plain" style="min-height:48px"><span class="main t" style="font-weight:500">Profit</span><span class="v num" style="color:${pcol(sel.profit)};font-weight:700">${signed(sel.profit)}</span></div></div>` : ''}`;
+  $('exportFoot').innerHTML = `<button class="btn tint press" onclick="closePDFExportModal()">Cancel</button>
+    <button class="btn fill press" onclick="generateMonthlyReport()" id="generateMonthlyBtn" ${sel ? '' : 'disabled'}>${sel ? `Export ${sel.label.split(' ')[0]}` : 'Export'}</button>`;
+}
+function showTeamExportOptions() {
+  if (!needData()) return;
+  $('exportTitle').textContent = 'Single team';
+  $('exportSub').textContent = 'Choose a team to export';
+  const teams = [...dashboardData.teams].sort((a, b) => a.name.localeCompare(b.name));
+  window._exportTeams = teams.map((t) => t.name);
+  $('pdfExportContent').innerHTML = `<div class="list">${teams.map((t, i) =>
+    `<button class="row" onclick="exportTeamPDF(window._exportTeams[${i}])">${badge(t.name)}<div class="main"><div class="t">${esc(t.name)}</div><div class="s">${t.totalTickets} tickets · ${formatCurrency(t.totalSpent)} spent</div></div><span style="color:var(--blue);display:flex">${ic('doc', 20, 2)}</span></button>`).join('')}</div>`;
+  $('exportFoot').innerHTML = `<button class="btn tint press" onclick="closePDFExportModal()">Cancel</button>`;
+  openLayer('pdfExportModal');
+}
+
+function setLoading(on) {
+  document.body.classList.toggle('loading', on);
+  document.querySelectorAll('.refreshBtn').forEach((b) => { b.classList.toggle('spin', on); b.disabled = on; });
+  if (on) setProgress(0, SHEET_IDS.length);
+  if (!hasData()) renderHome();
+}
+function toggleMenu(id, btn) {
+  const m = $(id); const show = !m.classList.contains('show');
+  closeMenus();
+  if (show && btn) m.style.top = (btn.getBoundingClientRect().bottom + 6) + 'px';
+  m.classList.toggle('show', show);
+}
+function updateTopColour() {}
 
 /* =====================================================================
    Navigation
@@ -2036,14 +2118,10 @@ function switchTab(tab) {
   $('tabbar').style.setProperty('--i', TABS.indexOf(tab));
   updateTopColour();
 }
-function updateTopColour() {
-  const sc = $('view-home').querySelector('.scroll');
-  document.documentElement.classList.toggle('home-top', currentTab === 'home' && !currentTeam && sc.scrollTop < 20);
-}
 document.querySelectorAll('.view').forEach((v) => {
   const sc = v.querySelector('.scroll');
   sc.addEventListener('scroll', () => {
-    v.classList.toggle('scrolled', sc.scrollTop > 44);
+    v.classList.toggle('scrolled', sc.scrollTop > 150);
     if (v.id === 'view-home') updateTopColour();
   }, { passive: true });
 });
@@ -2055,10 +2133,9 @@ function toggleSearch(which) {
   if (show) { input.focus(); }
   else { input.value = ''; which === 'matches' ? setMatchQuery('') : setTeamQuery(''); }
 }
-function toggleMenu(id) { const m = $(id); const show = !m.classList.contains('show'); closeMenus(); m.classList.toggle('show', show); }
 function closeMenus() { document.querySelectorAll('.menu.show').forEach((m) => m.classList.remove('show')); }
 document.addEventListener('click', (e) => {
-  if (!e.target.closest('.menu') && !e.target.closest('#filterBtn')) closeMenus();
+  if (!e.target.closest('.menu') && !e.target.closest('.filterBtn')) closeMenus();
 });
 
 /* ---------- Sheets ---------- */
@@ -2105,12 +2182,6 @@ function showStatusMessage(message, type = 'success', persistent = false) {
 }
 function dismissStatusMessage(id) { const m = $(id); if (m) m.remove(); }
 function clearAllStatusMessages() { $('statusMessages').innerHTML = ''; }
-function setLoading(on) {
-  document.body.classList.toggle('loading', on);
-  const b = $('refreshBtn'); b.classList.toggle('spin', on); b.disabled = on;
-  if (on) setProgress(0, SHEET_IDS.length);
-  if (!hasData()) renderHome();
-}
 function setProgress(i, n) {
   $('progressBar').style.width = `${n ? Math.round(i / n * 100) : 0}%`;
   $('progressText').textContent = i ? `Loading ${i} of ${n} sheets…` : 'Loading club list…';
@@ -2141,7 +2212,7 @@ function effectiveDark() {
 function setTheme(pref) {
   if (pref === 'light' || pref === 'dark') document.documentElement.setAttribute('data-theme', pref);
   else document.documentElement.removeAttribute('data-theme');
-  $('themeColor').setAttribute('content', effectiveDark() ? '#000000' : '#F2F2F7');
+  $('themeColor').setAttribute('content', effectiveDark() ? '#000000' : '#F2F2F6');
 }
 function setThemePref(p) {
   try { if (p === 'auto') localStorage.removeItem('theme'); else localStorage.setItem('theme', p); } catch (e) {}
@@ -2179,62 +2250,10 @@ let currentMatch = null;
 function matchLoading(text) {
   $('matchPopupContent').innerHTML = `<div class="loading-box"><div class="spinner"></div>${esc(text)}</div>`;
 }
-async function openMatchPopup(teamName, matchName, matchDate) {
-  lastMatchArgs = [teamName, matchName, matchDate];
-  currentMatch = null;
-  const d = parseDMY(matchDate);
-  $('popupMatchTitle').textContent = formatMatchName(matchName);
-  $('popupMatchDate').textContent = `${teamName} · ${d ? dayShort(d) : matchDate}`;
-  $('matchShareBtn').disabled = true;
-  matchLoading('Loading match details…');
-  openLayer('matchPopupOverlay');
-
-  try {
-    let teamSheetId = teamSheetCache.get(teamName);
-    if (!teamSheetId) {
-      matchLoading('Finding team sheet…');
-      teamSheetId = await findTeamSheetId(teamName);
-      if (teamSheetId) teamSheetCache.set(teamName, teamSheetId);
-    }
-    if (!teamSheetId) throw new Error(`Could not find spreadsheet for team "${teamName}". The team may not have a dedicated sheet yet.`);
-    matchLoading('Loading match data…');
-    const matchData = await loadMatchDetails(teamSheetId, matchName);
-    if (lastMatchArgs[1] !== matchName) return; // another match was opened meanwhile
-    displayMatchDetails(matchData, matchName);
-  } catch (error) {
-    console.error('❌ Error loading match details:', error);
-    $('matchPopupContent').innerHTML = `<div class="loading-box"><span style="color:var(--red)">${ic('alert', 32, 2)}</span>
-      <div style="color:var(--label);max-width:300px">${esc(error.message)}</div>
-      <button class="btn-small press" onclick="retryMatch()">Try Again</button>
-      <div style="font-size:13px;max-width:300px">If this continues, the match sheet may not exist yet or there may be a connection issue.</div></div>`;
-  }
-}
 function retryMatch() { if (lastMatchArgs) openMatchPopup(...lastMatchArgs); }
 function closeMatchPopup(event) {
   if (event && event.target !== event.currentTarget) return;
   closeLayer('matchPopupOverlay');
-}
-function displayMatchDetails(matchData, matchName) {
-  const { tickets, summary } = matchData;
-  currentMatch = { name: formatMatchName(matchName), date: lastMatchArgs ? lastMatchArgs[2] : '', tickets, summary };
-  $('matchShareBtn').disabled = false;
-  const total = summary.totalTickets, sold = summary.soldTickets, avail = summary.availableTickets;
-  const segs = total && total <= 30
-    ? `<div class="segs" aria-hidden="true">${tickets.map((t) => `<i${t.status === 'Sold' ? ' style="background:var(--green)"' : ''}></i>`).sort((a, b) => b.length - a.length).join('')}</div>`
-    : `<div class="bar" style="height:8px;margin-top:0" aria-hidden="true"><i style="width:${total ? Math.round(sold / total * 100) : 0}%;background:var(--green)"></i></div>`;
-  const availT = tickets.map((t, i) => ({ t, i })).filter((x) => x.t.status !== 'Sold');
-  const soldT = tickets.map((t, i) => ({ t, i })).filter((x) => x.t.status === 'Sold');
-  $('matchPopupContent').innerHTML = `
-    <div class="card cardpad">
-      ${chead('trend', summary.profit >= 0 ? 'green' : 'red', 'Profit', `${sold} of ${total} sold`, false)}
-      <div class="big" ${summary.profit < 0 ? 'style="color:var(--red)"' : ''}>${signed(summary.profit)}</div>
-      ${segs}
-      ${cols([['Sold', 'green', String(sold)], ['Available', 'orange', String(avail)], ['Total FV', 'blue', formatCurrency(summary.totalFV)], ['Sales', 'indigo', formatCurrency(summary.totalSales)]], true)}
-    </div>
-    ${availT.length ? `<div class="shead" style="padding-top:2px"><h2 style="font-size:20px">Available</h2><button class="link press" onclick="copySeats()">${ic('copy', 16, 2.2)}Copy</button></div>
-    <div class="list">${availT.map(({ t, i }) => `<div class="row plain" style="min-height:50px"><span class="main t num">${esc(seatLabel(t, i))}</span><span class="v num">FV ${formatCurrency(t.fv)}</span></div>`).join('')}</div>` : ''}
-    ${soldT.length ? `<div class="shead" style="padding-top:2px"><h2 style="font-size:20px">Sold</h2><span class="r">${soldT.length}</span></div>
-    <div class="list">${soldT.map(({ t, i }) => `<div class="row plain" style="min-height:54px"><span class="main t num">${esc(seatLabel(t, i))}</span><div class="right num"><b style="color:var(--green)">${formatCurrency(t.soldFor)}</b><small>FV ${formatCurrency(t.fv)}</small></div></div>`).join('')}</div>` : ''}`;
 }
 function seatsText(list) { return list.map(({ t, i }) => `${seatLabel(t, i)} (FV ${formatCurrency(t.fv)})`).join('\n'); }
 async function copySeats() {
@@ -2280,42 +2299,12 @@ function exportAllDataPDF() { runPDF('All Teams PDF', generateAllTeamsPDF); }
 function exportTeamPDF(teamName) { runPDF(`${teamName} PDF`, () => generateTeamPDF(teamName)); }
 
 let selectedMonth = null;
-function showMonthlyReportOptions() {
-  if (!needData()) return;
-  selectedMonth = null;
-  $('exportTitle').textContent = 'Monthly Report';
-  $('exportSub').textContent = 'Choose a month';
-  renderMonthly();
-  openLayer('pdfExportModal');
-}
-function renderMonthly() {
-  const stats = monthlyStats();
-  const sel = stats.find((m) => m.value === selectedMonth);
-  $('pdfExportContent').innerHTML = `
-    <div class="months">${stats.map((m) => `<button class="press" aria-pressed="${m.value === selectedMonth}" onclick="selectMonth('${m.value}')">${m.short.split(' ')[0]}</button>`).join('')}</div>
-    ${sel ? `<div class="list">
-      <div class="row plain" style="min-height:48px"><span class="main t">Matches</span><span class="v num">${sel.count}</span></div>
-      <div class="row plain" style="min-height:48px"><span class="main t">Tickets</span><span class="v num">${sel.tickets}</span></div>
-      <div class="row plain" style="min-height:48px"><span class="main t">Profit</span><span class="v num" style="color:${pcol(sel.profit)};font-weight:600">${signed(sel.profit)}</span></div></div>` : ''}
-    <button class="btn-primary press" onclick="generateMonthlyReport()" id="generateMonthlyBtn" ${sel ? '' : 'disabled'}>${ic('doc', 19, 2)}${sel ? `Export ${sel.label.split(' ')[0]} PDF` : 'Select a month'}</button>`;
-}
 function selectMonth(monthValue) { selectedMonth = monthValue; renderMonthly(); }
 function generateMonthlyReport() {
   if (!selectedMonth) { toast('Select a month first'); return; }
   const label = getSeasonMonths().find((m) => m.value === selectedMonth).label;
   runPDF(`${label} report`, () => generateMonthlyPDF(selectedMonth));
 }
-function showTeamExportOptions() {
-  if (!needData()) return;
-  $('exportTitle').textContent = 'Single Team';
-  $('exportSub').textContent = 'Choose a team to export';
-  const teams = [...dashboardData.teams].sort((a, b) => a.name.localeCompare(b.name));
-  $('pdfExportContent').innerHTML = `<div class="list">${teams.map((t, i) =>
-    `<button class="row" onclick="exportTeamPDF(window._exportTeams[${i}])">${badge(t.name)}<div class="main"><div class="t">${esc(t.name)}</div><div class="s">${t.totalTickets} tickets · ${formatCurrency(t.totalSpent)} spent</div></div><span style="color:var(--blue);display:flex">${ic('doc', 19, 2)}</span></button>`).join('')}</div>`;
-  window._exportTeams = teams.map((t) => t.name);
-  openLayer('pdfExportModal');
-}
-
 /* =====================================================================
    App lifecycle
    ===================================================================== */
