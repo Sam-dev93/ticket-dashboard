@@ -176,11 +176,11 @@ button:disabled { cursor: default; }
 .view.push.open { visibility: visible; transform: none; transition: transform .38s cubic-bezier(.2,.9,.3,1); }
 
 /* ---------- One UI header: big viewing area, then a toolbar ---------- */
-.hero-head { min-height: calc(var(--safe-top) + 200px); display: flex; flex-direction: column; justify-content: flex-end; padding: calc(var(--safe-top) + 40px) 14px 16px; }
-.hero-head.short { min-height: calc(var(--safe-top) + 180px); }
-.hero-head h1 { font-size: 36px; font-weight: 700; letter-spacing: -0.4px; line-height: 1.1; }
+.hero-head { display: flex; flex-direction: column; justify-content: flex-end; padding: 2px 10px 12px; }
+.hero-head.solo { padding-top: calc(var(--safe-top) + 52px); }
+.hero-head h1 { font-size: 34px; font-weight: 700; letter-spacing: -0.4px; line-height: 1.1; }
 .hero-head p { margin-top: 8px; font-size: 15px; color: var(--sec); }
-.toolbar { display: flex; align-items: center; justify-content: space-between; min-height: 44px; margin: -4px 0 4px; padding: 0 0 0 8px; }
+.toolbar { order: -1; display: flex; align-items: center; justify-content: space-between; min-height: 44px; margin: calc(var(--safe-top) + 4px) -4px 0; padding: 0; }
 .toolbar .icons { display: flex; margin-left: auto; }
 .tb { width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; color: var(--label); border-radius: 999px; }
 .tb:active { background: var(--fill); }
@@ -452,7 +452,7 @@ body.offline .offline-pill { display: flex; }
   <section class="view" id="view-reports" aria-label="Reports">
     <div class="nav"><div class="ctitle">Reports</div></div>
     <div class="scroll"><div class="page">
-      <header class="hero-head short"><h1>Reports</h1><p>Season 2026–27</p></header>
+      <header class="hero-head solo"><h1>Reports</h1><p>Season 2026–27</p></header>
       <div id="reportsBody" style="display:flex;flex-direction:column;gap:10px"></div>
     </div></div>
   </section>
@@ -1661,7 +1661,7 @@ body.offline .offline-pill { display: flex; }
    Data loading, parsing and PDF generation further down are unchanged
    from the previous version (apart from the season label).
    ===================================================================== */
-const APP_VERSION = '2026.09.24-5';
+const APP_VERSION = '2026.09.24-6';
 const SEASON_START = 2026;                 // season 2026–27 (Aug 2026 – Jul 2027)
 const SEASON_LABEL = '2026–27';
 const CACHE_KEY = 'tf-cache-v1';
@@ -2012,6 +2012,7 @@ function renderReports() {
     </div>
     <div class="shead"><h2>Appearance</h2></div>
     <div class="list" role="radiogroup" aria-label="Appearance">${modes.map(([k, l]) => `<button class="row plain" style="min-height:56px" role="radio" aria-checked="${pref === k}" onclick="setThemePref('${k}')"><span class="main t" style="font-weight:500">${l}</span><span class="radio"></span></button>`).join('')}</div>
+    ${pref !== 'auto' ? `<p style="font-size:13px;color:var(--sec);padding:0 14px;line-height:1.45">The iPhone’s time and battery bar follows your phone’s own light/dark setting. Choose System default for the top of the screen to match.</p>` : ''}
     <p style="text-align:center;font-size:13px;color:var(--sec);padding:6px 0">Version ${APP_VERSION}${lastUpdated ? ` · Updated ${updatedLabel()}` : ''}<br>Updates automatically</p>`;
 }
 
@@ -2116,7 +2117,7 @@ function switchTab(tab) {
 document.querySelectorAll('.view').forEach((v) => {
   const sc = v.querySelector('.scroll');
   sc.addEventListener('scroll', () => {
-    v.classList.toggle('scrolled', sc.scrollTop > 150);
+    v.classList.toggle('scrolled', sc.scrollTop > 64);
     if (v.id === 'view-home') updateTopColour();
   }, { passive: true });
 });
