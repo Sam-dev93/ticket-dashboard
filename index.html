@@ -1,1913 +1,515 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en-GB">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="Ticket Father">
-    <meta name="theme-color" content="#181818">
-    <meta name="mobile-web-app-capable" content="yes">
-    <link rel="manifest" href="manifest.json">
-    <title>Ticket Father - Dashboard</title>
-    
-    <!-- PWA Meta Tags -->
-    <meta name="description" content="Season 2025-2026 ticket management dashboard">
-    <meta name="theme-color" content="#181818">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="Ticket Father">
-    <meta name="application-name" content="Ticket Father">
-    <meta name="msapplication-TileColor" content="#181818">
-    <meta name="msapplication-TileImage" content="/icon-192.png">
-    <meta name="format-detection" content="telephone=no">
-    
-    <!-- iOS Splash Screens -->
-    <link rel="apple-touch-icon" sizes="180x180" href="icon-192.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="icon-192.png">
-    
-    <!-- PWA Icons -->
-    <link rel="icon" type="image/png" sizes="32x32" href="./icon-192.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="./icon-192.png">
-    <link rel="apple-touch-icon" sizes="180x180" href="./icon-192.png">
-    <link rel="apple-touch-icon" sizes="152x152" href="./icon-192.png">
-    <link rel="apple-touch-icon" sizes="120x120" href="./icon-192.png">
-    <link rel="apple-touch-icon" sizes="76x76" href="./icon-192.png">
-    <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png">
-    <link rel="icon" type="image/png" sizes="512x512" href="./icon-512.png">
-    
-    <!-- PWA Manifest -->
-    <link rel="manifest" href="./manifest.json">
-    
-    <!-- PDF Generation Libraries -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
-    
-    <style>
-        :root {
-            /* Dark mode colors (default) */
-            --bg-primary: #181818;
-            --bg-secondary: #1F1F1F;
-            --bg-tertiary: #2A2A2A;
-            --bg-quaternary: #3A3A3A;
-            --border-primary: #2E2E2E;
-            --border-secondary: #3A3A3A;
-            --text-primary: #F5F5F5;
-            --text-secondary: #E6E6E6;
-            --text-tertiary: #B8B8B8;
-            --text-quaternary: #8E8E93;
-            --accent-primary: #10A37F;
-            --accent-secondary: #0D8B6F;
-            --accent-blue: #5A9FD4;
-            --accent-red: #E85A5A;
-            --shadow-primary: rgba(0, 0, 0, 0.3);
-            --shadow-secondary: rgba(0, 0, 0, 0.5);
-            --accent-green-bg: rgba(16, 163, 127, 0.1);
-            --accent-green-border: rgba(16, 163, 127, 0.2);
-            --accent-green-shadow: rgba(16, 163, 127, 0.25);
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<title>Ticket Father</title>
+<meta name="description" content="Season 2026–27 ticket management dashboard">
+<meta name="theme-color" id="themeColor" content="#F2F2F7">
+<meta name="color-scheme" content="light dark">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Ticket Father">
+<meta name="application-name" content="Ticket Father">
+<meta name="format-detection" content="telephone=no">
+<link rel="apple-touch-icon" sizes="180x180" href="./icon-192.png">
+<link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png">
+<link rel="icon" type="image/png" sizes="512x512" href="./icon-512.png">
+<link rel="manifest" href="./manifest.json">
+<!-- PDF export -->
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
+<script>
+  // Apply the saved appearance before first paint (no flash)
+  (function () {
+    try {
+      var p = localStorage.getItem('theme');
+      if (p === 'light' || p === 'dark') document.documentElement.setAttribute('data-theme', p);
+    } catch (e) {}
+  })();
+</script>
+<style>
+:root {
+  --bg: #F2F2F7;
+  --card: #FFFFFF;
+  --label: #000000;
+  --sec: #8A8A8E;
+  --chev: #C4C4C7;
+  --sep: #E3E3E8;
+  --fill: rgba(118,118,128,0.12);
+  --track: #E9E9EE;
+  --red: #FF383C;
+  --orange: #FF8D28;
+  --green: #34C759;
+  --blue: #0088FF;
+  --indigo: #6155F5;
+  --teal: #00C3D0;
+  --purple: #CB30E0;
+  --glass: rgba(255,255,255,0.72);
+  --g-border: rgba(0,0,0,0.06);
+  --g-shadow: inset 0 1px 0 rgba(255,255,255,0.9), 0 8px 28px rgba(0,0,0,0.10);
+  --seg-on: #FFFFFF;
+  --seg-sh: 0 2px 6px rgba(0,0,0,0.12);
+  --wash-top: #5FD3A0;
+  --wash: linear-gradient(180deg, #5FD3A0 0%, #A8E6C6 38%, #DCF3E6 66%, rgba(242,242,247,0) 100%);
+  --sheet-card: #FFFFFF;
+  --ring-bg: #1C1C1E;
+  --fade: linear-gradient(to bottom, rgba(242,242,247,0), rgba(242,242,247,0.75));
+  --edge: rgba(242,242,247,0.85);
+  --pill: rgba(118,118,128,0.14);
+  --backdrop: rgba(0,0,0,0.25);
+  --sheet: #F2F2F7;
+  --grab: #C7C7CC;
+  color-scheme: light;
+  --font: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", system-ui, "Segoe UI", sans-serif;
+  --rounded: ui-rounded, "SF Pro Rounded", -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+  --bg: #000000;
+  --card: #1C1C1E;
+  --label: #FFFFFF;
+  --sec: #98989F;
+  --chev: #5A5A5F;
+  --sep: #38383A;
+  --fill: rgba(118,118,128,0.24);
+  --track: #2C2C2E;
+  --red: #E0605A;
+  --orange: #DB8A4A;
+  --green: #4CB872;
+  --blue: #4A8FE0;
+  --indigo: #7F86E0;
+  --teal: #3FB3BE;
+  --purple: #B96AD0;
+  --glass: rgba(44,44,48,0.72);
+  --g-border: rgba(255,255,255,0.12);
+  --g-shadow: inset 0 1px 0 rgba(255,255,255,0.14), 0 8px 28px rgba(0,0,0,0.5);
+  --seg-on: #636366;
+  --seg-sh: none;
+  --wash-top: #0B3A28;
+  --wash: linear-gradient(180deg, #0B3A28 0%, #08291D 36%, #041610 66%, rgba(0,0,0,0) 100%);
+  --sheet-card: #2C2C2E;
+  --ring-bg: #000000;
+  --fade: linear-gradient(to bottom, rgba(0,0,0,0), rgba(0,0,0,0.75));
+  --edge: rgba(0,0,0,0.85);
+  --pill: rgba(0,0,0,0.40);
+  --backdrop: rgba(0,0,0,0.5);
+  --sheet: #1C1C1E;
+  --grab: #48484A;
+  color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #000000;
+  --card: #1C1C1E;
+  --label: #FFFFFF;
+  --sec: #98989F;
+  --chev: #5A5A5F;
+  --sep: #38383A;
+  --fill: rgba(118,118,128,0.24);
+  --track: #2C2C2E;
+  --red: #E0605A;
+  --orange: #DB8A4A;
+  --green: #4CB872;
+  --blue: #4A8FE0;
+  --indigo: #7F86E0;
+  --teal: #3FB3BE;
+  --purple: #B96AD0;
+  --glass: rgba(44,44,48,0.72);
+  --g-border: rgba(255,255,255,0.12);
+  --g-shadow: inset 0 1px 0 rgba(255,255,255,0.14), 0 8px 28px rgba(0,0,0,0.5);
+  --seg-on: #636366;
+  --seg-sh: none;
+  --wash-top: #0B3A28;
+  --wash: linear-gradient(180deg, #0B3A28 0%, #08291D 36%, #041610 66%, rgba(0,0,0,0) 100%);
+  --sheet-card: #2C2C2E;
+  --ring-bg: #000000;
+  --fade: linear-gradient(to bottom, rgba(0,0,0,0), rgba(0,0,0,0.75));
+  --edge: rgba(0,0,0,0.85);
+  --pill: rgba(0,0,0,0.40);
+  --backdrop: rgba(0,0,0,0.5);
+  --sheet: #1C1C1E;
+  --grab: #48484A;
+  color-scheme: dark;
+}
 
-        [data-theme="light"] {
-            /* Light mode colors */
-            --bg-primary: #F2F2F7;
-            --bg-secondary: #FFFFFF;
-            --bg-tertiary: #F1F3F4;
-            --bg-quaternary: #E8EAED;
-            --border-primary: #E1E3E6;
-            --border-secondary: #D1D5DB;
-            --text-primary: #1A1A1A;
-            --text-secondary: #333333;
-            --text-tertiary: #666666;
-            --text-quaternary: #9CA3AF;
-            --accent-primary: #10A37F;
-            --accent-secondary: #0D8B6F;
-            --accent-blue: #1E5A96;
-            --accent-red: #DC2626;
-            --shadow-primary: rgba(0, 0, 0, 0.1);
-            --shadow-secondary: rgba(0, 0, 0, 0.15);
-            --accent-green-bg: rgba(16, 163, 127, 0.08);
-            --accent-green-border: rgba(16, 163, 127, 0.15);
-            --accent-green-shadow: rgba(16, 163, 127, 0.15);
-        }
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { height: 100%; overflow: hidden; background: var(--bg); }
+html.home-top { background: var(--wash-top); }
+body {
+  font-family: var(--font); color: var(--label);
+  -webkit-font-smoothing: antialiased; -webkit-tap-highlight-color: transparent; -webkit-text-size-adjust: 100%;
+  user-select: none; -webkit-user-select: none; touch-action: manipulation;
+}
+button { font: inherit; color: inherit; background: none; border: none; cursor: pointer; padding: 0; text-align: inherit; }
+button:focus-visible { outline: 2px solid var(--blue); outline-offset: 2px; }
+button:disabled { cursor: default; }
+.press { transition: transform .15s ease, opacity .15s ease; }
+.press:active { transform: scale(0.97); opacity: 0.85; }
+.num { font-variant-numeric: tabular-nums; }
+.hidden { display: none !important; }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        html {
-            height: 100%;
-            width: 100%;
-            margin: 0;
-            padding: 0;
-        }
-        
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, sans-serif;
-            background: var(--bg-primary);
-            color: var(--text-secondary);
-            line-height: 1.47;
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
-            -webkit-touch-callout: none;
-            -webkit-user-select: none;
-            user-select: none;
-            overscroll-behavior: none;
-            -webkit-overflow-scrolling: touch;
-            transition: background-color 0.3s ease, color 0.3s ease;
-            min-height: 100vh;
-            margin: 0;
-            padding: 0;
-        }
-        
-        .container {
-            max-width: 100%;
-            margin: 0 auto;
-            height: 100vh;
-            background: var(--bg-primary);
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-            padding: 0 16px;
-        }
-        
-        .top-spacer {
-            height: 70px;
-            flex-shrink: 0;
-            background: var(--bg-primary);
-        }
-        
-        .bottom-spacer {
-            height: 50px;
-            flex-shrink: 0;
-            background: var(--bg-primary);
-        }
-        
-        .header {
-            text-align: center;
-            margin-bottom: 0;
-            padding: 10px 0;
-            position: relative;
-            flex-shrink: 0;
-            background: var(--bg-primary);
-        }
-        
-        .sticky-header {
-            position: sticky;
-            top: 0;
-            background: var(--bg-primary);
-            z-index: 100;
-            height: 8px;
-            border-bottom: 1px solid var(--border-primary);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-        }
-        
-        .scrollable-content {
-            flex: 1;
-            overflow-y: auto;
-            overflow-x: hidden;
-            -webkit-overflow-scrolling: touch;
-            padding-top: 20px;
-            padding-bottom: 0;
-        }
-        
-        .header h1 {
-            font-size: 34px;
-            font-weight: 700;
-            color: var(--text-primary);
-            margin-bottom: 6px;
-            letter-spacing: -0.41px;
-        }
-        
-        .header p {
-            font-size: 17px;
-            color: var(--text-tertiary);
-            font-weight: 400;
-        }
+/* ---------- Views ---------- */
+#app { position: fixed; inset: 0; overflow: hidden; overflow: clip; background: var(--bg); }
+.view { position: absolute; inset: 0; display: none; background: var(--bg); }
+.view.active { display: block; }
+.scroll { position: absolute; inset: 0; overflow-y: auto; overflow-x: hidden; -webkit-overflow-scrolling: touch; overscroll-behavior-y: contain; }
+.page {
+  position: relative; max-width: 560px; margin: 0 auto;
+  padding: calc(var(--safe-top) + 60px) 16px calc(var(--safe-bottom) + 112px);
+  display: flex; flex-direction: column; gap: 14px;
+}
+.wash { position: absolute; left: 0; right: 0; top: 0; height: calc(var(--safe-top) + 470px); background: var(--wash); pointer-events: none; }
+.view.push { z-index: 10; display: block; visibility: hidden; transform: translateX(100%); transition: transform .38s cubic-bezier(.2,.9,.3,1), visibility 0s linear .38s; }
+.view.push.open { visibility: visible; transform: none; transition: transform .38s cubic-bezier(.2,.9,.3,1); }
 
-        .theme-toggle {
-            position: absolute;
-            top: 10px;
-            right: 0;
-            background: var(--bg-tertiary);
-            border: 1px solid var(--border-secondary);
-            border-radius: 20px;
-            width: 40px;
-            height: 40px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-size: 18px;
-            -webkit-tap-highlight-color: transparent;
-            touch-action: manipulation;
-        }
+/* ---------- Floating nav (Liquid Glass controls) ---------- */
+.nav {
+  position: absolute; z-index: 6; left: 0; right: 0; top: 0;
+  padding: calc(var(--safe-top) + 6px) 16px 10px;
+  display: flex; align-items: center; justify-content: space-between; gap: 8px; pointer-events: none;
+}
+.nav > * { pointer-events: auto; }
+.nav::before {
+  content: ""; position: absolute; inset: 0; pointer-events: none; opacity: 0; transition: opacity .2s ease;
+  background: linear-gradient(to bottom, var(--edge) 0%, var(--edge) 55%, transparent 100%);
+  -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
+  -webkit-mask-image: linear-gradient(to bottom, #000 55%, transparent); mask-image: linear-gradient(to bottom, #000 55%, transparent);
+}
+.view.scrolled .nav::before { opacity: 1; }
+.ctitle {
+  position: absolute; left: 76px; right: 76px; top: calc(var(--safe-top) + 6px); height: 44px; line-height: 44px;
+  text-align: center; font-size: 17px; font-weight: 600; opacity: 0; transition: opacity .2s ease; pointer-events: none;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.view.scrolled .ctitle { opacity: 1; }
+.nav-group { display: flex; gap: 8px; }
+.glass {
+  background: var(--glass); border: 1px solid var(--g-border); box-shadow: var(--g-shadow);
+  -webkit-backdrop-filter: blur(20px) saturate(180%); backdrop-filter: blur(20px) saturate(180%);
+}
+.circ { width: 44px; height: 44px; border-radius: 999px; display: flex; align-items: center; justify-content: center; color: var(--label); flex-shrink: 0; }
+.pillgroup { display: flex; padding: 0 4px; border-radius: 999px; }
+.pillgroup button { width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; color: var(--label); }
+.pillgroup button.on { color: var(--blue); }
+.spin svg { animation: spin 1s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
 
-        .theme-toggle:hover {
-            background: var(--bg-quaternary);
-            transform: translateY(-1px);
-            box-shadow: 0 4px 12px var(--shadow-primary);
-        }
+/* ---------- Type ---------- */
+h1.large { font-size: 34px; font-weight: 700; letter-spacing: 0.3px; line-height: 1.15; padding: 0 6px; }
+.sub { font-size: 15px; color: var(--sec); padding: 0 6px; margin-top: -10px; }
+.shead { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 6px 6px 0; }
+.shead h2 { font-size: 22px; font-weight: 700; flex: 1; }
+.shead .r { font-size: 17px; color: var(--sec); }
+.shead .link { font-size: 17px; color: var(--blue); display: flex; align-items: center; gap: 4px; }
+.shead .ic { display: flex; }
+.day { font-size: 20px; font-weight: 700; padding: 8px 6px 0; }
 
-        .theme-toggle:active {
-            transform: translateY(0);
-        }
+/* ---------- Cards & lists ---------- */
+.card { background: var(--card); border-radius: 26px; }
+.cardpad { padding: 16px 16px 18px; display: flex; flex-direction: column; gap: 12px; width: 100%; text-align: left; }
+.list { background: var(--card); border-radius: 26px; overflow: hidden; }
+.row { position: relative; display: flex; align-items: center; gap: 12px; padding: 0 14px 0 16px; min-height: 62px; width: 100%; text-align: left; }
+button.row:active, .row.tap:active { background: var(--fill); }
+.row::after { content: ""; position: absolute; left: 64px; right: 0; bottom: 0; height: 1px; background: var(--sep); }
+.row:last-child::after { display: none; }
+.row.plain::after { left: 16px; }
+.row.tiled { min-height: 52px; gap: 14px; }
+.row.tiled::after { left: 60px; }
+.row .main { flex: 1; min-width: 0; padding: 9px 0; }
+.row .t { font-size: 17px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.row .s { font-size: 14px; color: var(--sec); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.row .v { font-size: 17px; color: var(--sec); white-space: nowrap; }
+.row .right { text-align: right; flex-shrink: 0; }
+.row .right b { display: block; font-size: 17px; font-weight: 600; }
+.row .right small { display: block; font-size: 13px; color: var(--sec); }
+.chev { color: var(--chev); display: flex; flex-shrink: 0; }
+.soldout { display: flex; align-items: center; gap: 3px; font-size: 15px; font-weight: 600; color: var(--green); white-space: nowrap; }
+.bar { height: 4px; border-radius: 999px; background: var(--track); overflow: hidden; margin-top: 6px; }
+.bar i { display: block; height: 100%; border-radius: 999px; }
+.empty { padding: 22px 18px; text-align: center; color: var(--sec); font-size: 15px; line-height: 1.45; }
 
-        .theme-icon {
-            transition: all 0.3s ease;
-        }
+.badge { width: 36px; height: 36px; border-radius: 10px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 11px; font-weight: 800; letter-spacing: 0.3px; }
+.badge.edge { box-shadow: inset 0 0 0 1px rgba(0,0,0,0.12); }
+.badge.xl { width: 76px; height: 76px; border-radius: 22px; font-size: 20px; }
+.tile { --c: var(--blue); width: 30px; height: 30px; border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  background: linear-gradient(180deg, color-mix(in srgb, var(--c) 78%, white), var(--c)); color: #FFFFFF; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .tile { background: #121214; color: var(--c); border: 1px solid rgba(255,255,255,0.07); } }
+:root[data-theme="dark"] .tile { background: #121214; color: var(--c); border: 1px solid rgba(255,255,255,0.07); }
 
-        [data-theme="light"] .theme-icon.moon {
-            display: none;
-        }
+.chead { display: flex; align-items: center; gap: 6px; }
+.chead .ic { display: flex; }
+.chead .ct { flex: 1; font-size: 17px; font-weight: 600; }
+.chead .cr { font-size: 15px; color: var(--sec); }
+.cols { display: flex; align-items: stretch; }
+.cols > div + div { border-left: 1px solid var(--sep); padding-left: 12px; margin-left: 12px; }
+.cols .l { font-size: 15px; font-weight: 600; }
+.cols .v { font-family: var(--rounded); font-size: 22px; font-weight: 600; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.cols.sm .l { font-size: 13px; }
+.cols.sm .v { font-size: 17px; }
+.big { font-family: var(--rounded); font-size: 36px; font-weight: 600; letter-spacing: -0.6px; font-variant-numeric: tabular-nums; line-height: 1.15; }
+.muted { font-size: 15px; color: var(--sec); }
+.split { display: flex; align-items: flex-end; justify-content: space-between; gap: 12px; }
 
-        [data-theme="light"] .theme-icon.sun {
-            display: block;
-        }
+.ring { position: relative; width: 68px; height: 68px; border-radius: 50%; background: var(--ring-bg); flex-shrink: 0; }
+.ring svg { transform: rotate(-90deg); }
+.ring b { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; color: #FFFFFF; font-size: 13px; font-weight: 700; }
+.minibars { display: flex; align-items: flex-end; gap: 4px; height: 44px; flex-shrink: 0; }
+.minibars i { width: 6px; border-radius: 3px; background: var(--track); }
+.segs { display: flex; gap: 3px; }
+.segs i { flex: 1; height: 8px; border-radius: 999px; background: var(--track); }
 
-        [data-theme="dark"] .theme-icon.sun {
-            display: none;
-        }
+/* segmented control */
+.seg { display: flex; padding: 3px; border-radius: 999px; background: var(--fill); }
+.seg button { text-align: center; flex: 1; height: 34px; border-radius: 999px; font-size: 14px; font-weight: 500; transition: background .2s ease; }
+.seg button[aria-pressed="true"] { background: var(--seg-on); box-shadow: var(--seg-sh); font-weight: 600; }
 
-        [data-theme="dark"] .theme-icon.moon {
-            display: block;
-        }
+/* search */
+.search { display: none; align-items: center; gap: 8px; height: 44px; border-radius: 999px; padding: 0 8px 0 14px; background: var(--fill); color: var(--sec); }
+.search.show { display: flex; }
+.search input { flex: 1; min-width: 0; border: none; background: none; font: inherit; font-size: 17px; color: var(--label); outline: none; user-select: text; -webkit-user-select: text; }
+.search button { width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; color: var(--sec); }
 
-        body:not([data-theme]) .theme-icon.sun {
-            display: none;
-        }
+/* menu */
+.menu { position: absolute; z-index: 30; right: 16px; top: calc(var(--safe-top) + 58px); min-width: 230px; border-radius: 22px; padding: 6px; display: none; flex-direction: column; }
+.menu.show { display: flex; animation: pop .18s ease; }
+.menu button { display: flex; align-items: center; justify-content: space-between; gap: 12px; height: 44px; padding: 0 12px; border-radius: 14px; font-size: 17px; }
+.menu button:active { background: var(--fill); }
+.menu .tick { color: var(--blue); display: flex; }
+@keyframes pop { from { opacity: 0; transform: scale(.94); } to { opacity: 1; transform: none; } }
 
-        body:not([data-theme]) .theme-icon.moon {
-            display: block;
-        }
-        
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 12px;
-            margin-bottom: 16px;
-        }
-        
-        .stat-card {
-            background: var(--bg-secondary);
-            border-radius: 16px;
-            padding: 16px 14px;
-            box-shadow: 0 2px 8px var(--shadow-primary);
-            border: 1px solid var(--border-primary);
-            text-align: center;
-            transition: all 0.3s ease;
-        }
-        
-        .stat-value {
-            font-size: 28px;
-            font-weight: 700;
-            margin-bottom: 6px;
-            line-height: 1.2;
-            letter-spacing: -0.34px;
-            color: var(--text-primary);
-        }
-        
-        .stat-label {
-            font-size: 13px;
-            color: var(--text-tertiary);
-            font-weight: 400;
-            letter-spacing: -0.08px;
-        }
-        
-        .stat-card.available-tickets .stat-value {
-            color: var(--accent-blue);
-        }
-        
-        .profit-negative {
-            color: var(--accent-red);
-        }
-        
-        .profit-positive {
-            color: var(--accent-primary);
-        }
-        
-        .section {
-            background: var(--bg-secondary);
-            border-radius: 16px;
-            margin-bottom: 12px;
-            box-shadow: 0 2px 8px var(--shadow-primary);
-            border: 1px solid var(--border-primary);
-            overflow: hidden;
-            transition: all 0.3s ease;
-        }
-        
-        .section:last-child {
-            margin-bottom: 0;
-        }
-        
-        .section-title {
-            font-size: 20px;
-            font-weight: 600;
-            padding: 16px 20px 8px 20px;
-            color: var(--text-primary);
-            letter-spacing: -0.24px;
-            text-align: center;
-        }
-        
-        .period-selector {
-            display: flex;
-            justify-content: center;
-            padding: 0 20px 16px 20px;
-            border-bottom: 1px solid var(--border-primary);
-        }
-        
-        .period-control {
-            display: flex;
-            background: var(--bg-tertiary);
-            border-radius: 12px;
-            padding: 4px;
-            border: 1px solid var(--border-secondary);
-        }
-        
-        .period-btn {
-            background: transparent;
-            border: none;
-            color: var(--text-tertiary);
-            padding: 8px 16px;
-            border-radius: 8px;
-            font-size: 15px;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            letter-spacing: -0.24px;
-            min-width: 44px;
-            -webkit-tap-highlight-color: transparent;
-            touch-action: manipulation;
-        }
-        
-        .period-btn.active {
-            background: var(--accent-primary);
-            color: #ffffff;
-            box-shadow: 0 2px 8px var(--accent-green-shadow);
-        }
-        
-        .period-btn:hover:not(.active) {
-            background: var(--bg-quaternary);
-            color: var(--text-secondary);
-        }
-        
-        .period-btn:active {
-            transform: scale(0.98);
-        }
-        
-        .match-item {
-            padding: 12px 20px;
-            border-bottom: 1px solid var(--border-primary);
-            background: var(--bg-secondary);
-            transition: all 0.3s ease;
-        }
-        
-        .match-item:last-child {
-            border-bottom: none;
-        }
-        
-        .match-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 6px;
-        }
-        
-        .match-details-info h3 {
-            font-size: 17px;
-            font-weight: 600;
-            color: var(--text-primary);
-            line-height: 1.29;
-            letter-spacing: -0.41px;
-            margin-bottom: 2px;
-        }
-        
-        .match-date {
-            font-size: 15px;
-            color: var(--text-tertiary);
-            font-weight: 400;
-            letter-spacing: -0.24px;
-        }
-        
-        .tickets-status {
-            text-align: right;
-            flex-shrink: 0;
-            margin-left: 16px;
-        }
-        
-        .tickets-count {
-            font-size: 20px;
-            font-weight: 700;
-            color: var(--accent-blue);
-            line-height: 1.2;
-            letter-spacing: -0.24px;
-        }
-        
-        .tickets-label {
-            font-size: 13px;
-            color: var(--text-tertiary);
-            font-weight: 400;
-            letter-spacing: -0.08px;
-        }
-        
-        .match-details {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-top: 8px;
-            padding-top: 8px;
-            border-top: 1px solid var(--border-primary);
-        }
-        
-        .detail-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            flex: 1;
-        }
-        
-        .detail-label {
-            color: var(--text-tertiary);
-            font-size: 12px;
-            font-weight: 400;
-            margin-bottom: 4px;
-            letter-spacing: -0.06px;
-        }
-        
-        .detail-value {
-            font-weight: 600;
-            font-size: 15px;
-            letter-spacing: -0.24px;
-            color: var(--text-secondary);
-        }
-        
-        .detail-value.profit-positive {
-            color: var(--accent-primary);
-        }
-        
-        .detail-value.profit-negative {
-            color: var(--accent-red);
-        }
-        
-        .refresh-btn {
-            background: var(--accent-primary);
-            border: none;
-            color: #ffffff;
-            padding: 16px 24px;
-            border-radius: 14px;
-            font-size: 17px;
-            font-weight: 600;
-            cursor: pointer;
-            width: 100%;
-            margin: 16px 0 24px 0;
-            transition: all 0.2s ease;
-            box-shadow: 0 2px 12px var(--accent-green-shadow);
-            letter-spacing: -0.41px;
-            -webkit-tap-highlight-color: transparent;
-            touch-action: manipulation;
-            flex-shrink: 0;
-        }
-        
-        .refresh-btn:hover {
-            background: var(--accent-secondary);
-            transform: translateY(-1px);
-            box-shadow: 0 4px 20px var(--accent-green-shadow);
-        }
-        
-        .refresh-btn:active {
-            transform: translateY(0);
-            box-shadow: 0 1px 8px var(--accent-green-shadow);
-        }
-        
-        .refresh-btn:disabled {
-            background: var(--bg-quaternary);
-            transform: none;
-            box-shadow: none;
-            cursor: not-allowed;
-        }
-        
-        .pdf-export-btn {
-            background: linear-gradient(135deg, #10A37F, #0D7A5F);
-            border: none;
-            color: #ffffff;
-            padding: 16px 24px;
-            border-radius: 14px;
-            font-size: 17px;
-            font-weight: 600;
-            cursor: pointer;
-            width: 100%;
-            margin: 24px 0 16px 0;
-            transition: all 0.2s ease;
-            box-shadow: 0 2px 12px var(--accent-green-shadow);
-            letter-spacing: -0.41px;
-            -webkit-tap-highlight-color: transparent;
-            touch-action: manipulation;
-            flex-shrink: 0;
-        }
-        
-        .pdf-export-btn:hover {
-            background: linear-gradient(135deg, #0D8B6F, #0A7A5F);
-            transform: translateY(-1px);
-            box-shadow: 0 4px 20px var(--accent-green-shadow);
-        }
-        
-        .pdf-export-btn:active {
-            transform: translateY(0);
-            box-shadow: 0 1px 8px var(--accent-green-shadow);
-        }
-        
-        .team-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 16px 20px;
-            border-bottom: 1px solid var(--border-primary);
-        }
-        
-        .team-name {
-            font-size: 20px;
-            font-weight: 700;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            color: var(--text-primary);
-            letter-spacing: -0.24px;
-        }
-        
-        .team-emoji {
-            width: 32px;
-            height: 32px;
-            background: var(--bg-tertiary);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 16px;
-            border: 1px solid var(--border-secondary);
-            flex-shrink: 0;
-        }
-        
-        .team-summary {
-            text-align: right;
-            font-size: 13px;
-            line-height: 1.38;
-        }
-        
-        .team-tickets {
-            font-weight: 600;
-            color: var(--accent-blue);
-            margin-bottom: 2px;
-            letter-spacing: -0.08px;
-        }
-        
-        .team-spent {
-            color: var(--text-tertiary);
-            margin-bottom: 2px;
-            letter-spacing: -0.08px;
-        }
-        
-        .team-profit {
-            font-weight: 700;
-            font-size: 15px;
-            letter-spacing: -0.24px;
-        }
-        
-        .team-profit.profit-positive {
-            color: var(--accent-primary);
-        }
-        
-        .team-profit.profit-negative {
-            color: var(--accent-red);
-        }
-        
-        .expand-btn {
-            background: var(--bg-tertiary);
-            border: none;
-            color: var(--accent-primary);
-            padding: 12px 20px;
-            border-radius: 12px;
-            font-size: 17px;
-            font-weight: 600;
-            cursor: pointer;
-            margin: 12px 20px;
-            transition: all 0.2s ease;
-            letter-spacing: -0.41px;
-            border: 1px solid var(--border-secondary);
-            -webkit-tap-highlight-color: transparent;
-            touch-action: manipulation;
-        }
-        
-        .expand-btn.hide-matches {
-            color: var(--accent-red);
-        }
-        
-        .expand-btn:hover {
-            background: var(--bg-quaternary);
-            transform: translateY(-1px);
-        }
-        
-        .expand-btn:active {
-            transform: translateY(0);
-            background: var(--bg-quaternary);
-        }
-        
-        .team-details.collapsed {
-            display: none;
-        }
-        
-        .loading {
-            text-align: center;
-            color: var(--text-tertiary);
-            font-size: 17px;
-            margin: 20px 0;
-            font-weight: 400;
-        }
-        
-        .loading-progress {
-            text-align: center;
-            color: var(--accent-primary);
-            font-size: 15px;
-            margin: 10px 0;
-            font-weight: 500;
-        }
-        
-        .progress-container {
-            width: 100%;
-            max-width: 300px;
-            margin: 16px auto;
-            background: var(--bg-tertiary);
-            border-radius: 10px;
-            overflow: hidden;
-            height: 8px;
-        }
-        
-        .progress-bar {
-            height: 100%;
-            background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary));
-            border-radius: 10px;
-            transition: width 0.3s ease;
-            width: 0%;
-        }
-        
-        .progress-text {
-            text-align: center;
-            color: var(--accent-primary);
-            font-size: 15px;
-            margin: 8px 0;
-            font-weight: 500;
-        }
-        
-        .success-message {
-            text-align: center;
-            color: var(--accent-primary);
-            font-size: 15px;
-            font-weight: 500;
-            margin: 16px 0 24px 0;
-            padding: 12px;
-            background: var(--accent-green-bg);
-            border-radius: 12px;
-            border: 1px solid var(--accent-green-border);
-        }
+/* team header */
+.team-hero { display: flex; flex-direction: column; align-items: center; gap: 8px; padding-bottom: 4px; text-align: center; }
+.team-hero h1 { font-size: 28px; font-weight: 700; }
+.team-hero p { margin-top: -6px; font-size: 15px; color: var(--sec); }
 
-        .error-message {
-            text-align: center;
-            color: var(--accent-red);
-            font-size: 15px;
-            font-weight: 500;
-            margin: 16px 0 24px 0;
-            padding: 12px;
-            background: rgba(232, 90, 90, 0.1);
-            border-radius: 12px;
-            border: 1px solid rgba(232, 90, 90, 0.2);
-        }
+/* month chart */
+.chart { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); align-items: end; height: 118px; }
+.chart button { display: flex; flex-direction: column; align-items: center; justify-content: flex-end; gap: 6px; height: 100%; }
+.chart i { display: block; width: 12px; border-radius: 6px; background: var(--track); }
+.chart span { font-size: 12px; color: var(--sec); }
+.chart button[aria-pressed="true"] span { color: var(--label); font-weight: 700; }
 
-        .persistent-message {
-            position: relative;
-            cursor: pointer;
-        }
+/* ---------- Tab bar ---------- */
+.bottom-fade { position: fixed; z-index: 15; left: 0; right: 0; bottom: 0; height: calc(var(--safe-bottom) + 90px); background: var(--fade); pointer-events: none; }
+.tabbar {
+  position: fixed; z-index: 20; left: 0; right: 0; margin: 0 auto;
+  bottom: max(10px, calc(var(--safe-bottom) - 10px));
+  width: min(calc(100% - 40px), 440px); height: 62px; border-radius: 999px;
+  display: flex; align-items: center; padding: 0 4px;
+}
+.tab-pill { position: absolute; left: 4px; top: 4px; bottom: 4px; width: calc((100% - 8px) / 4); border-radius: 999px; background: var(--pill); transform: translateX(calc(var(--i, 0) * 100%)); transition: transform .45s cubic-bezier(.3,1.3,.45,1); }
+.tab { position: relative; z-index: 1; flex: 1; height: 54px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; font-size: 10px; font-weight: 600; color: var(--label); }
+.tab[aria-selected="true"] { color: var(--blue); }
 
-        .persistent-message::after {
-            content: '×';
-            position: absolute;
-            top: 8px;
-            right: 12px;
-            font-size: 18px;
-            color: inherit;
-            opacity: 0.7;
-        }
+/* ---------- Sheets ---------- */
+.layer { position: fixed; inset: 0; z-index: 40; pointer-events: none; visibility: hidden; transition: visibility 0s linear .38s; }
+.layer.open { pointer-events: auto; visibility: visible; transition: none; }
+.backdrop { position: absolute; inset: 0; background: var(--backdrop); opacity: 0; transition: opacity .3s ease; }
+.layer.open .backdrop { opacity: 1; }
+.sheet {
+  position: absolute; left: 8px; right: 8px; margin: 0 auto; max-width: 560px;
+  top: calc(var(--safe-top) + 12px); bottom: 8px;
+  border-radius: 38px; background: var(--sheet); display: flex; flex-direction: column; overflow: hidden;
+  box-shadow: 0 -8px 40px rgba(0,0,0,0.25);
+  transform: translateY(110%); transition: transform .38s cubic-bezier(.2,.9,.3,1);
+}
+.sheet.medium { top: auto; max-height: calc(100% - var(--safe-top) - 40px); }
+.layer.open .sheet { transform: none; }
+.sheet.dragging { transition: none; }
+.sheet-head { padding: 8px 16px 8px; flex-shrink: 0; touch-action: none; }
+.grab { width: 36px; height: 5px; border-radius: 999px; background: var(--grab); margin: 0 auto 8px; }
+.sh-row { display: flex; align-items: center; gap: 10px; }
+.sh-title { flex: 1; text-align: center; min-width: 0; }
+.sh-title b { display: block; font-size: 17px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.sh-title span { display: block; font-size: 13px; color: var(--sec); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.sheet-body { flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; padding: 6px 16px calc(18px + var(--safe-bottom)); display: flex; flex-direction: column; gap: 14px; }
+.sheet .card, .sheet .list { background: var(--sheet-card); }
+.months { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; }
+.months button { text-align: center; height: 46px; border-radius: 999px; background: var(--sheet-card); font-size: 16px; }
+.months button[aria-pressed="true"] { background: var(--blue); color: #FFFFFF; font-weight: 600; }
+.btn-primary { width: 100%; height: 54px; border-radius: 999px; background: var(--blue); color: #FFFFFF; font-size: 17px; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: inset 0 1px 0 rgba(255,255,255,0.3); }
+.btn-primary:disabled { opacity: 0.4; }
+.btn-small { height: 36px; padding: 0 16px; border-radius: 999px; background: var(--blue); color: #FFFFFF; font-size: 15px; font-weight: 600; }
+.loading-box { padding: 48px 0; display: flex; flex-direction: column; align-items: center; gap: 14px; color: var(--sec); font-size: 15px; text-align: center; }
+.spinner { width: 28px; height: 28px; border-radius: 50%; border: 3px solid var(--track); border-top-color: var(--sec); animation: spin .8s linear infinite; }
 
-        .persistent-message:hover::after {
-            opacity: 1;
-        }
-        
-        .empty-state {
-            text-align: center;
-            color: var(--text-tertiary);
-            padding: 40px 20px;
-            font-size: 17px;
-            font-weight: 400;
-        }
-        
-        .separator {
-            height: 1px;
-            background: repeating-linear-gradient(
-                to right,
-                var(--border-primary) 0px,
-                var(--border-primary) 8px,
-                transparent 8px,
-                transparent 16px
-            );
-            margin: 16px 0 0 0;
-        }
-        
-        #teamsContainer .section:last-child {
-            margin-bottom: 0;
-        }
-        
-        #teamsContainer:last-child {
-            margin-bottom: 0;
-        }
-        
-        .scrollable-content > *:last-child {
-            margin-bottom: 0 !important;
-        }
-        
-        .section:last-child {
-            margin-bottom: 0 !important;
-        }
-        
-        .team-details:last-child {
-            margin-bottom: 0;
-            padding-bottom: 0;
-        }
-        
-        .match-popup-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.5);
-            z-index: 2000;
-            display: none;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-            overflow-y: auto;
-        }
-        
-        .match-popup {
-            background: var(--bg-secondary);
-            border-radius: 20px;
-            width: 90%;
-            max-width: 600px;
-            max-height: 80vh;
-            overflow-y: auto;
-            position: relative;
-            box-shadow: 0 20px 60px var(--shadow-secondary);
-            border: 1px solid var(--border-primary);
-            margin: auto;
-        }
-        
-        .match-popup-header {
-            padding: 20px 20px 16px 20px;
-            border-bottom: 1px solid var(--border-primary);
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            background: var(--bg-secondary);
-            border-radius: 20px 20px 0 0;
-        }
-        
-        .match-popup-title {
-            font-size: 24px;
-            font-weight: 700;
-            color: var(--text-primary);
-            letter-spacing: -0.29px;
-            margin-bottom: 4px;
-        }
-        
-        .match-popup-date {
-            font-size: 17px;
-            color: var(--text-tertiary);
-            font-weight: 400;
-        }
-        
-        .close-btn {
-            background: var(--bg-tertiary);
-            border: none;
-            border-radius: 20px;
-            width: 40px;
-            height: 40px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 20px;
-            color: var(--text-tertiary);
-            cursor: pointer;
-            transition: all 0.2s ease;
-            flex-shrink: 0;
-            margin-left: 16px;
-            border: 1px solid var(--border-secondary);
-        }
-        
-        .close-btn:hover {
-            background: var(--bg-quaternary);
-            color: var(--text-primary);
-        }
-        
-        .match-popup-content {
-            padding: 20px;
-            padding-top: 16px;
-        }
-        
-        .match-stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-            gap: 16px;
-            margin-bottom: 32px;
-        }
-        
-        .match-stat-card {
-            background: var(--bg-tertiary);
-            border-radius: 12px;
-            padding: 16px;
-            text-align: center;
-            border: 1px solid var(--border-secondary);
-            transition: all 0.3s ease;
-        }
-        
-        .match-stat-value {
-            font-size: 18px;
-            font-weight: 700;
-            margin-bottom: 4px;
-            letter-spacing: -0.29px;
-            word-break: break-word;
-            color: var(--text-primary);
-        }
-        
-        .match-stat-value.profit-positive {
-            color: var(--accent-primary);
-        }
-        
-        .match-stat-value.profit-negative {
-            color: var(--accent-red);
-        }
-        
-        .match-stat-label {
-            font-size: 11px;
-            color: var(--text-tertiary);
-            font-weight: 500;
-            letter-spacing: -0.08px;
-        }
-        
-        .tickets-chart-container {
-            background: transparent;
-            border-radius: 0;
-            padding: 16px 0;
-            margin-bottom: 0;
-        }
-        
-        .chart-title {
-            font-size: 18px;
-            font-weight: 600;
-            margin-bottom: 16px;
-            color: var(--text-primary);
-            letter-spacing: -0.24px;
-            text-align: center;
-        }
-        
-        .tickets-table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 12px;
-            background: var(--bg-secondary);
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 0 2px 8px var(--shadow-primary);
-        }
-        
-        .tickets-table th {
-            background: var(--bg-tertiary);
-            padding: 10px 6px;
-            text-align: center;
-            font-weight: 600;
-            color: var(--text-secondary);
-            border-bottom: 1px solid var(--border-secondary);
-            font-size: 11px;
-            letter-spacing: -0.08px;
-        }
-        
-        .tickets-table td {
-            padding: 8px 6px;
-            border-bottom: 1px solid var(--border-primary);
-            color: var(--text-secondary);
-            text-align: center;
-            font-size: 12px;
-            word-break: break-word;
-        }
-        
-        .tickets-table tr:last-child td {
-            border-bottom: none;
-        }
-        
-        .tickets-table tr:hover {
-            background: var(--bg-tertiary);
-        }
-        
-        .status-sold {
-            color: var(--accent-red) !important;
-            font-weight: 600;
-        }
-        
-        .status-available {
-            color: var(--accent-primary) !important;
-            font-weight: 600;
-        }
-        
-        .match-loading {
-            text-align: center;
-            padding: 40px;
-            color: var(--text-tertiary);
-            font-size: 17px;
-        }
-        
-        .match-loading-spinner {
-            width: 24px;
-            height: 24px;
-            border: 3px solid var(--border-secondary);
-            border-top: 3px solid var(--accent-primary);
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin: 0 auto 16px auto;
-        }
-        
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-        
-        .clickable-match {
-            cursor: pointer;
-            transition: background-color 0.2s ease;
-        }
-        
-        .clickable-match:hover {
-            background: var(--bg-tertiary);
-        }
-        
-        .pdf-export-options {
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-        }
-        
-        .pdf-option-btn {
-            background: var(--bg-secondary);
-            border: 2px solid var(--border-primary);
-            border-radius: 16px;
-            padding: 20px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-align: left;
-            font-size: 16px;
-            font-weight: 600;
-            color: var(--text-primary);
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-        
-        .pdf-option-btn:hover {
-            border-color: var(--accent-primary);
-            background: var(--accent-green-bg);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px var(--accent-green-shadow);
-        }
-        
-        .pdf-option-btn span {
-            font-size: 14px;
-            font-weight: 400;
-            color: var(--text-tertiary);
-        }
-        
-        .pdf-teams-section {
-            margin-top: 24px;
-        }
-        
-        .pdf-teams-section h3 {
-            font-size: 18px;
-            font-weight: 600;
-            color: var(--text-primary);
-            margin-bottom: 16px;
-        }
-        
-        .pdf-team-btn {
-            background: var(--bg-secondary);
-            border: 1px solid var(--border-primary);
-            border-radius: 12px;
-            padding: 16px;
-            margin-bottom: 8px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            font-size: 15px;
-            font-weight: 500;
-            color: var(--text-secondary);
-            width: 100%;
-            text-align: left;
-        }
-        
-        .pdf-team-btn:hover {
-            border-color: var(--accent-primary);
-            background: var(--bg-tertiary);
-        }
-        
-        .pdf-team-emoji {
-            font-size: 20px;
-        }
-        
-        .pdf-loading {
-            text-align: center;
-            padding: 20px;
-            color: var(--text-tertiary);
-            font-size: 16px;
-        }
-        
-        .pdf-loading-spinner {
-            width: 20px;
-            height: 20px;
-            border: 3px solid var(--border-secondary);
-            border-top: 3px solid var(--accent-primary);
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin: 0 auto 12px auto;
-        }
-
-        .pdf-monthly-section {
-            margin-top: 24px;
-        }
-
-        .pdf-monthly-section h3 {
-            font-size: 18px;
-            font-weight: 600;
-            color: var(--text-primary);
-            margin-bottom: 16px;
-        }
-
-        .month-selector {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-            gap: 8px;
-            margin-bottom: 16px;
-        }
-
-        .month-btn {
-            background: var(--bg-secondary);
-            border: 1px solid var(--border-primary);
-            border-radius: 8px;
-            padding: 12px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-size: 14px;
-            font-weight: 500;
-            color: var(--text-secondary);
-            text-align: center;
-        }
-
-        .month-btn:hover {
-            border-color: var(--accent-primary);
-            background: var(--bg-tertiary);
-        }
-
-        .month-btn.selected {
-            border-color: var(--accent-primary);
-            background: var(--accent-green-bg);
-            color: var(--accent-primary);
-            font-weight: 600;
-        }
-        
-        .install-banner {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: var(--accent-primary);
-            color: white;
-            padding: 16px;
-            text-align: center;
-            transform: translateY(100%);
-            transition: transform 0.3s ease;
-            z-index: 1000;
-            box-shadow: 0 -2px 10px var(--shadow-primary);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 12px;
-            font-size: 15px;
-            font-weight: 500;
-        }
-        
-        .install-banner.show {
-            transform: translateY(0);
-        }
-        
-        .install-btn {
-            background: white;
-            color: var(--accent-primary);
-            border: none;
-            padding: 8px 16px;
-            border-radius: 8px;
-            font-weight: 600;
-            cursor: pointer;
-            font-size: 15px;
-            transition: all 0.2s ease;
-        }
-        
-        .install-btn:hover {
-            transform: scale(1.05);
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-        }
-        
-        .install-btn:active {
-            transform: scale(0.98);
-        }
-        
-        .install-banner-close {
-            position: absolute;
-            right: 16px;
-            top: 50%;
-            transform: translateY(-50%);
-            background: transparent;
-            border: none;
-            color: white;
-            font-size: 24px;
-            cursor: pointer;
-            padding: 0;
-            width: 32px;
-            height: 32px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        
-        .offline-indicator {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            background: var(--accent-red);
-            color: white;
-            padding: 8px;
-            text-align: center;
-            font-size: 14px;
-            font-weight: 500;
-            z-index: 9999;
-            transform: translateY(-100%);
-            transition: transform 0.3s ease;
-        }
-        
-        .offline-indicator.show {
-            transform: translateY(0);
-        }
-        
-        @media (max-width: 767px) {
-            .container {
-                padding: 0 12px;
-            }
-            
-            .top-spacer {
-                height: 60px;
-            }
-            
-            .bottom-spacer {
-                height: 40px;
-            }
-            
-            .scrollable-content {
-                padding-top: 16px;
-            }
-            
-            .stats-grid {
-                grid-template-columns: repeat(2, 1fr);
-                gap: 8px;
-            }
-            
-            .stat-value {
-                font-size: 24px;
-            }
-            
-            .header h1 {
-                font-size: 26px;
-            }
-
-            .header {
-                margin-bottom: 0;
-                padding: 10px 0;
-            }
-            
-            .expand-btn, .refresh-btn {
-                min-height: 44px;
-            }
-            
-            .match-popup {
-                width: 95%;
-                max-width: 500px;
-                max-height: 85vh;
-                border-radius: 16px;
-            }
-
-            .theme-toggle {
-                top: 10px;
-                right: 0;
-            }
-
-            .month-selector {
-                grid-template-columns: repeat(2, 1fr);
-            }
-        }
-        
-        @media (min-width: 768px) {
-            .container {
-                max-width: 768px;
-                margin: 0 auto;
-                padding: 0 24px;
-            }
-            
-            .bottom-spacer {
-                height: 60px;
-            }
-            
-            .scrollable-content {
-                padding-top: 20px;
-            }
-            
-            .stats-grid {
-                grid-template-columns: repeat(4, 1fr);
-                gap: 16px;
-            }
-            
-            .header h1 {
-                font-size: 40px;
-            }
-            
-            .stat-value {
-                font-size: 32px;
-            }
-            
-            .match-popup {
-                width: 80%;
-                max-width: 700px;
-            }
-
-            .month-selector {
-                grid-template-columns: repeat(3, 1fr);
-            }
-        }
-        
-        @media (min-width: 1024px) {
-            .container {
-                max-width: 1024px;
-                padding: 0 32px;
-            }
-            
-            .bottom-spacer {
-                height: 70px;
-            }
-            
-            .scrollable-content {
-                padding-top: 24px;
-            }
-            
-            .header h1 {
-                font-size: 48px;
-            }
-            
-            .match-popup {
-                width: 70%;
-                max-width: 800px;
-            }
-
-            .month-selector {
-                grid-template-columns: repeat(4, 1fr);
-            }
-        }
-        
-        @media print {
-            body {
-                background: white;
-                color: black;
-            }
-            
-            .refresh-btn, .expand-btn, .install-banner, .theme-toggle {
-                display: none !important;
-            }
-        }
-    </style>
-
-    <!-- ===== World Cup look ported from FIFA 26 Stock app ===== -->
-    <style>
-        /* ===== World Cup additions ===== */
-        .match-popup-overlay.show { display:flex; }
-        .subtitle-row { display:flex; align-items:center; justify-content:center; gap:8px; flex-wrap:wrap; }
-
-        /* Filter / control bar */
-        .filter-bar {
-            display:flex; flex-direction:column; gap:16px; margin-bottom:24px;
-            background:var(--bg-secondary); border:1px solid var(--border-primary);
-            border-radius:18px; padding:18px;
-        }
-        .search-box {
-            width:100%; padding:13px 16px; border-radius:12px;
-            border:1px solid var(--border-primary); background:var(--bg-tertiary);
-            color:var(--text-primary); font-size:15px; outline:none;
-            transition:border-color .2s, box-shadow .2s;
-        }
-        .search-box:focus { border-color:var(--accent-primary); box-shadow:0 0 0 3px var(--accent-green-bg); }
-        .filter-group { display:flex; flex-direction:column; gap:9px; }
-        .filter-group-label { font-size:11px; font-weight:800; letter-spacing:.09em; text-transform:uppercase; color:var(--text-tertiary); padding-left:2px; }
-        .chip-row { display:flex; flex-wrap:wrap; gap:9px; }
-        .chip {
-            padding:9px 16px; border-radius:999px; cursor:pointer; user-select:none;
-            border:1px solid var(--border-primary); background:var(--bg-tertiary);
-            color:var(--text-secondary); font-size:13px; font-weight:600;
-            transition:all .15s; white-space:nowrap;
-        }
-        .chip:hover { border-color:var(--accent-primary); color:var(--text-primary); }
-        .chip.active { background:var(--accent-primary); border-color:var(--accent-primary); color:#fff; box-shadow:0 2px 8px var(--accent-green-shadow); }
-
-        /* Region summary mini-bars — 2 per row, roomy */
-        .region-overview { display:grid; grid-template-columns:repeat(2, minmax(0,1fr)); gap:16px; margin-bottom:8px; }
-        .region-mini {
-            background:var(--bg-secondary); border:1px solid var(--border-primary);
-            border-radius:16px; padding:20px; cursor:pointer; transition:transform .15s, border-color .15s, box-shadow .15s;
-        }
-        .region-mini:hover { transform:translateY(-2px); border-color:var(--accent-primary); box-shadow:0 6px 18px var(--shadow-primary); }
-        .region-mini .rm-name { font-weight:700; font-size:16px; display:flex; align-items:center; gap:8px; margin-bottom:14px; }
-        .region-mini .rm-stat { font-size:13px; color:var(--text-tertiary); display:flex; justify-content:space-between; gap:12px; margin-top:7px; }
-        .region-mini .rm-stat b { color:var(--text-primary); font-weight:700; text-align:right; white-space:nowrap; }
-
-        /* Stage grouping inside a region */
-        .stage-group { margin-top:24px; }
-        .stage-group:first-child { margin-top:8px; }
-        .stage-label {
-            font-size:12px; font-weight:800; letter-spacing:.08em; text-transform:uppercase;
-            color:var(--text-secondary); margin:0 2px 16px; display:flex; align-items:center; gap:10px;
-        }
-        .stage-label::after { content:""; flex:1; height:1px; background:var(--border-primary); }
-        .stage-count { font-weight:600; letter-spacing:normal; text-transform:none; color:var(--text-tertiary); }
-
-        /* Match cards — clearly separated, profit-coloured edge */
-        .match-item.clickable-match {
-            background:var(--bg-secondary);
-            border:1px solid var(--border-primary);
-            border-left:4px solid var(--text-quaternary);
-            border-radius:16px;
-            padding:16px 18px;
-            margin-bottom:14px;
-            box-shadow:0 1px 3px var(--shadow-primary);
-        }
-        .match-item.clickable-match:last-child { margin-bottom:0; }
-        .match-item.clickable-match:hover { transform:translateY(-2px); box-shadow:0 8px 22px var(--shadow-primary); border-color:var(--accent-primary); border-left-color:var(--accent-primary); }
-        .match-item.profit-pos { border-left-color:var(--accent-primary); }
-        .match-item.profit-neg { border-left-color:var(--accent-red); }
-        .match-item .match-details { border-top-color:var(--border-secondary); margin-top:12px; padding-top:12px; }
-
-        /* Match card teams + city line */
-        .match-meta { display:flex; gap:8px; flex-wrap:wrap; align-items:center; margin-top:2px; }
-        .match-city { font-size:12px; color:var(--text-secondary); display:inline-flex; align-items:center; gap:4px; }
-        .match-stage-tag {
-            font-size:10px; font-weight:700; padding:2px 8px; border-radius:999px;
-            background:var(--accent-green-bg); color:var(--accent-primary);
-        }
-
-        /* Category breakdown table inside popup */
-        .cat-table { width:100%; border-collapse:collapse; margin:6px 0 18px; font-size:13px; }
-        .cat-table th, .cat-table td { padding:8px 10px; text-align:right; border-bottom:1px solid var(--border-primary); }
-        .cat-table th { color:var(--text-secondary); font-weight:600; font-size:11px; text-transform:uppercase; letter-spacing:.05em; }
-        .cat-table td:first-child, .cat-table th:first-child { text-align:left; }
-        .cat-table tr:last-child td { border-bottom:none; }
-        .cat-table .zero-row { opacity:.4; }
-
-        .popup-section-title { font-size:13px; font-weight:700; color:var(--text-primary); margin:4px 0 6px; }
-
-        /* Status pills */
-        .pill { font-size:11px; font-weight:700; padding:2px 9px; border-radius:999px; white-space:nowrap; }
-        .pill.sold { background:rgba(34,197,94,.15); color:#16a34a; }
-        .pill.listed { background:rgba(234,179,8,.18); color:#ca8a04; }
-        .pill.available { background:rgba(148,163,184,.18); color:#64748b; }
-        [data-theme="dark"] .pill.available { color:#94a3b8; }
-
-        /* Config modal */
-        .config-grid { display:flex; flex-direction:column; gap:14px; }
-        .config-field label { display:block; font-size:12px; font-weight:600; color:var(--text-secondary); margin-bottom:5px; }
-        .config-field input {
-            width:100%; padding:10px 12px; border-radius:10px; border:1px solid var(--border-primary);
-            background:var(--bg-secondary, var(--bg-secondary)); color:var(--text-primary); font-size:13px; outline:none;
-            font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
-        }
-        .config-field input:focus { border-color:var(--accent-primary); }
-        .config-save-btn {
-            width:100%; padding:13px; border:none; border-radius:12px; background:var(--accent-primary);
-            color:#fff; font-size:15px; font-weight:700; cursor:pointer; margin-top:6px;
-        }
-        .config-hint { font-size:12px; color:var(--text-secondary); line-height:1.5; }
-        .gear-btn {
-            position:absolute; top:0; left:0; background:none; border:none; font-size:20px;
-            cursor:pointer; color:var(--text-secondary); padding:6px; line-height:1;
-        }
-        .needs-config { text-align:center; padding:40px 20px; }
-        .needs-config h2 { margin-bottom:10px; }
-        .needs-config p { color:var(--text-secondary); margin-bottom:20px; }
-    </style>
-    <style id="oneui-skin">
-        /* ===================== One UI–inspired skin ===================== */
-        :root{
-            --bg-primary:#0B0B0D; --bg-secondary:#19191C; --bg-tertiary:#242428; --bg-quaternary:#303036;
-            --border-primary:#28282D; --border-secondary:#37373E;
-            --text-primary:#F4F4F7; --text-secondary:#D5D5DC; --text-tertiary:#96969F; --text-quaternary:#6B6B74;
-            --accent-primary:#1AA47C; --accent-secondary:#138A68; --accent-blue:#3D8AF7; --accent-red:#FF5C61;
-            --shadow-primary:rgba(0,0,0,.45); --shadow-secondary:rgba(0,0,0,.6);
-            --accent-green-bg:rgba(26,164,124,.16); --accent-green-border:rgba(26,164,124,.30); --accent-green-shadow:rgba(26,164,124,.38);
-            --radius-pill:999px;
-        }
-        [data-theme="light"]{
-            --bg-primary:#F2F3F6; --bg-secondary:#FFFFFF; --bg-tertiary:#EFF0F4; --bg-quaternary:#E5E6EC;
-            --border-primary:#E9EAEF; --border-secondary:#DCDDE4;
-            --text-primary:#15161A; --text-secondary:#43454D; --text-tertiary:#73757E; --text-quaternary:#9FA1AA;
-            --accent-primary:#149A76; --accent-secondary:#0F7E60; --accent-blue:#2E7DF6; --accent-red:#E5484D;
-            --shadow-primary:rgba(20,22,34,.07); --shadow-secondary:rgba(20,22,34,.13);
-            --accent-green-bg:rgba(20,154,118,.10); --accent-green-border:rgba(20,154,118,.18); --accent-green-shadow:rgba(20,154,118,.22);
-        }
-
-        body{ background:var(--bg-primary); font-family:"SamsungOne",-apple-system,BlinkMacSystemFont,"Segoe UI","Roboto",system-ui,sans-serif; -webkit-font-smoothing:antialiased; }
-
-        /* Header */
-        .header{ background:transparent; padding:16px 6px 8px; }
-        .header h1{ font-size:30px; font-weight:800; letter-spacing:-0.6px; }
-        .header p{ color:var(--text-tertiary); font-size:15px; font-weight:500; }
-        .sticky-header{ background:transparent; border-bottom:none; }
-        .theme-toggle{ width:46px; height:46px; border-radius:var(--radius-pill); background:var(--bg-secondary); border:1px solid var(--border-primary); box-shadow:0 1px 3px var(--shadow-primary); }
-
-        /* Stat cards */
-        .stats-grid{ gap:12px; }
-        .stat-card{ background:var(--bg-secondary); border:1px solid var(--border-primary); border-radius:26px; padding:22px 20px; box-shadow:0 1px 3px var(--shadow-primary); }
-        .stat-value{ font-size:29px; font-weight:800; letter-spacing:-0.6px; }
-        .stat-label{ font-size:13px; color:var(--text-tertiary); margin-top:5px; font-weight:500; }
-
-        /* Buttons */
-        .refresh-btn{ background:var(--accent-primary); color:#fff; border:none; border-radius:var(--radius-pill); padding:16px; font-size:16px; font-weight:700; box-shadow:0 6px 18px var(--accent-green-shadow); }
-        .refresh-btn:hover{ filter:brightness(1.06); transform:none; }
-        .refresh-btn:disabled{ opacity:.55; box-shadow:none; }
-        .pdf-export-btn{ background:var(--bg-secondary); color:var(--accent-primary); border:1px solid var(--border-primary); border-radius:var(--radius-pill); padding:15px; font-weight:700; font-size:15px; box-shadow:0 1px 3px var(--shadow-primary); }
-        .pdf-export-btn:hover{ background:var(--bg-tertiary); transform:none; }
-        .expand-btn{ border-radius:var(--radius-pill); background:var(--bg-tertiary); border:1px solid var(--border-primary); font-weight:600; }
-        .expand-btn:hover{ background:var(--bg-quaternary); }
-        .expand-btn.hide-matches{ background:var(--accent-green-bg); border-color:var(--accent-green-border); color:var(--accent-primary); }
-
-        /* Grouped section cards */
-        .section{ background:var(--bg-secondary); border:1px solid var(--border-primary); border-radius:28px; padding:20px; box-shadow:0 1px 3px var(--shadow-primary); margin-bottom:16px; }
-        .section-title{ text-align:left; font-size:18px; font-weight:800; letter-spacing:-0.3px; margin-bottom:16px; }
-        #teamsContainer .section, #regionsContainer .section{ padding:18px; }
-
-        /* Region overview tiles (nested) */
-        .region-overview{ margin-bottom:0; gap:12px; }
-        .region-mini{ background:var(--bg-tertiary); border:1px solid transparent; border-radius:22px; box-shadow:none; padding:18px; }
-        .region-mini:hover{ box-shadow:0 6px 18px var(--shadow-primary); border-color:var(--border-primary); }
-
-        /* Filter card */
-        .filter-bar{ border-radius:28px; padding:20px; box-shadow:0 1px 3px var(--shadow-primary); }
-        .search-box{ border-radius:16px; }
-        .chip{ border-radius:var(--radius-pill); }
-
-        /* Region accordion header */
-        .team-header{ padding:4px 2px 2px; }
-        .team-name{ font-size:18px; font-weight:800; letter-spacing:-0.3px; }
-
-        /* Match cards (nested in region card) */
-        .match-item.clickable-match{ background:var(--bg-tertiary); border:1px solid transparent; border-left:4px solid var(--text-quaternary); border-radius:20px; box-shadow:none; }
-        .match-item.clickable-match:hover{ box-shadow:0 6px 18px var(--shadow-primary); border-color:var(--border-primary); }
-        .match-item.profit-pos{ border-left-color:var(--accent-primary); }
-        .match-item.profit-neg{ border-left-color:var(--accent-red); }
-        .match-details-info h3{ font-weight:700; }
-
-        /* ===================== Bottom-sheet modals ===================== */
-        .match-popup-overlay{
-            display:flex; align-items:flex-end; justify-content:center; padding:0;
-            background:rgba(0,0,0,.55); -webkit-backdrop-filter:blur(2px); backdrop-filter:blur(2px);
-            opacity:0; pointer-events:none; transition:opacity .28s ease;
-        }
-        .match-popup-overlay.show{ opacity:1; pointer-events:auto; }
-        .match-popup{
-            width:100%; max-width:620px; max-height:92vh; margin:0; padding:0;
-            border:none; border-radius:32px 32px 0 0; overflow:hidden;
-            display:flex; flex-direction:column; position:relative; background:var(--bg-secondary);
-            box-shadow:0 -10px 44px rgba(0,0,0,.4);
-            transform:translateY(100%); transition:transform .36s cubic-bezier(.22,.61,.36,1);
-        }
-        .match-popup-overlay.show .match-popup{ transform:translateY(0); }
-        .match-popup::before{ content:""; position:absolute; top:11px; left:50%; transform:translateX(-50%); width:44px; height:5px; border-radius:3px; background:var(--text-tertiary); opacity:.4; z-index:3; }
-        .match-popup-header{ padding:28px 22px 16px; border-radius:0; border-bottom:1px solid var(--border-primary); flex-shrink:0; }
-        .match-popup-title{ font-size:21px; font-weight:800; letter-spacing:-0.4px; margin-bottom:3px; }
-        .match-popup-date{ font-size:14px; }
-        .match-popup-content{ padding:18px 22px calc(30px + env(safe-area-inset-bottom)); overflow-y:auto; -webkit-overflow-scrolling:touch; }
-        .close-btn{ width:38px; height:38px; border-radius:var(--radius-pill); background:var(--bg-tertiary); border:1px solid var(--border-primary); color:var(--text-secondary); }
-        .match-stats-grid{ gap:12px; margin-bottom:16px; }
-        .match-stat-card{ background:var(--bg-tertiary); border:none; border-radius:18px; }
-        .pdf-option-btn{ border-radius:20px; }
-        .pdf-team-btn{ border-radius:var(--radius-pill); }
-        .month-btn{ border-radius:var(--radius-pill); }
-        .pill{ border-radius:var(--radius-pill); }
-
-        /* Toasts + banners */
-        .success-message,.error-message{ border-radius:18px; }
-        .install-banner{ border-radius:24px; border:1px solid var(--border-primary); }
-        .install-btn{ border-radius:var(--radius-pill); }
-        .offline-indicator{ border-radius:var(--radius-pill); }
-
-        /* Keep the bottom-sheet full-width on phones (override desktop width rules) */
-        @media (min-width:768px){
-            .match-popup{ width:100%; max-width:620px; border-radius:32px 32px 0 0; }
-        }
-        @media (min-width:1024px){
-            .match-popup{ width:100%; max-width:640px; }
-        }
-
-        /* ===== Density + fit pass ===== */
-        .container{ max-width:560px; }
-        .top-spacer{ height: calc(env(safe-area-inset-top, 20px) + 10px); }
-        .bottom-spacer{ height:28px; }
-        .scrollable-content{ padding-top:8px; }
-
-        /* Compact header */
-        .header{ padding:6px 6px 2px; }
-        .header h1{ font-size:23px; letter-spacing:-0.5px; }
-        .header p{ font-size:13px; margin-top:0; }
-        .theme-toggle{ width:40px; height:40px; top:0; }
-        @media (min-width:768px){ .header h1{ font-size:26px; } }
-        @media (min-width:1024px){ .header h1{ font-size:28px; } }
-
-        /* KPI cards — never overflow, shrink the big numbers responsively */
-        .stats-grid{ grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px; }
-        .stat-card{ padding:16px 12px; border-radius:20px; min-width:0; }
-        .stat-value{ font-size:clamp(15px,4.6vw,22px); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-        .stat-label{ font-size:12px; margin-top:3px; }
-        @media (min-width:600px){ .stats-grid{ grid-template-columns:repeat(3,minmax(0,1fr)); } .stat-value{ font-size:clamp(14px,2.5vw,20px); } }
-
-        /* Sections + region tiles a touch tighter */
-        .section{ border-radius:22px; padding:16px; margin-bottom:14px; }
-        .section-title{ font-size:16px; margin-bottom:12px; }
-        .region-overview{ gap:10px; }
-        .region-mini{ padding:15px; border-radius:18px; }
-        .region-mini .rm-name{ font-size:15px; margin-bottom:10px; }
-        .region-mini .rm-stat{ font-size:12px; margin-top:5px; }
-
-        /* Filter card tighter */
-        .filter-bar{ border-radius:22px; padding:16px; gap:14px; }
-        .chip{ padding:8px 14px; font-size:13px; }
-
-        /* Match cards — denser, profit never wraps */
-        .match-item.clickable-match{ padding:13px 15px; margin-bottom:11px; border-radius:16px; }
-        .match-details-info h3{ font-size:16px; }
-        .match-meta{ margin-top:3px; }
-        .tickets-count{ font-size:17px; }
-        .tickets-label{ font-size:12px; }
-        .match-item .match-details{ margin-top:10px; padding-top:10px; gap:6px; }
-        .detail-item{ min-width:0; }
-        .detail-label{ font-size:11px; margin-bottom:2px; }
-        .detail-value{ font-size:13px; white-space:nowrap; }
-
-        /* Popup stat grid — compact, 2 per row, fits */
-        .match-stats-grid{ grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px; margin-bottom:18px; }
-        .match-stat-card{ padding:13px 12px; border-radius:16px; min-width:0; }
-        .match-stat-value{ font-size:clamp(15px,4.6vw,19px); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-        .match-stat-label{ font-size:11px; margin-top:2px; }
-        @media (min-width:520px){ .match-stats-grid{ grid-template-columns:repeat(3,minmax(0,1fr)); } }
-
-        /* Sub-text (seat code / order id) */
-        .cat-table .sub, .tickets-table .sub{ opacity:.55; font-size:11px; font-weight:400; }
-        .orders-table th:nth-child(2), .orders-table td:nth-child(2),
-        .orders-table th:nth-child(3), .orders-table td:nth-child(3){ width:74px; }
-
-        /* Collapsible seats */
-        .seats-toggle{
-            width:100%; margin-top:6px; padding:13px; border-radius:var(--radius-pill);
-            background:var(--bg-tertiary); border:1px solid var(--border-primary);
-            color:var(--text-secondary); font-weight:600; font-size:14px; cursor:pointer;
-            display:flex; align-items:center; justify-content:center; gap:8px;
-        }
-        .seats-toggle .chev{ transition:transform .2s; }
-        .seats-toggle.open .chev{ transform:rotate(180deg); }
-        .seats-wrap{ display:none; margin-top:10px; }
-        .seats-wrap.open{ display:block; }
-
-        .need-badge{
-            font-size:11px; font-weight:700; padding:2px 9px; border-radius:var(--radius-pill);
-            background:rgba(234,179,8,.18); color:#b8860b; white-space:nowrap;
-        }
-        [data-theme="dark"] .need-badge{ color:#e3b341; }
-
-        /* Profit/loss colour must win inside tables */
-        .tickets-table td.profit-positive, .cat-table td.profit-positive{ color:var(--accent-primary) !important; font-weight:600; }
-        .tickets-table td.profit-negative, .cat-table td.profit-negative{ color:var(--accent-red) !important; font-weight:600; }
-
-        /* Ticket table: keep money on one line, let only Cat/Seat wrap */
-        .tickets-table{ font-size:12.5px; }
-        .tickets-table th, .tickets-table td{ padding:9px 6px; white-space:nowrap; }
-        .tickets-table td:first-child, .tickets-table th:first-child{ white-space:normal; }
-        /* Pack grouping: shade alternate packs + a divider between them so groups read as blocks */
-        .tickets-table tbody tr td{ border-bottom:none; }
-        .tickets-table tbody tr.band td{ background:var(--bg-tertiary); }
-        .tickets-table tbody tr.group-start td{ border-top:1px solid var(--border-secondary); }
-
-        /* Pack mix summary */
-        .pack-mix{ display:flex; flex-wrap:wrap; align-items:center; gap:7px; margin:4px 0 12px; font-size:13px; }
-        .pack-mix-label{ font-weight:700; color:var(--text-secondary); }
-        .pack-tag{ font-size:12px; font-weight:600; padding:3px 10px; border-radius:var(--radius-pill); background:var(--bg-tertiary); border:1px solid var(--border-primary); color:var(--text-secondary); white-space:nowrap; }
-    </style>
+/* ---------- Status ---------- */
+.progress { display: none; padding: 0 6px; }
+body.loading .progress { display: block; }
+.progress .track { height: 4px; border-radius: 999px; background: var(--fill); overflow: hidden; }
+.progress i { display: block; height: 100%; width: 0; border-radius: 999px; background: var(--blue); transition: width .3s ease; }
+.progress p { font-size: 13px; color: var(--sec); margin-top: 6px; }
+#statusMessages { display: flex; flex-direction: column; gap: 10px; }
+#statusMessages:empty { display: none; }
+.banner { display: flex; gap: 12px; align-items: flex-start; padding: 14px 16px; font-size: 14px; line-height: 1.45; width: 100%; text-align: left; }
+.banner .ic { color: var(--red); display: flex; padding-top: 1px; }
+.banner small { display: block; margin-top: 6px; color: var(--sec); }
+.toast {
+  position: fixed; z-index: 60; left: 50%; top: calc(var(--safe-top) + 8px);
+  transform: translate(-50%, -150%); transition: transform .35s cubic-bezier(.2,.9,.3,1);
+  border-radius: 999px; padding: 0 8px 0 18px; min-height: 48px; font-size: 15px; font-weight: 600;
+  display: flex; gap: 10px; align-items: center; max-width: calc(100% - 32px); white-space: nowrap;
+}
+.toast.show { transform: translate(-50%, 0); }
+.toast span { overflow: hidden; text-overflow: ellipsis; padding-right: 10px; }
+.toast button { color: var(--blue); font-weight: 600; padding: 0 10px; height: 40px; }
+.offline-pill { display: none; position: fixed; z-index: 16; left: 50%; transform: translateX(-50%); top: calc(var(--safe-top) + 10px); height: 36px; padding: 0 14px; border-radius: 999px; align-items: center; gap: 6px; font-size: 13px; font-weight: 600; color: var(--sec); white-space: nowrap; }
+body.offline .offline-pill { display: flex; }
+.install { position: fixed; z-index: 25; left: 16px; right: 16px; margin: 0 auto; max-width: 440px; bottom: calc(max(10px, calc(var(--safe-bottom) - 10px)) + 74px); border-radius: 26px; padding: 10px 10px 10px 16px; display: none; align-items: center; gap: 10px; font-size: 14px; }
+.install.show { display: flex; }
+.install p { flex: 1; color: var(--sec); }
+.install b { color: var(--label); }
+</style>
 </head>
 <body>
-    <div class="container">
-        <div class="top-spacer"></div>
-        
-        <div id="offlineIndicator" class="offline-indicator">
-            🔵 You're offline - Data may be outdated
-        </div>
-        
-        <div class="header">
-            <h1>Ticket Father Dashboard</h1>
-            <p>Season 2025 - 2026</p>
-            
-            <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme">
-                <span class="theme-icon moon">🌙</span>
-                <span class="theme-icon sun">☀️</span>
-            </button>
-        </div>
-        
-        <div class="sticky-header"></div>
-        
-        <div class="scrollable-content">
-            <div class="stats-grid">
-                <div class="stat-card">
-                    <div class="stat-value" id="totalTickets">0</div>
-                    <div class="stat-label">Total Tickets</div>
-                </div>
-                <div class="stat-card available-tickets">
-                    <div class="stat-value" id="availableTickets">0</div>
-                    <div class="stat-label">Available Tickets</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-value" id="totalSpent">£0</div>
-                    <div class="stat-label">Total Spent</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-value" id="netProfit">£0</div>
-                    <div class="stat-label">Net Profit</div>
-                </div>
-            </div>
-            
-            <button class="refresh-btn" onclick="refreshDashboard()">Refresh Data</button>
-            
-            <div id="loadingMessage" class="loading" style="display: none;">
-                Loading latest data...
-            </div>
-            
-            <div id="loadingProgress" style="display: none;">
-                <div class="progress-container">
-                    <div class="progress-bar" id="progressBar"></div>
-                </div>
-                <div class="progress-text" id="progressText">0%</div>
-            </div>
+<div id="app">
 
-            <div id="statusMessages"></div>
-            
-            <div class="section">
-                <div class="section-title" id="upcomingTitle">📅 Next 7 Days</div>
-                <div class="period-selector">
-                    <div class="period-control">
-                        <button class="period-btn" onclick="setUpcomingPeriod(3)" data-days="3">3d</button>
-                        <button class="period-btn active" onclick="setUpcomingPeriod(7)" data-days="7">7d</button>
-                        <button class="period-btn" onclick="setUpcomingPeriod(14)" data-days="14">14d</button>
-                        <button class="period-btn" onclick="setUpcomingPeriod(30)" data-days="30">30d</button>
-                    </div>
-                </div>
-                <div id="upcomingMatches"></div>
-            </div>
-            
-            <div id="teamsContainer"></div>
-            
-            <button class="pdf-export-btn" onclick="showPDFExportModal()">📄 Export PDF</button>
-        </div>
-        
-        <div class="bottom-spacer"></div>
-        
-        <div id="installBanner" class="install-banner">
-            <span>Add Ticket Father to your home screen!</span>
-            <button class="install-btn" onclick="installPWA()">Install</button>
-            <button class="install-banner-close" onclick="hideInstallBanner()">×</button>
-        </div>
-        
-        <div id="matchPopupOverlay" class="match-popup-overlay" onclick="closeMatchPopup(event)">
-            <div class="match-popup" onclick="event.stopPropagation()">
-                <div class="match-popup-header">
-                    <div>
-                        <div class="match-popup-title" id="popupMatchTitle">Loading...</div>
-                        <div class="match-popup-date" id="popupMatchDate"></div>
-                    </div>
-                    <button class="close-btn" onclick="closeMatchPopup()">×</button>
-                </div>
-                <div class="match-popup-content" id="matchPopupContent">
-                    <div class="match-loading">
-                        <div class="match-loading-spinner"></div>
-                        Loading match details...
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        <div id="pdfExportModal" class="match-popup-overlay" onclick="closePDFExportModal(event)">
-            <div class="match-popup" onclick="event.stopPropagation()">
-                <div class="match-popup-header">
-                    <div>
-                        <div class="match-popup-title">📄 Export PDF Report</div>
-                        <div class="match-popup-date">Choose what to export</div>
-                    </div>
-                    <button class="close-btn" onclick="closePDFExportModal()">×</button>
-                </div>
-                <div class="match-popup-content" id="pdfExportContent">
-                    <div class="pdf-export-options">
-                        <button class="pdf-option-btn" onclick="exportAllDataPDF()">
-                            📊 Export All Teams Summary
-                            <span>Complete overview of all teams and matches</span>
-                        </button>
-
-                        <button class="pdf-option-btn" onclick="showMonthlyReportOptions()">
-                            📅 Export Monthly Report
-                            <span>Filter matches by specific month</span>
-                        </button>
-                        
-                        <div class="pdf-teams-section">
-                            <h3>Export Individual Teams:</h3>
-                            <div id="pdfTeamsList"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+  <!-- ================= HOME ================= -->
+  <section class="view active" id="view-home" aria-label="Home">
+    <div class="nav">
+      <div class="ctitle">Ticket Father</div>
+      <span></span>
+      <button class="circ glass press" id="refreshBtn" onclick="refreshDashboard()" aria-label="Refresh data"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 11a8 8 0 1 0-2.3 5.7"></path><path d="M20 5v6h-6"></path></svg></button>
     </div>
-    
-    <script>
-        function initializeTheme() {
-            const savedTheme = localStorage.getItem('theme');
-            const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-            
-            let theme = savedTheme;
-            if (!theme) {
-                theme = systemPrefersDark ? 'dark' : 'light';
-            }
-            
-            setTheme(theme);
-            
-            window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
-                if (!localStorage.getItem('theme')) {
-                    setTheme(e.matches ? 'dark' : 'light');
-                }
-            });
-        }
-        
-        function setTheme(theme) {
-            document.documentElement.setAttribute('data-theme', theme);
-            
-            const themeColorMeta = document.querySelector('meta[name="theme-color"]');
-            if (themeColorMeta) {
-                themeColorMeta.content = theme === 'dark' ? '#181818' : '#FFFFFF';
-            }
-            
-            const statusBarMeta = document.querySelector('meta[name="apple-mobile-web-app-status-bar-style"]');
-            if (statusBarMeta) {
-                statusBarMeta.content = theme === 'dark' ? 'black-translucent' : 'default';
-            }
-        }
-        
-        function toggleTheme() {
-            const currentTheme = document.documentElement.getAttribute('data-theme') || 'dark';
-            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-            
-            setTheme(newTheme);
-            localStorage.setItem('theme', newTheme);
-        }
-        
-        initializeTheme();
+    <div class="scroll">
+      <div class="wash" aria-hidden="true"></div>
+      <div class="page">
+        <h1 class="large">Ticket Father</h1>
+        <div class="progress" aria-live="polite"><div class="track"><i id="progressBar"></i></div><p id="progressText">Loading…</p></div>
+        <div id="statusMessages"></div>
+        <div id="homeBody" style="display:flex;flex-direction:column;gap:14px"></div>
+      </div>
+    </div>
+  </section>
 
-        if ('serviceWorker' in navigator) {
-            let swRefreshing = false;
-            // When a new service worker takes control, reload once to pick up the update.
-            navigator.serviceWorker.addEventListener('controllerchange', () => {
-                if (swRefreshing) return;
-                swRefreshing = true;
-                window.location.reload();
-            });
+  <!-- ================= MATCHES ================= -->
+  <section class="view" id="view-matches" aria-label="Matches">
+    <div class="nav">
+      <div class="ctitle">Matches</div>
+      <span></span>
+      <div class="pillgroup glass">
+        <button class="press" onclick="toggleSearch('matches')" aria-label="Search matches"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="M20 20l-4-4"></path></svg></button>
+        <button class="press" id="filterBtn" onclick="toggleMenu('filterMenu')" aria-label="Filter matches"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h16M7 12h10M10 18h4"></path></svg></button>
+      </div>
+    </div>
+    <div class="menu glass" id="filterMenu" role="menu"></div>
+    <div class="scroll">
+      <div class="page">
+        <h1 class="large">Matches</h1>
+        <p class="sub" id="matchesSub">&nbsp;</p>
+        <label class="search" id="matchSearch"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="M20 20l-4-4"></path></svg><input type="search" placeholder="Search all matches" oninput="setMatchQuery(this.value)" autocomplete="off"><button onclick="toggleSearch('matches')" aria-label="Clear search"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M9 9l6 6M15 9l-6 6"></path></svg></button></label>
+        <div class="seg" role="group" aria-label="Period" id="periodSeg">
+          <button data-days="3" onclick="setUpcomingPeriod(3)" aria-pressed="false">3 days</button>
+          <button data-days="7" onclick="setUpcomingPeriod(7)" aria-pressed="true">7 days</button>
+          <button data-days="14" onclick="setUpcomingPeriod(14)" aria-pressed="false">14 days</button>
+          <button data-days="30" onclick="setUpcomingPeriod(30)" aria-pressed="false">30 days</button>
+        </div>
+        <div id="upcomingMatches" style="display:flex;flex-direction:column;gap:12px"></div>
+      </div>
+    </div>
+  </section>
 
-            window.addEventListener('load', async () => {
-                try {
-                    const registration = await navigator.serviceWorker.register('/sw.js');
-                    console.log('PWA: Service Worker registered', registration);
+  <!-- ================= TEAMS ================= -->
+  <section class="view" id="view-teams" aria-label="Teams">
+    <div class="nav">
+      <div class="ctitle">Teams</div>
+      <span></span>
+      <div class="pillgroup glass">
+        <button class="press" onclick="toggleSearch('teams')" aria-label="Search teams"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="M20 20l-4-4"></path></svg></button>
+      </div>
+    </div>
+    <div class="scroll">
+      <div class="page">
+        <h1 class="large">Teams</h1>
+        <p class="sub" id="teamsSub">&nbsp;</p>
+        <label class="search" id="teamSearch"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="M20 20l-4-4"></path></svg><input type="search" placeholder="Search teams" oninput="setTeamQuery(this.value)" autocomplete="off"><button onclick="toggleSearch('teams')" aria-label="Clear search"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M9 9l6 6M15 9l-6 6"></path></svg></button></label>
+        <div class="seg" role="group" aria-label="Sort teams" id="sortSeg">
+          <button data-sort="profit" onclick="setTeamSort('profit')" aria-pressed="true">Profit</button>
+          <button data-sort="az" onclick="setTeamSort('az')" aria-pressed="false">A–Z</button>
+          <button data-sort="left" onclick="setTeamSort('left')" aria-pressed="false">Tickets left</button>
+        </div>
+        <div id="teamsContainer"></div>
+      </div>
+    </div>
+  </section>
 
-                    // A new version was found → activate it immediately (no prompt).
-                    registration.addEventListener('updatefound', () => {
-                        const newWorker = registration.installing;
-                        if (!newWorker) return;
-                        newWorker.addEventListener('statechange', () => {
-                            if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-                                newWorker.postMessage({ type: 'SKIP_WAITING' });
-                            }
-                        });
-                    });
+  <!-- ================= TEAM DETAIL (pushed) ================= -->
+  <section class="view push" id="view-team" aria-label="Team">
+    <div class="nav">
+      <div class="ctitle" id="teamCTitle"></div>
+      <button class="circ glass press" onclick="closeTeam()" aria-label="Back to Teams"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"></path></svg></button>
+      <button class="circ glass press" id="teamExportBtn" aria-label="Export team PDF"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a1 1 0 0 0-1 1v16a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V8z"></path><path d="M14 3v5h5M9 13h6M9 17h6"></path></svg></button>
+    </div>
+    <div class="scroll"><div class="page" id="teamBody" style="padding-top: calc(var(--safe-top) + 64px)"></div></div>
+  </section>
 
-                    // Check for a newer service worker on every load, and every 60s while open.
-                    registration.update();
-                    setInterval(() => registration.update(), 60 * 1000);
-                } catch (error) {
-                    console.error('PWA: Service Worker registration failed', error);
-                }
-            });
-        }
-        
-        window.addEventListener('online', () => {
-            document.getElementById('offlineIndicator').classList.remove('show');
-            if (confirm('You\'re back online! Refresh data?')) {
-                refreshDashboard();
-            }
-        });
-        
-        window.addEventListener('offline', () => {
-            document.getElementById('offlineIndicator').classList.add('show');
-        });
-        
-        let deferredPrompt;
-        const installBanner = document.getElementById('installBanner');
-        
-        window.addEventListener('beforeinstallprompt', (e) => {
-            e.preventDefault();
-            deferredPrompt = e;
-            
-            if (!window.matchMedia('(display-mode: standalone)').matches) {
-                installBanner.classList.add('show');
-            }
-        });
-        
-        function installPWA() {
-            if (deferredPrompt) {
-                deferredPrompt.prompt();
-                deferredPrompt.userChoice.then((choiceResult) => {
-                    if (choiceResult.outcome === 'accepted') {
-                        console.log('User accepted the install prompt');
-                    }
-                    deferredPrompt = null;
-                    hideInstallBanner();
-                });
-            }
-        }
-        
-        function hideInstallBanner() {
-            installBanner.classList.remove('show');
-            localStorage.setItem('installBannerDismissed', 'true');
-        }
-        
-        if (localStorage.getItem('installBannerDismissed') === 'true') {
-            installBanner.classList.remove('show');
-        }
-        
-        window.addEventListener('appinstalled', () => {
-            console.log('PWA installed');
-            hideInstallBanner();
-        });
-        
-        setTimeout(() => {
-            if (installBanner.classList.contains('show')) {
-                hideInstallBanner();
-            }
-        }, 30000);
-        
-        function refreshDashboard() {
-            refreshData();
-        }
-        
-        if (window.location.hash === '#refresh') {
-            refreshDashboard();
-            window.location.hash = '';
-        } else if (window.location.hash === '#upcoming') {
-            setTimeout(() => {
-                document.getElementById('upcomingMatches').scrollIntoView({ behavior: 'smooth' });
-                window.location.hash = '';
-            }, 500);
-        }
-        
+  <!-- ================= REPORTS ================= -->
+  <section class="view" id="view-reports" aria-label="Reports">
+    <div class="nav"><div class="ctitle">Reports</div></div>
+    <div class="scroll"><div class="page">
+      <h1 class="large">Reports</h1>
+      <div id="reportsBody" style="display:flex;flex-direction:column;gap:14px"></div>
+    </div></div>
+  </section>
+</div>
+
+<div class="bottom-fade" aria-hidden="true"></div>
+<nav class="tabbar glass" role="tablist" aria-label="Sections" id="tabbar">
+  <span class="tab-pill" aria-hidden="true"></span>
+  <button class="tab" role="tab" data-tab="home" aria-selected="true" onclick="switchTab('home')"><svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z"></path></svg><span>Home</span></button>
+  <button class="tab" role="tab" data-tab="matches" aria-selected="false" onclick="switchTab('matches')"><svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="3"></rect><path d="M3 10h18M8 3v4M16 3v4"></path></svg><span>Matches</span></button>
+  <button class="tab" role="tab" data-tab="teams" aria-selected="false" onclick="switchTab('teams')"><svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l8 3v6c0 4.5-3.4 8.2-8 9-4.6-.8-8-4.5-8-9V6z"></path></svg><span>Teams</span></button>
+  <button class="tab" role="tab" data-tab="reports" aria-selected="false" onclick="switchTab('reports')"><svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"></path></svg><span>Reports</span></button>
+</nav>
+
+<div class="offline-pill glass" id="offlineIndicator"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 8.5a15 15 0 0 1 4-2.6M9.5 5.2A15 15 0 0 1 22 8.5M5 12a10 10 0 0 1 3.5-2.2M15 10a10 10 0 0 1 4 2M8.5 15.5a5 5 0 0 1 7 0M12 19h.01M3 3l18 18"></path></svg>Offline · showing saved data</div>
+
+<!-- Match sheet -->
+<div class="layer" id="matchPopupOverlay">
+  <div class="backdrop" onclick="closeMatchPopup()"></div>
+  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="popupMatchTitle">
+    <div class="sheet-head">
+      <div class="grab"></div>
+      <div class="sh-row">
+        <button class="circ glass press" onclick="closeMatchPopup()" aria-label="Close"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"></path></svg></button>
+        <div class="sh-title"><b id="popupMatchTitle">Loading…</b><span id="popupMatchDate"></span></div>
+        <button class="circ glass press" id="matchShareBtn" onclick="shareMatch()" aria-label="Share match summary"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12M8 7l4-4 4 4"></path><path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7"></path></svg></button>
+      </div>
+    </div>
+    <div class="sheet-body" id="matchPopupContent"></div>
+  </div>
+</div>
+
+<!-- Export sheet (monthly report / single team) -->
+<div class="layer" id="pdfExportModal">
+  <div class="backdrop" onclick="closePDFExportModal()"></div>
+  <div class="sheet medium" role="dialog" aria-modal="true" aria-labelledby="exportTitle">
+    <div class="sheet-head">
+      <div class="grab"></div>
+      <div class="sh-row">
+        <button class="circ glass press" onclick="closePDFExportModal()" aria-label="Close"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"></path></svg></button>
+        <div class="sh-title"><b id="exportTitle">Export PDF</b><span id="exportSub"></span></div>
+        <span style="width:44px"></span>
+      </div>
+    </div>
+    <div class="sheet-body" id="pdfExportContent"></div>
+  </div>
+</div>
+
+<div id="installBanner" class="install glass">
+  <p><b>Add Ticket Father</b><br>to your Home Screen</p>
+  <button class="btn-small press" onclick="installPWA()">Install</button>
+  <button class="circ press" onclick="hideInstallBanner()" aria-label="Dismiss"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"></path></svg></button>
+</div>
+
+<div class="toast glass" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+// ===================== Data: Google Sheets (unchanged) =====================
         let dashboardData = {
             totalTickets: 0,
             availableTickets: 0,
@@ -2001,20 +603,6 @@
             return isWithinPeriod(dateStr, 7);
         }
 
-        function setUpcomingPeriod(days) {
-            selectedUpcomingPeriod = days;
-            
-            document.querySelectorAll('.period-btn').forEach(btn => {
-                btn.classList.remove('active');
-                if (parseInt(btn.dataset.days) === days) {
-                    btn.classList.add('active');
-                }
-            });
-            
-            document.getElementById('upcomingTitle').textContent = `📅 Next ${days} Day${days === 1 ? '' : 's'}`;
-            
-            updateDashboard();
-        }
 
         function formatName(name) {
             if (!name) return '';
@@ -2069,182 +657,7 @@
             return formatName(matchName);
         }
 
-        function showStatusMessage(message, type = 'success', persistent = false) {
-            const container = document.getElementById('statusMessages');
-            const messageId = 'status-' + Date.now();
-            
-            const messageClass = type === 'error' ? 'error-message' : 'success-message';
-            const persistentClass = persistent ? ' persistent-message' : '';
-            
-            const messageElement = document.createElement('div');
-            messageElement.id = messageId;
-            messageElement.className = messageClass + persistentClass;
-            messageElement.innerHTML = message;
-            
-            if (persistent) {
-                messageElement.onclick = () => dismissStatusMessage(messageId);
-            }
-            
-            container.appendChild(messageElement);
-            
-            if (!persistent) {
-                setTimeout(() => dismissStatusMessage(messageId), 5000);
-            }
-            
-            return messageId;
-        }
-        
-        function dismissStatusMessage(messageId) {
-            const message = document.getElementById(messageId);
-            if (message) {
-                message.remove();
-            }
-        }
-        
-        function clearAllStatusMessages() {
-            document.getElementById('statusMessages').innerHTML = '';
-        }
-        
-        function updateDashboard() {
-            document.getElementById('totalTickets').textContent = dashboardData.totalTickets;
-            document.getElementById('availableTickets').textContent = dashboardData.availableTickets;
-            document.getElementById('totalSpent').textContent = formatCurrency(dashboardData.totalSpent);
-            
-            const profitElement = document.getElementById('netProfit');
-            const profitValue = dashboardData.netProfit;
-            const profitText = profitValue >= 0 ? `+${formatCurrency(profitValue)}` : `-${formatCurrency(profitValue)}`;
-            profitElement.textContent = profitText;
-            profitElement.className = profitValue >= 0 ? 'stat-value profit-positive' : 'stat-value profit-negative';
-            
-            const allUpcomingMatches = [];
-            dashboardData.teams.forEach(team => {
-                team.matches.forEach(match => {
-                    if (isWithinPeriod(match.date, selectedUpcomingPeriod)) {
-                        allUpcomingMatches.push({
-                            ...match,
-                            teamEmoji: team.emoji,
-                            teamName: team.name
-                        });
-                    }
-                });
-            });
-            
-            allUpcomingMatches.sort((a, b) => {
-                const dateA = new Date(a.date.split('/').reverse().join('/'));
-                const dateB = new Date(b.date.split('/').reverse().join('/'));
-                return dateA - dateB;
-            });
-            
-            const upcomingContainer = document.getElementById('upcomingMatches');
-            if (allUpcomingMatches.length === 0) {
-                upcomingContainer.innerHTML = `<div class="empty-state">No matches in the next ${selectedUpcomingPeriod} day${selectedUpcomingPeriod === 1 ? '' : 's'}</div>`;
-            } else {
-                upcomingContainer.innerHTML = allUpcomingMatches.map((match, index) => `
-                    <div class="match-item clickable-match" onclick="openMatchPopup('${match.teamName}', '${match.name}', '${match.date}')">
-                        <div class="match-header">
-                            <div class="match-info">
-                                <div class="match-details-info">
-                                    <h3>${formatMatchName(match.name)}</h3>
-                                    <div class="match-date">${formatDate(match.date)}</div>
-                                </div>
-                            </div>
-                            <div class="tickets-status">
-                                <div class="tickets-count">${match.tickets}/${match.total}</div>
-                                <div class="tickets-label">available</div>
-                            </div>
-                        </div>
-                    </div>
-                `).join('');
-            }
-            
-            updateTeamsSections();
-        }
-        
-        function updateTeamsSections() {
-            const teamsContainer = document.getElementById('teamsContainer');
-            
-            const sortedTeams = [...dashboardData.teams].sort((a, b) => a.name.localeCompare(b.name));
-            
-            teamsContainer.innerHTML = sortedTeams.map((team, sortedIndex) => `
-                <div class="section">
-                    <div class="team-header">
-                        <div class="team-name">
-                            <div class="team-emoji">${team.emoji}</div>
-                            <span>${team.name}</span>
-                        </div>
-                        <div class="team-summary">
-                            <div class="team-tickets">${team.totalTickets} tickets</div>
-                            <div class="team-spent">${formatCurrency(team.totalSpent)} spent</div>
-                            <div class="team-profit ${team.netProfit >= 0 ? 'profit-positive' : 'profit-negative'}">
-                                ${team.netProfit >= 0 ? '+' : '-'}${formatCurrency(team.netProfit)}
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <button class="expand-btn" onclick="toggleTeamDetails(${sortedIndex})">
-                        <span id="expand-text-${sortedIndex}">Show Matches</span>
-                    </button>
-                    
-                    <div class="team-details collapsed" id="team-details-${sortedIndex}">
-                        ${team.matches.map((match, matchIndex) => `
-                            <div class="match-item clickable-match" onclick="openMatchPopup('${team.name}', '${match.name}', '${match.date}')">
-                                <div class="match-header">
-                                    <div class="match-info">
-                                        <div class="match-details-info">
-                                            <h3>${formatMatchName(match.name)}</h3>
-                                            <div class="match-date">${formatDate(match.date)}</div>
-                                        </div>
-                                    </div>
-                                    <div class="tickets-status">
-                                        <div class="tickets-count">${match.tickets}/${match.total}</div>
-                                        <div class="tickets-label">available</div>
-                                    </div>
-                                </div>
-                                <div class="match-details">
-                                    <div class="detail-item">
-                                        <div class="detail-label">Sold</div>
-                                        <div class="detail-value">${match.sold}</div>
-                                    </div>
-                                    <div class="detail-item">
-                                        <div class="detail-label">Spent</div>
-                                        <div class="detail-value">${formatCurrency(match.spent)}</div>
-                                    </div>
-                                    <div class="detail-item">
-                                        <div class="detail-label">Sales</div>
-                                        <div class="detail-value">${formatCurrency(match.sales)}</div>
-                                    </div>
-                                    <div class="detail-item">
-                                        <div class="detail-label">Profit</div>
-                                        <div class="detail-value ${match.profit >= 0 ? 'profit-positive' : 'profit-negative'}">
-                                            ${match.profit >= 0 ? '+' : '-'}${formatCurrency(match.profit)}
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        `).join('')}
-                    </div>
-                </div>
-            `).join('');
-            
-            window.sortedTeams = sortedTeams;
-        }
-        
-        function toggleTeamDetails(teamIndex) {
-            const detailsElement = document.getElementById(`team-details-${teamIndex}`);
-            const expandText = document.getElementById(`expand-text-${teamIndex}`);
-            const expandBtn = expandText.closest('.expand-btn');
-            
-            if (detailsElement.classList.contains('collapsed')) {
-                detailsElement.classList.remove('collapsed');
-                expandText.textContent = 'Hide Matches';
-                expandBtn.classList.add('hide-matches');
-            } else {
-                detailsElement.classList.add('collapsed');
-                expandText.textContent = 'Show Matches';
-                expandBtn.classList.remove('hide-matches');
-            }
-        }
-        
+
         async function fastFetch(url, timeout = 5000, maxRetries = 2) {
             for (let attempt = 1; attempt <= maxRetries; attempt++) {
                 try {
@@ -2434,86 +847,7 @@
             return '⚽';
         }
         
-        async function openMatchPopup(teamName, matchName, matchDate) {
-            const overlay = document.getElementById('matchPopupOverlay');
-            const popupTitle = document.getElementById('popupMatchTitle');
-            const popupDate = document.getElementById('popupMatchDate');
-            const popupContent = document.getElementById('matchPopupContent');
-            
-            popupTitle.textContent = formatMatchName(matchName);
-            popupDate.textContent = formatDate(matchDate);
-            popupContent.innerHTML = `
-                <div class="match-loading">
-                    <div class="match-loading-spinner"></div>
-                    Loading match details...
-                </div>
-            `;
-            overlay.style.display = 'flex';
-            requestAnimationFrame(() => overlay.classList.add('show'));
-            
-            try {
-                console.log(`🎯 Opening match popup for: "${teamName}" - "${matchName}"`);
-                
-                let teamSheetId = teamSheetCache.get(teamName);
-                
-                if (!teamSheetId) {
-                    console.log(`💾 No cached sheet ID for "${teamName}", searching...`);
-                    
-                    popupContent.innerHTML = `
-                        <div class="match-loading">
-                            <div class="match-loading-spinner"></div>
-                            Finding team sheet...
-                        </div>
-                    `;
-                    
-                    teamSheetId = await findTeamSheetId(teamName);
-                    
-                    if (teamSheetId) {
-                        teamSheetCache.set(teamName, teamSheetId);
-                        console.log(`💾 Cached sheet ID for "${teamName}": ${teamSheetId}`);
-                    }
-                }
-                
-                if (!teamSheetId) {
-                    throw new Error(`Could not find spreadsheet for team "${teamName}". The team may not have a dedicated sheet yet.`);
-                }
-                
-                popupContent.innerHTML = `
-                    <div class="match-loading">
-                        <div class="match-loading-spinner"></div>
-                        Loading match data...
-                    </div>
-                `;
-                
-                const matchData = await loadMatchDetails(teamSheetId, matchName);
-                
-                displayMatchDetails(matchData, matchName);
-                
-            } catch (error) {
-                console.error('❌ Error loading match details:', error);
-                
-                popupContent.innerHTML = `
-                    <div class="match-loading">
-                        <div style="color: #ff3b30; margin-bottom: 16px;">❌ ${error.message}</div>
-                        <button onclick="openMatchPopup('${teamName}', '${matchName}', '${matchDate}')" 
-                                style="background: #007aff; color: white; border: none; padding: 12px 24px; border-radius: 8px; cursor: pointer;">
-                            Try Again
-                        </button>
-                        <div style="margin-top: 12px; font-size: 14px; color: #8e8e93;">
-                            If this continues, the match sheet may not exist yet or there may be a connection issue.
-                        </div>
-                    </div>
-                `;
-            }
-        }
-        
-        function closeMatchPopup(event) {
-            if (event && event.target !== event.currentTarget) return;
-            const o = document.getElementById('matchPopupOverlay');
-            o.classList.remove('show');
-            setTimeout(() => { o.style.display = 'none'; }, 320);
-        }
-        
+
         async function findTeamSheetId(teamName) {
             console.log(`🔍 Finding sheet ID for team: "${teamName}"`);
             
@@ -2794,74 +1128,7 @@
             };
         }
         
-        function displayMatchDetails(matchData, matchName) {
-            const popupContent = document.getElementById('matchPopupContent');
-            const { tickets, summary } = matchData;
-            
-            popupContent.innerHTML = `
-                <div class="match-stats-grid">
-                    <div class="match-stat-card">
-                        <div class="match-stat-value">${summary.totalTickets}</div>
-                        <div class="match-stat-label">Total Tickets</div>
-                    </div>
-                    <div class="match-stat-card">
-                        <div class="match-stat-value">${summary.soldTickets}</div>
-                        <div class="match-stat-label">Sold</div>
-                    </div>
-                    <div class="match-stat-card">
-                        <div class="match-stat-value">${summary.availableTickets}</div>
-                        <div class="match-stat-label">Available</div>
-                    </div>
-                    <div class="match-stat-card">
-                        <div class="match-stat-value">${formatCurrency(summary.totalFV)}</div>
-                        <div class="match-stat-label">Total FV</div>
-                    </div>
-                    <div class="match-stat-card">
-                        <div class="match-stat-value">${formatCurrency(summary.totalSales)}</div>
-                        <div class="match-stat-label">Total Sales</div>
-                    </div>
-                    <div class="match-stat-card">
-                        <div class="match-stat-value ${summary.profit >= 0 ? 'profit-positive' : 'profit-negative'}">
-                            ${summary.profit >= 0 ? '+' : '-'}${formatCurrency(summary.profit)}
-                        </div>
-                        <div class="match-stat-label">Profit</div>
-                    </div>
-                </div>
-                
-                <div class="tickets-chart-container">
-                    <div class="chart-title">Ticket Details</div>
-                    <div style="overflow-x: auto;">
-                        <table class="tickets-table">
-                            <thead>
-                                <tr>
-                                    <th>FV</th>
-                                    <th>Block</th>
-                                    <th>Row</th>
-                                    <th>Seat</th>
-                                    <th>Status</th>
-                                    <th>Sold For</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                ${tickets.map(ticket => `
-                                    <tr>
-                                        <td>${formatCurrency(ticket.fv)}</td>
-                                        <td>${ticket.block}</td>
-                                        <td>${ticket.row}</td>
-                                        <td>${ticket.seat}</td>
-                                        <td class="status-${ticket.status.toLowerCase()}">${ticket.status}</td>
-                                        <td>${ticket.soldFor > 0 ? formatCurrency(ticket.soldFor) : '-'}</td>
-                                    </tr>
-                                `).join('')}
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            `;
-        }
-        
-        // Pull the live club list from the master's CLUBS tab (single source of truth).
-        // On success it replaces SHEET_IDS; on any failure it leaves the fallback intact.
+
         async function loadClubList() {
             if (!MASTER_SHEET_ID || MASTER_SHEET_ID.indexOf('PASTE') !== -1) return; // not configured yet
             try {
@@ -2883,26 +1150,11 @@
             }
         }
 
+
         async function refreshData() {
-            const loadingElement = document.getElementById('loadingMessage');
-            const progressElement = document.getElementById('loadingProgress');
-            const refreshBtn = document.querySelector('.refresh-btn');
-            
+            // Saved data stays on screen while the fresh copy loads
             clearAllStatusMessages();
-            dashboardData = {
-                totalTickets: 0,
-                availableTickets: 0,
-                totalSpent: 0,
-                totalSales: 0,
-                netProfit: 0,
-                teams: []
-            };
-            updateDashboard();
-            
-            loadingElement.style.display = 'block';
-            progressElement.style.display = 'block';
-            refreshBtn.disabled = true;
-            refreshBtn.textContent = 'Loading...';
+            setLoading(true);
             
             try {
                 await loadClubList(); // refresh the club list from the master (single source of truth)
@@ -2921,9 +1173,7 @@
                     try {
                         console.log(`\n📊 Processing sheet ${i + 1}/${SHEET_IDS.length}: ${sheetId}`);
                         
-                        const percentage = Math.round(((i + 1) / SHEET_IDS.length) * 100);
-                        document.getElementById('progressBar').style.width = `${percentage}%`;
-                        document.getElementById('progressText').textContent = `${percentage}% (${i + 1}/${SHEET_IDS.length})`;
+                        setProgress(i + 1, SHEET_IDS.length);
                         
                         const documentInfo = await fastFetch(
                             `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}?key=${API_KEY}&fields=properties.title`,
@@ -3013,58 +1263,44 @@
                     return sum + team.matches.reduce((matchSum, match) => matchSum + match.tickets, 0);
                 }, 0);
                 
+                lastUpdated = new Date();
                 updateDashboard();
+                saveCache();
                 
-                let successMessage = `✅ Loaded ${allTeams.length} teams successfully!`;
+                let successMessage = `Loaded ${allTeams.length} teams`;
                 
                 if (errorSheets.length > 0) {
                     showStatusMessage(successMessage, 'success', true);
                     
-                    const errorList = errorSheets.map(f => `• ${f.name}: ${f.reason}`).join('<br>');
-                    const errorMessage = `❌ ${errorSheets.length} sheets had connection/permission issues:<br><br>${errorList}<br><br>Click to dismiss this message.`;
+                    const errorList = errorSheets.map(f => `• ${esc(f.name)}: ${esc(f.reason)}`).join('<br>');
+                    const errorMessage = `<b>${errorSheets.length} sheet${errorSheets.length === 1 ? '' : 's'} couldn’t load</b><br>${errorList}`;
                     showStatusMessage(errorMessage, 'error', true);
                 } else {
                     if (emptySheets.length > 0) {
-                        successMessage += ` (${emptySheets.length} sheets have no data yet)`;
+                        successMessage += ` · ${emptySheets.length} with no data yet`;
                     }
                     showStatusMessage(successMessage, 'success', true);
                 }
                 
             } catch (error) {
                 console.error('❌ Critical error during refresh:', error);
-                showStatusMessage(`❌ Critical error: ${error.message}`, 'error', true);
+                showStatusMessage(`<b>Couldn’t refresh</b><br>${esc(error.message)}`, 'error', true);
             } finally {
-                loadingElement.style.display = 'none';
-                progressElement.style.display = 'none';
-                refreshBtn.disabled = false;
-                refreshBtn.textContent = 'Refresh Data';
+                setLoading(false);
+                if (!hasData()) renderHome();
             }
         }
         
-        document.addEventListener('DOMContentLoaded', function() {
-            if (navigator.onLine) {
-                refreshData();
-            } else {
-                document.getElementById('offlineIndicator').classList.add('show');
-                updateDashboard();
-            }
-        });
-        
+
+        // Season 2026–27: August 2026 – July 2027
         function getSeasonMonths() {
-            return [
-                { value: '2025-08', label: 'August 2025', short: 'Aug 25' },
-                { value: '2025-09', label: 'September 2025', short: 'Sep 25' },
-                { value: '2025-10', label: 'October 2025', short: 'Oct 25' },
-                { value: '2025-11', label: 'November 2025', short: 'Nov 25' },
-                { value: '2025-12', label: 'December 2025', short: 'Dec 25' },
-                { value: '2026-01', label: 'January 2026', short: 'Jan 26' },
-                { value: '2026-02', label: 'February 2026', short: 'Feb 26' },
-                { value: '2026-03', label: 'March 2026', short: 'Mar 26' },
-                { value: '2026-04', label: 'April 2026', short: 'Apr 26' },
-                { value: '2026-05', label: 'May 2026', short: 'May 26' },
-                { value: '2026-06', label: 'June 2026', short: 'Jun 26' },
-                { value: '2026-07', label: 'July 2026', short: 'Jul 26' }
-            ];
+            const out = [];
+            for (let i = 0; i < 12; i++) {
+                const m = (7 + i) % 12;
+                const y = SEASON_START + (7 + i >= 12 ? 1 : 0);
+                out.push({ value: `${y}-${String(m + 1).padStart(2, '0')}`, label: `${MON_LONG[m]} ${y}`, short: `${MON[m]} ${String(y).slice(2)}` });
+            }
+            return out;
         }
 
         function filterMatchesByMonth(matches, monthValue) {
@@ -3076,75 +1312,6 @@
             });
         }
 
-        function showMonthlyReportOptions() {
-            const content = document.getElementById('pdfExportContent');
-            const months = getSeasonMonths();
-            
-            content.innerHTML = `
-                <div class="pdf-export-options">
-                    <button class="pdf-option-btn" onclick="showPDFExportModal()" style="margin-bottom: 20px;">
-                        ← Back to Export Options
-                    </button>
-                    
-                    <div class="pdf-monthly-section">
-                        <h3>Select Month for Report:</h3>
-                        <div class="month-selector">
-                            ${months.map(month => `
-                                <button class="month-btn" onclick="selectMonth('${month.value}', this)" data-month="${month.value}">
-                                    ${month.short}
-                                </button>
-                            `).join('')}
-                        </div>
-                        
-                        <button class="pdf-option-btn" onclick="generateMonthlyReport()" id="generateMonthlyBtn" style="opacity: 0.5; cursor: not-allowed;" disabled>
-                            📅 Generate Monthly Report
-                            <span id="selectedMonthText">Please select a month above</span>
-                        </button>
-                    </div>
-                </div>
-            `;
-        }
-
-        let selectedMonth = null;
-
-        function selectMonth(monthValue, buttonElement) {
-            document.querySelectorAll('.month-btn').forEach(btn => btn.classList.remove('selected'));
-            
-            buttonElement.classList.add('selected');
-            selectedMonth = monthValue;
-            
-            const generateBtn = document.getElementById('generateMonthlyBtn');
-            const monthText = document.getElementById('selectedMonthText');
-            
-            const monthLabel = getSeasonMonths().find(m => m.value === monthValue).label;
-            monthText.textContent = `Generate report for ${monthLabel}`;
-            
-            generateBtn.style.opacity = '1';
-            generateBtn.style.cursor = 'pointer';
-            generateBtn.disabled = false;
-        }
-
-        function generateMonthlyReport() {
-            if (!selectedMonth) {
-                alert('Please select a month first');
-                return;
-            }
-
-            const content = document.getElementById('pdfExportContent');
-            const monthLabel = getSeasonMonths().find(m => m.value === selectedMonth).label;
-            
-            content.innerHTML = `
-                <div class="pdf-loading">
-                    <div class="pdf-loading-spinner"></div>
-                    Generating Monthly Report for ${monthLabel}...
-                </div>
-            `;
-            
-            setTimeout(() => {
-                generateMonthlyPDF(selectedMonth);
-                closePDFExportModal();
-            }, 500);
-        }
 
         function generateMonthlyPDF(monthValue) {
             const { jsPDF } = window.jspdf;
@@ -3158,7 +1325,7 @@
             
             doc.setFontSize(12);
             doc.setFont(undefined, 'normal');
-            doc.text(`Season 2025-2026 • Generated: ${new Date().toLocaleDateString('en-GB')}`, 20, 40);
+            doc.text(`Season 2026-2027 • Generated: ${new Date().toLocaleDateString('en-GB')}`, 20, 40);
             
             const monthlyTeams = [];
             let monthlyTotalTickets = 0;
@@ -3332,63 +1499,7 @@
             doc.save(`Ticket-Father-${monthValue}-Report.pdf`);
         }
         
-        function showPDFExportModal() {
-            const modal = document.getElementById('pdfExportModal');
-            const teamsList = document.getElementById('pdfTeamsList');
-            
-            const sortedTeams = [...dashboardData.teams].sort((a, b) => a.name.localeCompare(b.name));
-            
-            teamsList.innerHTML = sortedTeams.map(team => `
-                <button class="pdf-team-btn" onclick="exportTeamPDF('${team.name}')">
-                    <span class="pdf-team-emoji">${team.emoji}</span>
-                    <div>
-                        <div>${team.name}</div>
-                        <small>${team.totalTickets} tickets • ${formatCurrency(team.totalSpent)} spent</small>
-                    </div>
-                </button>
-            `).join('');
-            
-            modal.style.display = 'flex';
-            requestAnimationFrame(() => modal.classList.add('show'));
-        }
-        
-        function closePDFExportModal(event) {
-            if (event && event.target !== event.currentTarget) return;
-            const m = document.getElementById('pdfExportModal');
-            m.classList.remove('show');
-            setTimeout(() => { m.style.display = 'none'; }, 320);
-        }
-        
-        function exportAllDataPDF() {
-            const content = document.getElementById('pdfExportContent');
-            content.innerHTML = `
-                <div class="pdf-loading">
-                    <div class="pdf-loading-spinner"></div>
-                    Generating All Teams Summary PDF...
-                </div>
-            `;
-            
-            setTimeout(() => {
-                generateAllTeamsPDF();
-                closePDFExportModal();
-            }, 500);
-        }
-        
-        function exportTeamPDF(teamName) {
-            const content = document.getElementById('pdfExportContent');
-            content.innerHTML = `
-                <div class="pdf-loading">
-                    <div class="pdf-loading-spinner"></div>
-                    Generating ${teamName} PDF Report...
-                </div>
-            `;
-            
-            setTimeout(() => {
-                generateTeamPDF(teamName);
-                closePDFExportModal();
-            }, 500);
-        }
-        
+
         function removeEmojis(text) {
             return text.replace(/[\u{1F600}-\u{1F64F}]|[\u{1F300}-\u{1F5FF}]|[\u{1F680}-\u{1F6FF}]|[\u{1F1E0}-\u{1F1FF}]|[\u{2600}-\u{26FF}]|[\u{2700}-\u{27BF}]/gu, '').trim();
         }
@@ -3403,7 +1514,7 @@
             
             doc.setFontSize(12);
             doc.setFont(undefined, 'normal');
-            doc.text(`Season 2025-2026 • Generated: ${new Date().toLocaleDateString('en-GB')}`, 20, 40);
+            doc.text(`Season 2026-2027 • Generated: ${new Date().toLocaleDateString('en-GB')}`, 20, 40);
             
             doc.setFontSize(14);
             doc.setFont(undefined, 'bold');
@@ -3479,7 +1590,7 @@
             
             doc.setFontSize(12);
             doc.setFont(undefined, 'normal');
-            doc.text(`Season 2025-2026 • Generated: ${new Date().toLocaleDateString('en-GB')}`, 20, 40);
+            doc.text(`Season 2026-2027 • Generated: ${new Date().toLocaleDateString('en-GB')}`, 20, 40);
             
             doc.setFontSize(14);
             doc.setFont(undefined, 'bold');
@@ -3549,6 +1660,740 @@
             const safeName = removeEmojis(teamName).replace(/[^a-zA-Z0-9]/g, '-');
             doc.save(`Ticket-Father-${safeName}-${new Date().toISOString().split('T')[0]}.pdf`);
         }
-    </script>
+
+/* =====================================================================
+   Ticket Father — iOS 27 interface
+   Data loading, parsing and PDF generation further down are unchanged
+   from the previous version (apart from the season label).
+   ===================================================================== */
+const APP_VERSION = '2026.09.24-2';
+const SEASON_START = 2026;                 // season 2026–27 (Aug 2026 – Jul 2027)
+const SEASON_LABEL = '2026–27';
+const CACHE_KEY = 'tf-cache-v1';
+
+const $ = (id) => document.getElementById(id);
+const ICON = {"home": "<path d=\"M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z\"></path>", "cal": "<rect x=\"3\" y=\"5\" width=\"18\" height=\"16\" rx=\"3\"></rect><path d=\"M3 10h18M8 3v4M16 3v4\"></path>", "shield": "<path d=\"M12 3l8 3v6c0 4.5-3.4 8.2-8 9-4.6-.8-8-4.5-8-9V6z\"></path>", "chart": "<path d=\"M4 20V10M10 20V4M16 20v-7M22 20H2\"></path>", "refresh": "<path d=\"M20 11a8 8 0 1 0-2.3 5.7\"></path><path d=\"M20 5v6h-6\"></path>", "search": "<circle cx=\"11\" cy=\"11\" r=\"7\"></circle><path d=\"M20 20l-4-4\"></path>", "filter": "<path d=\"M4 6h16M7 12h10M10 18h4\"></path>", "back": "<path d=\"M15 5l-7 7 7 7\"></path>", "chev": "<path d=\"M9 6l6 6-6 6\"></path>", "doc": "<path d=\"M14 3H6a1 1 0 0 0-1 1v16a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V8z\"></path><path d=\"M14 3v5h5M9 13h6M9 17h6\"></path>", "close": "<path d=\"M6 6l12 12M18 6 6 18\"></path>", "xcircle": "<circle cx=\"12\" cy=\"12\" r=\"9\"></circle><path d=\"M9 9l6 6M15 9l-6 6\"></path>", "check": "<path d=\"M5 12.5l4.5 4.5L19 7.5\"></path>", "ticket": "<path d=\"M4 6h16v4a2 2 0 0 0 0 4v4H4v-4a2 2 0 0 0 0-4z\"></path><path d=\"M14 7v2M14 11v2M14 15v2\"></path>", "trend": "<path d=\"M4 16l5-5 4 4 7-7\"></path><path d=\"M15 8h5v5\"></path>", "alert": "<circle cx=\"12\" cy=\"12\" r=\"9\"></circle><path d=\"M12 7.5v5M12 16h.01\"></path>", "pound": "<path d=\"M16 6.5A3.5 3.5 0 0 0 9.5 8v4.5c0 3-1.5 5-3 6.5H17\"></path><path d=\"M7 12.5h7\"></path>", "bag": "<path d=\"M5 8h14l-1 12H6z\"></path><path d=\"M9 8V6a3 3 0 0 1 6 0v2\"></path>", "copy": "<rect x=\"9\" y=\"9\" width=\"11\" height=\"11\" rx=\"2.5\"></rect><path d=\"M5 15V6a2 2 0 0 1 2-2h8\"></path>", "share": "<path d=\"M12 3v12M8 7l4-4 4 4\"></path><path d=\"M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7\"></path>", "sun": "<circle cx=\"12\" cy=\"12\" r=\"4\"></circle><path d=\"M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4\"></path>", "moon": "<path d=\"M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z\"></path>", "auto": "<circle cx=\"12\" cy=\"12\" r=\"9\"></circle><path d=\"M12 3a9 9 0 0 1 0 18z\" fill=\"currentColor\"></path>", "wifioff": "<path d=\"M2 8.5a15 15 0 0 1 4-2.6M9.5 5.2A15 15 0 0 1 22 8.5M5 12a10 10 0 0 1 3.5-2.2M15 10a10 10 0 0 1 4 2M8.5 15.5a5 5 0 0 1 7 0M12 19h.01M3 3l18 18\"></path>"};
+function ic(name, size = 20, w = 2) {
+  return `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="${w}" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICON[name]}</svg>`;
+}
+function esc(s) {
+  return String(s == null ? '' : s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+}
+const MON = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+const MON_LONG = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+const DOW = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+const DOW_LONG = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+function parseDMY(s) {
+  if (!s) return null;
+  const p = String(s).split('/');
+  if (p.length < 3) return null;
+  const d = new Date(+p[2], +p[1] - 1, +p[0]);
+  return isNaN(d) ? null : d;
+}
+function today0() { const t = new Date(); return new Date(t.getFullYear(), t.getMonth(), t.getDate()); }
+function daysFromToday(d) { return Math.round((d - today0()) / 86400000); }
+function relDay(d) {
+  const n = daysFromToday(d);
+  if (n === 0) return 'Today';
+  if (n === 1) return 'Tomorrow';
+  if (n > 1) return `in ${n} days`;
+  if (n === -1) return 'Yesterday';
+  return `${-n} days ago`;
+}
+function dayShort(d) { return d ? `${DOW[d.getDay()]} ${d.getDate()} ${MON[d.getMonth()]}` : ''; }
+function dayLong(d) {
+  const n = daysFromToday(d);
+  if (n === 0) return 'Today';
+  if (n === 1) return 'Tomorrow';
+  return `${DOW_LONG[d.getDay()]} ${d.getDate()} ${MON[d.getMonth()]}`;
+}
+function timeShort(d) {
+  if (!d) return '';
+  let h = d.getHours(); const m = String(d.getMinutes()).padStart(2, '0'); const ap = h >= 12 ? 'pm' : 'am';
+  h = h % 12 || 12;
+  return `${h}:${m} ${ap}`;
+}
+function updatedLabel() {
+  if (!lastUpdated) return '';
+  return daysFromToday(new Date(lastUpdated.getFullYear(), lastUpdated.getMonth(), lastUpdated.getDate())) === 0
+    ? timeShort(lastUpdated) : dayShort(lastUpdated);
+}
+function signed(v) { return (v >= 0 ? '+' : '−') + formatCurrency(v); }
+function pcol(v) { return v >= 0 ? 'var(--green)' : 'var(--red)'; }
+function plural(n, w) { return `${n} ${w}${n === 1 ? '' : (/(ch|sh|s|x)$/.test(w) ? 'es' : 's')}`; }
+
+/* ---------- Club badges (replace the old emojis in the UI) ---------- */
+const CLUB_BADGES = [
+  ['nfl', 'NFL', '#013369', '#FFFFFF'], ['women', 'WRU', '#A0287E', '#FFFFFF'], ['wembley', 'WEM', '#5E5CE6', '#FFFFFF'],
+  ['uefa', 'UEFA', '#0A2A6B', '#FFFFFF'], ['int football', 'INT', '#3949AB', '#FFFFFF'],
+  ['arsenal', 'ARS', '#DB0007', '#FFFFFF'], ['aston villa', 'AVL', '#670E36', '#FFFFFF'], ['bournemouth', 'BOU', '#DA291C', '#FFFFFF'],
+  ['burnley', 'BUR', '#6C1D45', '#FFFFFF'], ['chelsea', 'CHE', '#034694', '#FFFFFF'], ['everton', 'EVE', '#003399', '#FFFFFF'],
+  ['forest', 'NFO', '#DD0000', '#FFFFFF'], ['fulham', 'FUL', '#FFFFFF', '#000000'], ['liverpool', 'LIV', '#C8102E', '#FFFFFF'],
+  ['man city', 'MCI', '#6CABDD', '#0B1A2B'], ['manchester city', 'MCI', '#6CABDD', '#0B1A2B'],
+  ['man utd', 'MUN', '#DA291C', '#FFFFFF'], ['manchester united', 'MUN', '#DA291C', '#FFFFFF'], ['man united', 'MUN', '#DA291C', '#FFFFFF'],
+  ['newcastle', 'NEW', '#241F20', '#FFFFFF'], ['palace', 'CRY', '#1B458F', '#FFFFFF'], ['sunderland', 'SUN', '#EB172B', '#FFFFFF'],
+  ['tottenham', 'TOT', '#132257', '#FFFFFF'], ['spurs', 'TOT', '#132257', '#FFFFFF'], ['west ham', 'WHU', '#7A263A', '#FFFFFF'],
+  ['eng', 'ENG', '#FFFFFF', '#CE1124'], ['england', 'ENG', '#FFFFFF', '#CE1124'], ['scot', 'SCO', '#0065BF', '#FFFFFF'],
+  ['six nations', 'R6N', '#0B7A5A', '#FFFFFF'], ['autumn', 'RAN', '#8A5A00', '#FFFFFF'], ['rugby', 'RUG', '#0B7A5A', '#FFFFFF'],
+  ['comedy', 'COM', '#8E44AD', '#FFFFFF'], ['theatre', 'THR', '#8E44AD', '#FFFFFF'], ['cricket', 'CRI', '#2E7D32', '#FFFFFF'],
+  ['darts', 'DAR', '#D35400', '#FFFFFF'], ['snooker', 'SNK', '#1B5E20', '#FFFFFF']
+];
+const FALLBACK_COLS = ['#5E5CE6', '#0A84FF', '#30B0C7', '#34A853', '#FF9F0A', '#BF5AF2', '#FF6482', '#8E8E93'];
+function badgeInfo(name) {
+  const n = String(name || '').toLowerCase();
+  for (const [key, code, bg, fg] of CLUB_BADGES) {
+    const re = new RegExp('(^|[^a-z])' + key.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '([^a-z]|$)');
+    if (re.test(n)) return { code, bg, fg };
+  }
+  const words = String(name || '?').replace(/[^A-Za-z0-9 ]/g, ' ').trim().split(/\s+/).filter(Boolean);
+  const code = (words.length > 1 ? words.slice(0, 3).map((w) => w[0]).join('') : (words[0] || '?').slice(0, 3)).toUpperCase();
+  let h = 0; for (const c of n) h = (h * 31 + c.charCodeAt(0)) >>> 0;
+  return { code, bg: FALLBACK_COLS[h % FALLBACK_COLS.length], fg: '#FFFFFF' };
+}
+function badge(name, cls = '') {
+  const b = badgeInfo(name);
+  const edge = b.bg.toUpperCase() === '#FFFFFF' ? ' edge' : '';
+  return `<div class="badge${edge} ${cls}" style="background:${b.bg};color:${b.fg}" aria-hidden="true">${esc(b.code)}</div>`;
+}
+function tile(icon, colVar) { return `<span class="tile" style="--c:var(--${colVar})">${ic(icon, 17, 2.2)}</span>`; }
+function chev(size = 14) { return `<span class="chev">${ic('chev', size, 2.6)}</span>`; }
+function chead(icon, colVar, title, right, withChev = true) {
+  return `<div class="chead"><span class="ic" style="color:var(--${colVar})">${ic(icon, 19, 2.3)}</span><span class="ct" style="color:var(--${colVar})">${esc(title)}</span><span class="cr">${esc(right || '')}</span>${withChev ? chev(13) : ''}</div>`;
+}
+function cols(items, sm) {
+  return `<div class="cols${sm ? ' sm' : ''}">` + items.map(([l, colVar, v, vcol]) =>
+    `<div><div class="l" style="color:var(--${colVar})">${esc(l)}</div><div class="v"${vcol ? ` style="color:${vcol}"` : ''}>${esc(v)}</div></div>`).join('') + '</div>';
+}
+
+/* ---------- State ---------- */
+let currentTab = 'home';
+let matchFilter = 'all';          // all | unsold | soldout
+let matchQuery = '';
+let teamSort = 'profit';           // profit | az | left
+let teamQuery = '';
+let currentTeam = null;
+let lastUpdated = null;
+let REG = [];                      // match registry for safe onclick handlers
+function reg(teamName, m) { REG.push({ team: teamName, m }); return REG.length - 1; }
+function openMatchRef(i) { const r = REG[i]; if (r) openMatchPopup(r.team, r.m.name, r.m.date); }
+
+function allMatches() {
+  const out = [];
+  dashboardData.teams.forEach((team) => team.matches.forEach((m) => out.push({ team, m, d: parseDMY(m.date) })));
+  return out;
+}
+function monthlyStats() {
+  return getSeasonMonths().map((mo) => {
+    const ms = dashboardData.teams.flatMap((t) => filterMatchesByMonth(t.matches, mo.value));
+    return { ...mo, profit: ms.reduce((s, m) => s + m.profit, 0), count: ms.length, tickets: ms.reduce((s, m) => s + m.total, 0), sold: ms.reduce((s, m) => s + m.sold, 0) };
+  });
+}
+function hasData() { return dashboardData.teams.length > 0; }
+
+/* =====================================================================
+   Rendering
+   ===================================================================== */
+function updateDashboard() {
+  REG = [];
+  renderHome();
+  renderMatches();
+  updateTeamsSections();
+  if (currentTeam) renderTeamDetail();
+  renderReports();
+}
+
+function ringSVG(pct) {
+  const size = 68, r = 25, c = 2 * Math.PI * r, d = c * Math.min(100, Math.max(0, pct)) / 100;
+  return `<div class="ring" role="img" aria-label="${pct}% sold"><svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}" aria-hidden="true">
+    <circle cx="34" cy="34" r="${r}" fill="none" stroke="color-mix(in srgb, var(--green) 28%, black)" stroke-width="8"></circle>
+    <circle cx="34" cy="34" r="${r}" fill="none" stroke="var(--green)" stroke-width="8" stroke-linecap="round" stroke-dasharray="${d.toFixed(1)} ${c.toFixed(1)}"></circle></svg><b>${pct}%</b></div>`;
+}
+
+function renderHome() {
+  const D = dashboardData, loaded = hasData();
+  const total = D.totalTickets, avail = D.availableTickets, sold = Math.max(0, total - avail);
+  const pct = total ? Math.round((sold / total) * 100) : 0;
+  const dash = loaded ? null : '—';
+
+  // mini bars: the last 6 season months up to now
+  const nowKey = `${new Date().getFullYear()}-${String(new Date().getMonth() + 1).padStart(2, '0')}`;
+  const months = monthlyStats().filter((m) => m.value <= nowKey).slice(-6);
+  const max = Math.max(1, ...months.map((m) => Math.abs(m.profit)));
+  const bars = (months.length ? months : Array.from({ length: 6 }, () => ({ profit: 0 }))).map((m) =>
+    `<i style="height:${m.profit ? Math.max(6, Math.round(Math.abs(m.profit) / max * 44)) : 6}px;${m.profit ? `background:${pcol(m.profit)}` : ''}"></i>`).join('');
+
+  // still to sell in the next 7 days
+  const soon = allMatches().filter((x) => x.d && isWithinPeriod(x.m.date, 7) && x.m.tickets > 0).sort((a, b) => a.d - b.d);
+  let soonHTML;
+  if (!loaded) soonHTML = `<div class="empty">${document.body.classList.contains('loading') ? 'Loading your sheets…' : 'No data yet — tap refresh to load your sheets.'}</div>`;
+  else if (!soon.length) soonHTML = `<div class="row plain"><span class="tile" style="--c:var(--green)">${ic('check', 17, 2.6)}</span><div class="main"><div class="t">All sold</div><div class="s">Nothing left to sell in the next 7 days</div></div></div>`;
+  else soonHTML = soon.map((x) => `<button class="row" onclick="openMatchRef(${reg(x.team.name, x.m)})">${badge(x.team.name)}<div class="main"><div class="t">${esc(formatMatchName(x.m.name))}</div><div class="s">${dayShort(x.d)} · ${relDay(x.d)}</div></div><div class="right num"><b style="color:var(--orange)">${x.m.tickets} left</b><small>of ${x.m.total}</small></div>${chev()}</button>`).join('');
+
+  $('homeBody').innerHTML = `
+    <div class="shead"><h2>Season ${SEASON_LABEL}</h2></div>
+    <button class="card cardpad press" onclick="switchTab('matches')" aria-label="Tickets: ${sold} sold, ${avail} available of ${total}">
+      ${chead('ticket', 'blue', 'Tickets', updatedLabel())}
+      <div class="split">${cols([['Sold', 'green', dash || sold], ['Available', 'orange', dash || avail], ['Total', 'blue', dash || total]])}${ringSVG(pct)}</div>
+    </button>
+    <button class="card cardpad press" onclick="switchTab('reports')" aria-label="Net profit ${loaded ? signed(D.netProfit) : 'not loaded'}">
+      ${chead('trend', 'green', 'Net Profit', 'Season')}
+      <div class="split"><div><div class="big" ${loaded && D.netProfit < 0 ? 'style="color:var(--red)"' : ''}>${loaded ? signed(D.netProfit) : '—'}</div>
+      <div class="muted">${loaded ? `${formatCurrency(D.totalSales)} sales · ${formatCurrency(D.totalSpent)} spent` : 'Sales and spend appear here'}</div></div>
+      <div class="minibars" aria-hidden="true">${bars}</div></div>
+    </button>
+    <div class="shead"><span class="ic" style="color:var(--orange)">${ic('alert', 21, 2.3)}</span><h2>Still to Sell</h2><button class="link" onclick="setUpcomingPeriod(7);switchTab('matches')">Next 7 days</button></div>
+    <div class="list">${soonHTML}</div>`;
+}
+
+function setUpcomingPeriod(days) {
+  selectedUpcomingPeriod = days;
+  document.querySelectorAll('#periodSeg button').forEach((b) => b.setAttribute('aria-pressed', String(+b.dataset.days === days)));
+  renderMatches();
+}
+function setMatchFilter(f) { matchFilter = f; closeMenus(); renderMatches(); }
+function setMatchQuery(q) { matchQuery = q; renderMatches(); }
+
+function matchRow(x, showDate) {
+  const right = x.m.tickets > 0
+    ? `<div class="right num"><b>${x.m.tickets}<span style="color:var(--sec);font-weight:400">/${x.m.total}</span></b><small>available</small></div>`
+    : `<span class="soldout">${ic('check', 15, 2.8)}Sold out</span>`;
+  const sub = showDate ? `${dayShort(x.d)} · ${esc(x.team.name)}` : esc(x.team.name);
+  return `<button class="row" onclick="openMatchRef(${reg(x.team.name, x.m)})">${badge(x.team.name)}<div class="main"><div class="t">${esc(formatMatchName(x.m.name))}</div><div class="s">${sub}</div></div>${right}${chev()}</button>`;
+}
+function renderMatches() {
+  const q = matchQuery.trim().toLowerCase();
+  let items = allMatches().filter((x) => x.d);
+  if (q) items = items.filter((x) => (x.m.name + ' ' + x.team.name).toLowerCase().includes(q));
+  else items = items.filter((x) => isWithinPeriod(x.m.date, selectedUpcomingPeriod));
+  if (matchFilter === 'unsold') items = items.filter((x) => x.m.tickets > 0);
+  if (matchFilter === 'soldout') items = items.filter((x) => x.m.tickets === 0);
+  items.sort((a, b) => a.d - b.d || a.team.name.localeCompare(b.team.name));
+
+  const filterName = { all: '', unsold: ' · unsold', soldout: ' · sold out' }[matchFilter];
+  $('matchesSub').textContent = q ? `${plural(items.length, 'result')}${filterName}` : `Next ${selectedUpcomingPeriod} days · ${plural(items.length, 'match')}${filterName}`;
+  $('periodSeg').classList.toggle('hidden', !!q);
+  $('filterBtn').classList.toggle('on', matchFilter !== 'all');
+  $('filterMenu').innerHTML = [['all', 'All matches'], ['unsold', 'Unsold'], ['soldout', 'Sold out']].map(([k, l]) =>
+    `<button role="menuitemradio" aria-checked="${matchFilter === k}" onclick="setMatchFilter('${k}')"><span>${l}</span><span class="tick">${matchFilter === k ? ic('check', 18, 2.6) : ''}</span></button>`).join('');
+
+  const box = $('upcomingMatches');
+  if (!hasData()) { box.innerHTML = `<div class="card empty">No data yet.</div>`; return; }
+  if (!items.length) {
+    box.innerHTML = `<div class="card empty">${q ? 'No matches found.' : `No matches in the next ${selectedUpcomingPeriod} days.`}</div>`;
+    return;
+  }
+  if (q) { box.innerHTML = `<div class="list">${items.map((x) => matchRow(x, true)).join('')}</div>`; return; }
+  const groups = [];
+  items.forEach((x) => {
+    const key = x.m.date;
+    if (!groups.length || groups[groups.length - 1].key !== key) groups.push({ key, d: x.d, rows: [] });
+    groups[groups.length - 1].rows.push(x);
+  });
+  box.innerHTML = groups.map((g) => `<div class="day">${dayLong(g.d)}</div><div class="list">${g.rows.map((x) => matchRow(x, false)).join('')}</div>`).join('');
+}
+
+function setTeamSort(s) {
+  teamSort = s;
+  document.querySelectorAll('#sortSeg button').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.sort === s)));
+  updateTeamsSections();
+}
+function setTeamQuery(q) { teamQuery = q; updateTeamsSections(); }
+function teamLeft(t) { return t.matches.reduce((s, m) => s + m.tickets, 0); }
+
+function updateTeamsSections() {
+  const all = dashboardData.teams;
+  $('teamsSub').textContent = hasData() ? `${plural(all.length, 'team')} · ${dashboardData.totalTickets} tickets` : ' ';
+  const q = teamQuery.trim().toLowerCase();
+  let teams = all.filter((t) => !q || t.name.toLowerCase().includes(q));
+  if (teamSort === 'profit') teams.sort((a, b) => b.netProfit - a.netProfit);
+  else if (teamSort === 'left') teams.sort((a, b) => teamLeft(b) - teamLeft(a) || a.name.localeCompare(b.name));
+  else teams.sort((a, b) => a.name.localeCompare(b.name));
+  window.sortedTeams = teams;
+  const box = $('teamsContainer');
+  if (!hasData()) { box.innerHTML = `<div class="card empty">No data yet.</div>`; return; }
+  if (!teams.length) { box.innerHTML = `<div class="card empty">No teams found.</div>`; return; }
+  const max = Math.max(1, ...teams.map((t) => Math.abs(t.netProfit)));
+  box.innerHTML = `<div class="list">${teams.map((t, i) => {
+    const right = teamSort === 'left'
+      ? `<span class="num" style="font-size:17px;font-weight:600;color:${teamLeft(t) ? 'var(--orange)' : 'var(--green)'}">${teamLeft(t) ? teamLeft(t) + ' left' : 'All sold'}</span>`
+      : `<span class="num" style="font-size:17px;font-weight:600;color:${pcol(t.netProfit)}">${signed(t.netProfit)}</span>`;
+    return `<button class="row" style="padding-top:10px;padding-bottom:10px" onclick="openTeamIdx(${i})">${badge(t.name)}<div class="main" style="padding:0">
+      <div style="display:flex;justify-content:space-between;gap:8px"><span class="t">${esc(t.name)}</span>${right}</div>
+      <div class="s">${t.totalTickets} tickets · ${formatCurrency(t.totalSpent)} spent</div>
+      <div class="bar"><i style="width:${Math.max(3, Math.round(Math.abs(t.netProfit) / max * 100))}%;background:${pcol(t.netProfit)}"></i></div></div>${chev()}</button>`;
+  }).join('')}</div>`;
+}
+function toggleTeamDetails(i) { openTeamIdx(i); } // kept for old links
+
+/* ---------- Team detail ---------- */
+function openTeamIdx(i) { const t = (window.sortedTeams || [])[i]; if (t) openTeam(t.name); }
+function openTeam(name) {
+  currentTeam = name;
+  renderTeamDetail();
+  const v = $('view-team');
+  v.querySelector('.scroll').scrollTop = 0;
+  v.classList.remove('scrolled');
+  v.classList.add('open');
+}
+function closeTeam(instant) {
+  const v = $('view-team');
+  if (instant) { v.style.transition = 'none'; requestAnimationFrame(() => { v.style.transition = ''; }); }
+  v.classList.remove('open');
+  currentTeam = null;
+}
+function teamMatchCard(team, m) {
+  const d = parseDMY(m.date);
+  const played = d && daysFromToday(d) < 0;
+  return `<button class="card cardpad press" style="gap:12px;padding:14px 16px 16px" onclick="openMatchRef(${reg(team.name, m)})">
+    <div style="display:flex;align-items:center;gap:8px;width:100%"><div style="flex:1;min-width:0"><div style="font-size:17px;font-weight:600">${esc(formatMatchName(m.name))}</div>
+    <div class="muted" style="font-size:14px">${d ? dayShort(d) : esc(m.date)} · ${played ? 'played' : `${m.tickets}/${m.total} available`}</div></div>${chev(13)}</div>
+    ${cols([['Sold', 'green', String(m.sold)], ['Spent', 'orange', formatCurrency(m.spent)], ['Sales', 'blue', formatCurrency(m.sales)], ['Profit', m.profit >= 0 ? 'green' : 'red', signed(m.profit)]], true)}
+  </button>`;
+}
+function renderTeamDetail() {
+  const team = dashboardData.teams.find((t) => t.name === currentTeam);
+  if (!team) { $('teamBody').innerHTML = `<div class="card empty">This team isn't in the latest data.</div>`; return; }
+  const left = teamLeft(team), totalM = team.matches.reduce((s, m) => s + m.total, 0);
+  $('teamCTitle').textContent = team.name;
+  $('teamExportBtn').onclick = () => exportTeamPDF(team.name);
+  const withD = team.matches.map((m) => ({ m, d: parseDMY(m.date) }));
+  const upcoming = withD.filter((x) => !x.d || daysFromToday(x.d) >= 0).sort((a, b) => (a.d || 0) - (b.d || 0));
+  const played = withD.filter((x) => x.d && daysFromToday(x.d) < 0).sort((a, b) => b.d - a.d);
+  $('teamBody').innerHTML = `
+    <div class="team-hero">${badge(team.name, 'xl')}<h1>${esc(team.name)}</h1><p>${plural(team.matches.length, 'match')} · ${team.totalTickets} tickets</p></div>
+    <div class="list">
+      <div class="row tiled">${tile('pound', 'orange')}<span class="main t">Spent</span><span class="v num">${formatCurrency(team.totalSpent)}</span></div>
+      <div class="row tiled">${tile('bag', 'blue')}<span class="main t">Sales</span><span class="v num">${formatCurrency(team.totalSales)}</span></div>
+      <div class="row tiled">${tile('ticket', 'indigo')}<span class="main t">Available</span><span class="v num">${left} of ${totalM}</span></div>
+      <div class="row tiled">${tile('trend', team.netProfit >= 0 ? 'green' : 'red')}<span class="main t">Profit</span><span class="v num" style="color:${pcol(team.netProfit)};font-weight:600">${signed(team.netProfit)}</span></div>
+    </div>
+    ${upcoming.length ? `<div class="shead"><h2>Upcoming</h2><span class="r">${upcoming.length}</span></div>${upcoming.map((x) => teamMatchCard(team, x.m)).join('')}` : ''}
+    ${played.length ? `<div class="shead"><h2>Played</h2><span class="r">${played.length}</span></div>${played.map((x) => teamMatchCard(team, x.m)).join('')}` : ''}
+    ${!team.matches.length ? '<div class="card empty">No matches listed yet.</div>' : ''}`;
+}
+
+/* ---------- Reports ---------- */
+let chartMonth = null;
+function pickChartMonth(v) { chartMonth = chartMonth === v ? null : v; renderReports(); }
+function renderReports() {
+  const stats = monthlyStats();
+  const max = Math.max(1, ...stats.map((m) => Math.abs(m.profit)));
+  const sel = stats.find((m) => m.value === chartMonth);
+  const head = sel
+    ? `<span class="big" style="font-size:30px;${sel.profit < 0 ? 'color:var(--red)' : ''}">${signed(sel.profit)}</span><span class="muted">${sel.label} · ${plural(sel.count, 'match')}</span>`
+    : `<span class="big" style="font-size:30px;${dashboardData.netProfit < 0 ? 'color:var(--red)' : ''}">${hasData() ? signed(dashboardData.netProfit) : '—'}</span><span class="muted">this season</span>`;
+  const bars = stats.map((m) => {
+    const h = m.profit ? Math.max(6, Math.round(Math.abs(m.profit) / max * 90)) : 6;
+    return `<button onclick="pickChartMonth('${m.value}')" aria-pressed="${m.value === chartMonth}" aria-label="${m.label}: ${m.count ? signed(m.profit) : 'no matches'}"><i style="height:${h}px;${m.profit ? `background:${pcol(m.profit)}` : ''}"></i><span>${m.short[0]}</span></button>`;
+  }).join('');
+  const pref = getThemePref() || 'auto';
+  const modes = [['auto', 'Automatic', 'auto'], ['light', 'Light', 'sun'], ['dark', 'Dark', 'moon']];
+  $('reportsBody').innerHTML = `
+    <div class="card cardpad" style="gap:10px">${chead('chart', 'green', 'Profit by Month', SEASON_LABEL, false)}
+      <div style="display:flex;align-items:baseline;gap:8px;flex-wrap:wrap">${head}</div>
+      <div class="chart">${bars}</div></div>
+    <div class="shead"><h2>Export PDF</h2></div>
+    <div class="list">
+      <button class="row tiled" onclick="exportAllDataPDF()">${tile('doc', 'blue')}<span class="main t">All Teams Summary</span>${chev()}</button>
+      <button class="row tiled" onclick="showMonthlyReportOptions()">${tile('cal', 'red')}<span class="main t">Monthly Report</span>${chev()}</button>
+      <button class="row tiled" onclick="showTeamExportOptions()">${tile('shield', 'green')}<span class="main t">Single Team</span>${chev()}</button>
+    </div>
+    <div class="shead"><h2>Appearance</h2></div>
+    <div class="list">${modes.map(([k, l, icn]) => `<button class="row tiled" role="menuitemradio" aria-checked="${pref === k}" onclick="setThemePref('${k}')">${tile(icn, 'indigo')}<span class="main t">${l}</span><span style="color:var(--blue);display:flex">${pref === k ? ic('check', 20, 2.6) : ''}</span></button>`).join('')}</div>
+    <p style="text-align:center;font-size:13px;color:var(--sec);padding:4px 0">Version ${APP_VERSION}${lastUpdated ? ` · Updated ${updatedLabel()}` : ''}<br>Updates automatically</p>`;
+}
+
+/* =====================================================================
+   Navigation
+   ===================================================================== */
+const TABS = ['home', 'matches', 'teams', 'reports'];
+function switchTab(tab) {
+  closeMenus();
+  if (tab === currentTab) {
+    if (tab === 'teams' && currentTeam) { closeTeam(); return; }
+    const sc = $('view-' + tab).querySelector('.scroll');
+    sc.scrollTo({ top: 0, behavior: 'smooth' });
+    return;
+  }
+  if (currentTeam) closeTeam(true);
+  currentTab = tab;
+  TABS.forEach((t) => $('view-' + t).classList.toggle('active', t === tab));
+  document.querySelectorAll('.tab').forEach((b) => b.setAttribute('aria-selected', String(b.dataset.tab === tab)));
+  $('tabbar').style.setProperty('--i', TABS.indexOf(tab));
+  updateTopColour();
+}
+function updateTopColour() {
+  const sc = $('view-home').querySelector('.scroll');
+  document.documentElement.classList.toggle('home-top', currentTab === 'home' && !currentTeam && sc.scrollTop < 20);
+}
+document.querySelectorAll('.view').forEach((v) => {
+  const sc = v.querySelector('.scroll');
+  sc.addEventListener('scroll', () => {
+    v.classList.toggle('scrolled', sc.scrollTop > 44);
+    if (v.id === 'view-home') updateTopColour();
+  }, { passive: true });
+});
+function toggleSearch(which) {
+  const box = $(which === 'matches' ? 'matchSearch' : 'teamSearch');
+  const input = box.querySelector('input');
+  const show = !box.classList.contains('show');
+  box.classList.toggle('show', show);
+  if (show) { input.focus(); }
+  else { input.value = ''; which === 'matches' ? setMatchQuery('') : setTeamQuery(''); }
+}
+function toggleMenu(id) { const m = $(id); const show = !m.classList.contains('show'); closeMenus(); m.classList.toggle('show', show); }
+function closeMenus() { document.querySelectorAll('.menu.show').forEach((m) => m.classList.remove('show')); }
+document.addEventListener('click', (e) => {
+  if (!e.target.closest('.menu') && !e.target.closest('#filterBtn')) closeMenus();
+});
+
+/* ---------- Sheets ---------- */
+function openLayer(id) { const l = $(id); l.classList.add('open'); l.querySelector('.sheet-body').scrollTop = 0; }
+function closeLayer(id) { $(id).classList.remove('open'); }
+function attachSheetDrag(layerId, close) {
+  const layer = $(layerId), sheet = layer.querySelector('.sheet'), head = layer.querySelector('.sheet-head');
+  let y0 = null, dy = 0;
+  head.addEventListener('pointerdown', (e) => { if (e.target.closest('button')) return; y0 = e.clientY; dy = 0; sheet.classList.add('dragging'); head.setPointerCapture(e.pointerId); });
+  head.addEventListener('pointermove', (e) => { if (y0 === null) return; dy = Math.max(0, e.clientY - y0); sheet.style.transform = `translateY(${dy}px)`; });
+  const end = () => {
+    if (y0 === null) return;
+    sheet.classList.remove('dragging'); sheet.style.transform = ''; y0 = null;
+    if (dy > 110) close();
+  };
+  head.addEventListener('pointerup', end); head.addEventListener('pointercancel', end);
+}
+document.addEventListener('keydown', (e) => {
+  if (e.key !== 'Escape') return;
+  if ($('matchPopupOverlay').classList.contains('open')) closeMatchPopup();
+  else if ($('pdfExportModal').classList.contains('open')) closePDFExportModal();
+  else closeMenus();
+});
+
+/* ---------- Toast & status ---------- */
+let toastTimer = null;
+function toast(msg, actionLabel, action, ms = 3200) {
+  const t = $('toast');
+  t.innerHTML = `<span>${esc(msg)}</span>${actionLabel ? `<button>${esc(actionLabel)}</button>` : ''}`;
+  if (actionLabel) t.querySelector('button').onclick = () => { t.classList.remove('show'); action(); };
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), ms);
+}
+function showStatusMessage(message, type = 'success', persistent = false) {
+  const id = 'status-' + Date.now() + Math.random().toString(36).slice(2, 6);
+  if (type !== 'error') { toast(message.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim()); return id; }
+  const el = document.createElement('button');
+  el.id = id; el.className = 'card banner';
+  el.innerHTML = `<span class="ic">${ic('alert', 20, 2.3)}</span><div>${message}<small>Tap to dismiss</small></div>`;
+  el.onclick = () => dismissStatusMessage(id);
+  $('statusMessages').appendChild(el);
+  return id;
+}
+function dismissStatusMessage(id) { const m = $(id); if (m) m.remove(); }
+function clearAllStatusMessages() { $('statusMessages').innerHTML = ''; }
+function setLoading(on) {
+  document.body.classList.toggle('loading', on);
+  const b = $('refreshBtn'); b.classList.toggle('spin', on); b.disabled = on;
+  if (on) setProgress(0, SHEET_IDS.length);
+  if (!hasData()) renderHome();
+}
+function setProgress(i, n) {
+  $('progressBar').style.width = `${n ? Math.round(i / n * 100) : 0}%`;
+  $('progressText').textContent = i ? `Loading ${i} of ${n} sheets…` : 'Loading club list…';
+}
+
+/* ---------- Clipboard / share ---------- */
+async function copyText(text) {
+  try { await navigator.clipboard.writeText(text); return true; } catch (e) {
+    const ta = document.createElement('textarea'); ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
+    document.body.appendChild(ta); ta.select();
+    let ok = false; try { ok = document.execCommand('copy'); } catch (e2) {}
+    ta.remove(); return ok;
+  }
+}
+function seatLabel(t, i) {
+  const parts = [t.block && `Block ${t.block}`, t.row && `Row ${t.row}`, t.seat && `Seat ${t.seat}`].filter(Boolean);
+  return parts.length ? parts.join(' · ') : `Ticket ${i + 1}`;
+}
+
+/* ---------- Theme ---------- */
+function getThemePref() { try { return localStorage.getItem('theme'); } catch (e) { return null; } }
+function effectiveDark() {
+  const p = getThemePref();
+  if (p === 'dark') return true;
+  if (p === 'light') return false;
+  return window.matchMedia('(prefers-color-scheme: dark)').matches;
+}
+function setTheme(pref) {
+  if (pref === 'light' || pref === 'dark') document.documentElement.setAttribute('data-theme', pref);
+  else document.documentElement.removeAttribute('data-theme');
+  $('themeColor').setAttribute('content', effectiveDark() ? '#000000' : '#F2F2F7');
+}
+function setThemePref(p) {
+  try { if (p === 'auto') localStorage.removeItem('theme'); else localStorage.setItem('theme', p); } catch (e) {}
+  setTheme(p);
+  renderReports();
+}
+function toggleTheme() { setThemePref(effectiveDark() ? 'light' : 'dark'); }
+setTheme(getThemePref());
+window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => setTheme(getThemePref()));
+
+/* ---------- Saved data (instant open + offline) ---------- */
+function saveCache() {
+  try {
+    localStorage.setItem(CACHE_KEY, JSON.stringify({ data: dashboardData, at: lastUpdated ? lastUpdated.getTime() : Date.now(), ids: [...teamSheetCache.entries()] }));
+  } catch (e) {}
+}
+function loadCache() {
+  try {
+    const raw = localStorage.getItem(CACHE_KEY);
+    if (!raw) return false;
+    const c = JSON.parse(raw);
+    if (!c || !c.data || !Array.isArray(c.data.teams)) return false;
+    dashboardData = c.data;
+    lastUpdated = c.at ? new Date(c.at) : null;
+    (c.ids || []).forEach(([k, v]) => teamSheetCache.set(k, v));
+    return true;
+  } catch (e) { return false; }
+}
+
+/* =====================================================================
+   Match sheet (same data flow as before, new layout)
+   ===================================================================== */
+let lastMatchArgs = null;
+let currentMatch = null;
+function matchLoading(text) {
+  $('matchPopupContent').innerHTML = `<div class="loading-box"><div class="spinner"></div>${esc(text)}</div>`;
+}
+async function openMatchPopup(teamName, matchName, matchDate) {
+  lastMatchArgs = [teamName, matchName, matchDate];
+  currentMatch = null;
+  const d = parseDMY(matchDate);
+  $('popupMatchTitle').textContent = formatMatchName(matchName);
+  $('popupMatchDate').textContent = `${teamName} · ${d ? dayShort(d) : matchDate}`;
+  $('matchShareBtn').disabled = true;
+  matchLoading('Loading match details…');
+  openLayer('matchPopupOverlay');
+
+  try {
+    let teamSheetId = teamSheetCache.get(teamName);
+    if (!teamSheetId) {
+      matchLoading('Finding team sheet…');
+      teamSheetId = await findTeamSheetId(teamName);
+      if (teamSheetId) teamSheetCache.set(teamName, teamSheetId);
+    }
+    if (!teamSheetId) throw new Error(`Could not find spreadsheet for team "${teamName}". The team may not have a dedicated sheet yet.`);
+    matchLoading('Loading match data…');
+    const matchData = await loadMatchDetails(teamSheetId, matchName);
+    if (lastMatchArgs[1] !== matchName) return; // another match was opened meanwhile
+    displayMatchDetails(matchData, matchName);
+  } catch (error) {
+    console.error('❌ Error loading match details:', error);
+    $('matchPopupContent').innerHTML = `<div class="loading-box"><span style="color:var(--red)">${ic('alert', 32, 2)}</span>
+      <div style="color:var(--label);max-width:300px">${esc(error.message)}</div>
+      <button class="btn-small press" onclick="retryMatch()">Try Again</button>
+      <div style="font-size:13px;max-width:300px">If this continues, the match sheet may not exist yet or there may be a connection issue.</div></div>`;
+  }
+}
+function retryMatch() { if (lastMatchArgs) openMatchPopup(...lastMatchArgs); }
+function closeMatchPopup(event) {
+  if (event && event.target !== event.currentTarget) return;
+  closeLayer('matchPopupOverlay');
+}
+function displayMatchDetails(matchData, matchName) {
+  const { tickets, summary } = matchData;
+  currentMatch = { name: formatMatchName(matchName), date: lastMatchArgs ? lastMatchArgs[2] : '', tickets, summary };
+  $('matchShareBtn').disabled = false;
+  const total = summary.totalTickets, sold = summary.soldTickets, avail = summary.availableTickets;
+  const segs = total && total <= 30
+    ? `<div class="segs" aria-hidden="true">${tickets.map((t) => `<i${t.status === 'Sold' ? ' style="background:var(--green)"' : ''}></i>`).sort((a, b) => b.length - a.length).join('')}</div>`
+    : `<div class="bar" style="height:8px;margin-top:0" aria-hidden="true"><i style="width:${total ? Math.round(sold / total * 100) : 0}%;background:var(--green)"></i></div>`;
+  const availT = tickets.map((t, i) => ({ t, i })).filter((x) => x.t.status !== 'Sold');
+  const soldT = tickets.map((t, i) => ({ t, i })).filter((x) => x.t.status === 'Sold');
+  $('matchPopupContent').innerHTML = `
+    <div class="card cardpad">
+      ${chead('trend', summary.profit >= 0 ? 'green' : 'red', 'Profit', `${sold} of ${total} sold`, false)}
+      <div class="big" ${summary.profit < 0 ? 'style="color:var(--red)"' : ''}>${signed(summary.profit)}</div>
+      ${segs}
+      ${cols([['Sold', 'green', String(sold)], ['Available', 'orange', String(avail)], ['Total FV', 'blue', formatCurrency(summary.totalFV)], ['Sales', 'indigo', formatCurrency(summary.totalSales)]], true)}
+    </div>
+    ${availT.length ? `<div class="shead" style="padding-top:2px"><h2 style="font-size:20px">Available</h2><button class="link press" onclick="copySeats()">${ic('copy', 16, 2.2)}Copy</button></div>
+    <div class="list">${availT.map(({ t, i }) => `<div class="row plain" style="min-height:50px"><span class="main t num">${esc(seatLabel(t, i))}</span><span class="v num">FV ${formatCurrency(t.fv)}</span></div>`).join('')}</div>` : ''}
+    ${soldT.length ? `<div class="shead" style="padding-top:2px"><h2 style="font-size:20px">Sold</h2><span class="r">${soldT.length}</span></div>
+    <div class="list">${soldT.map(({ t, i }) => `<div class="row plain" style="min-height:54px"><span class="main t num">${esc(seatLabel(t, i))}</span><div class="right num"><b style="color:var(--green)">${formatCurrency(t.soldFor)}</b><small>FV ${formatCurrency(t.fv)}</small></div></div>`).join('')}</div>` : ''}`;
+}
+function seatsText(list) { return list.map(({ t, i }) => `${seatLabel(t, i)} (FV ${formatCurrency(t.fv)})`).join('\n'); }
+async function copySeats() {
+  if (!currentMatch) return;
+  const list = currentMatch.tickets.map((t, i) => ({ t, i })).filter((x) => x.t.status !== 'Sold');
+  const d = parseDMY(currentMatch.date);
+  const ok = await copyText(`${currentMatch.name}${d ? ' – ' + dayShort(d) : ''}\n${seatsText(list)}`);
+  toast(ok ? `Copied ${plural(list.length, 'seat')}` : 'Couldn’t copy');
+}
+async function shareMatch() {
+  if (!currentMatch) return;
+  const s = currentMatch.summary, d = parseDMY(currentMatch.date);
+  const list = currentMatch.tickets.map((t, i) => ({ t, i })).filter((x) => x.t.status !== 'Sold');
+  const text = `${currentMatch.name}${d ? ' – ' + dayShort(d) : ''}\nSold ${s.soldTickets} of ${s.totalTickets} · Profit ${signed(s.profit)}` +
+    (list.length ? `\n\nAvailable:\n${seatsText(list)}` : '');
+  if (navigator.share) { try { await navigator.share({ title: currentMatch.name, text }); return; } catch (e) { if (e && e.name === 'AbortError') return; } }
+  toast((await copyText(text)) ? 'Summary copied' : 'Couldn’t share');
+}
+
+/* =====================================================================
+   PDF export sheets (generation code below is unchanged)
+   ===================================================================== */
+function pdfReady() {
+  if (window.jspdf && window.jspdf.jsPDF) return true;
+  toast('PDF tools still loading — check your connection');
+  return false;
+}
+function needData() { if (hasData()) return true; toast('Load your data first', 'Refresh', refreshDashboard); return false; }
+function showPDFExportModal() { switchTab('reports'); }
+function closePDFExportModal(event) {
+  if (event && event.target !== event.currentTarget) return;
+  closeLayer('pdfExportModal');
+}
+function runPDF(label, fn) {
+  if (!needData() || !pdfReady()) return;
+  toast(`Creating ${label}…`);
+  setTimeout(() => {
+    try { fn(); closePDFExportModal(); toast(`${label} saved`); }
+    catch (e) { console.error(e); toast('Couldn’t create the PDF'); }
+  }, 350);
+}
+function exportAllDataPDF() { runPDF('All Teams PDF', generateAllTeamsPDF); }
+function exportTeamPDF(teamName) { runPDF(`${teamName} PDF`, () => generateTeamPDF(teamName)); }
+
+let selectedMonth = null;
+function showMonthlyReportOptions() {
+  if (!needData()) return;
+  selectedMonth = null;
+  $('exportTitle').textContent = 'Monthly Report';
+  $('exportSub').textContent = 'Choose a month';
+  renderMonthly();
+  openLayer('pdfExportModal');
+}
+function renderMonthly() {
+  const stats = monthlyStats();
+  const sel = stats.find((m) => m.value === selectedMonth);
+  $('pdfExportContent').innerHTML = `
+    <div class="months">${stats.map((m) => `<button class="press" aria-pressed="${m.value === selectedMonth}" onclick="selectMonth('${m.value}')">${m.short.split(' ')[0]}</button>`).join('')}</div>
+    ${sel ? `<div class="list">
+      <div class="row plain" style="min-height:48px"><span class="main t">Matches</span><span class="v num">${sel.count}</span></div>
+      <div class="row plain" style="min-height:48px"><span class="main t">Tickets</span><span class="v num">${sel.tickets}</span></div>
+      <div class="row plain" style="min-height:48px"><span class="main t">Profit</span><span class="v num" style="color:${pcol(sel.profit)};font-weight:600">${signed(sel.profit)}</span></div></div>` : ''}
+    <button class="btn-primary press" onclick="generateMonthlyReport()" id="generateMonthlyBtn" ${sel ? '' : 'disabled'}>${ic('doc', 19, 2)}${sel ? `Export ${sel.label.split(' ')[0]} PDF` : 'Select a month'}</button>`;
+}
+function selectMonth(monthValue) { selectedMonth = monthValue; renderMonthly(); }
+function generateMonthlyReport() {
+  if (!selectedMonth) { toast('Select a month first'); return; }
+  const label = getSeasonMonths().find((m) => m.value === selectedMonth).label;
+  runPDF(`${label} report`, () => generateMonthlyPDF(selectedMonth));
+}
+function showTeamExportOptions() {
+  if (!needData()) return;
+  $('exportTitle').textContent = 'Single Team';
+  $('exportSub').textContent = 'Choose a team to export';
+  const teams = [...dashboardData.teams].sort((a, b) => a.name.localeCompare(b.name));
+  $('pdfExportContent').innerHTML = `<div class="list">${teams.map((t, i) =>
+    `<button class="row" onclick="exportTeamPDF(window._exportTeams[${i}])">${badge(t.name)}<div class="main"><div class="t">${esc(t.name)}</div><div class="s">${t.totalTickets} tickets · ${formatCurrency(t.totalSpent)} spent</div></div><span style="color:var(--blue);display:flex">${ic('doc', 19, 2)}</span></button>`).join('')}</div>`;
+  window._exportTeams = teams.map((t) => t.name);
+  openLayer('pdfExportModal');
+}
+
+/* =====================================================================
+   App lifecycle
+   ===================================================================== */
+function refreshDashboard() {
+  if (document.body.classList.contains('loading')) return;
+  refreshData();
+}
+
+/* ---- Auto-update (same as Salah Times) ----
+   1) sw.js is re-checked every time the app is opened or brought back to the front.
+      If it changed, the new worker takes over and the page reloads itself once.
+   2) index.html is fetched network-first by the service worker, and when the app is
+      resumed we compare the server's ETag / Last-Modified, so HTML-only edits show
+      up without touching sw.js. */
+if ('serviceWorker' in navigator) {
+  let hasController = !!navigator.serviceWorker.controller;
+  let reloading = false;
+  navigator.serviceWorker.addEventListener('controllerchange', () => {
+    if (!hasController) { hasController = true; return; } // first install: no reload needed
+    if (reloading) return;
+    reloading = true;
+    location.reload();
+  });
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('./sw.js', { updateViaCache: 'none' }).then((reg) => {
+      const activate = (w) => { if (w && navigator.serviceWorker.controller) w.postMessage({ type: 'SKIP_WAITING' }); };
+      if (reg.waiting) activate(reg.waiting);
+      reg.addEventListener('updatefound', () => {
+        const w = reg.installing;
+        if (w) w.addEventListener('statechange', () => { if (w.state === 'installed') activate(w); });
+      });
+      const check = () => { if (navigator.onLine) reg.update().catch(() => {}); };
+      check();
+      setInterval(check, 15 * 60 * 1000);
+      document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') check(); });
+    }).catch((err) => console.warn('Service worker registration failed:', err));
+  });
+}
+(() => {
+  let stamp = null, lastCheck = 0;
+  const readStamp = () => fetch('./index.html', { method: 'HEAD', cache: 'no-store' })
+    .then((r) => r.ok ? (r.headers.get('ETag') || r.headers.get('Last-Modified')) : null)
+    .catch(() => null);
+  window.addEventListener('load', () => { readStamp().then((s) => { stamp = s; }); });
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState !== 'visible' || !navigator.onLine || !stamp) return;
+    if (Date.now() - lastCheck < 30000) return;
+    lastCheck = Date.now();
+    readStamp().then((s) => { if (s && s !== stamp) location.reload(); });
+  });
+})();
+
+window.addEventListener('online', () => {
+  document.body.classList.remove('offline');
+  toast('You’re back online', 'Refresh', refreshDashboard, 6000);
+});
+window.addEventListener('offline', () => { document.body.classList.add('offline'); });
+
+let deferredPrompt;
+const installBanner = $('installBanner');
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  deferredPrompt = e;
+  let dismissed = false; try { dismissed = localStorage.getItem('installBannerDismissed') === 'true'; } catch (err) {}
+  if (!dismissed && !window.matchMedia('(display-mode: standalone)').matches) installBanner.classList.add('show');
+});
+function installPWA() {
+  if (!deferredPrompt) return;
+  deferredPrompt.prompt();
+  deferredPrompt.userChoice.then(() => { deferredPrompt = null; hideInstallBanner(); });
+}
+function hideInstallBanner() {
+  installBanner.classList.remove('show');
+  try { localStorage.setItem('installBannerDismissed', 'true'); } catch (e) {}
+}
+window.addEventListener('appinstalled', hideInstallBanner);
+setTimeout(() => { if (installBanner.classList.contains('show')) hideInstallBanner(); }, 30000);
+
+/* ---------- Start ---------- */
+(function init() {
+  loadCache();
+  updateDashboard();
+  attachSheetDrag('matchPopupOverlay', closeMatchPopup);
+  attachSheetDrag('pdfExportModal', closePDFExportModal);
+  const hash = location.hash;
+  if (hash) history.replaceState(null, '', location.pathname + location.search);
+  if (hash === '#upcoming') switchTab('matches');
+  updateTopColour();
+  if (navigator.onLine) refreshData();
+  else document.body.classList.add('offline');
+})();
+
+</script>
 </body>
 </html>
