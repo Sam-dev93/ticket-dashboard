@@ -371,6 +371,22 @@ body.offline .offline-pill { display: flex; }
 .install p { flex: 1; color: var(--sec); }
 .install b { color: var(--label); }
 .muted { font-size: 14px; color: var(--sec); }
+
+/* packs (match sheet) */
+.pack { background: var(--sub2); border-radius: 22px; padding: 14px 16px 6px; }
+.pack-h { display: flex; align-items: flex-start; gap: 10px; }
+.pack-h .pt { font-size: 15px; font-weight: 700; }
+.pack-h .ps { font-size: 12px; color: var(--sec); margin-top: 3px; line-height: 1.5; }
+.pchip { font-size: 12px; font-weight: 700; padding: 5px 10px; border-radius: 999px; white-space: nowrap; flex-shrink: 0; }
+.seats { position: relative; margin-top: 6px; padding-left: 24px; }
+.seats::before { content: ""; position: absolute; left: 7px; top: 22px; bottom: 22px; width: 2px; border-radius: 2px; background: var(--chev); opacity: .6; }
+.seats.one::before { display: none; }
+.seat { position: relative; display: flex; align-items: center; gap: 10px; min-height: 46px; font-size: 15px; font-weight: 500; }
+.seat::before { content: ""; position: absolute; left: -22px; top: 50%; width: 10px; height: 10px; border-radius: 50%; transform: translateY(-50%); background: var(--c); box-shadow: 0 0 0 3px var(--sub2); }
+.seat + .seat { border-top: 1px solid var(--sep); }
+.seat .st { margin-left: auto; text-align: right; }
+.seat .st b { display: block; font-size: 15px; font-weight: 700; }
+.seat .st small { display: block; font-size: 11px; color: var(--sec); }
 </style>
 </head>
 <body>
@@ -991,6 +1007,7 @@ body.offline .offline-pill { display: flex; }
             let currentNameEmail = '';
             let currentBlock = '';
             let currentRow = '';
+            let pendingPackStart = false; // a filled purchase row starts a new pack
             
             for (let i = 3; i < rows.length; i++) {
                 const row = rows[i];
@@ -1011,6 +1028,7 @@ body.offline .offline-pill { display: flex; }
                 const rowNum = row[7] ? row[7].toString().trim() : '';
                 const seat = row[8] ? row[8].toString().trim() : '';
                 const soldForRaw = row[11] ? row[11].toString().trim() : '';
+                if (boughtBy || numTickets || nameEmail) pendingPackStart = true;
                 
                 console.log(`FV Raw: "${fvRaw}"`);
                 console.log(`Seat: "${seat}"`);
@@ -1064,12 +1082,15 @@ body.offline .offline-pill { display: flex; }
                     row: currentRow,
                     seat: seat,
                     status: status,
-                    soldFor: soldFor
+                    soldFor: soldFor,
+                    packStart: pendingPackStart,
+                    packSize: parseInt(currentNumTickets) || 0
                 };
                 
                 console.log('🎫 Created ticket:', ticket);
                 
                 tickets.push(ticket);
+                pendingPackStart = false;
                 totalFV += fv;
                 totalSales += soldFor;
                 
@@ -1640,13 +1661,13 @@ body.offline .offline-pill { display: flex; }
    Data loading, parsing and PDF generation further down are unchanged
    from the previous version (apart from the season label).
    ===================================================================== */
-const APP_VERSION = '2026.09.24-4';
+const APP_VERSION = '2026.09.24-5';
 const SEASON_START = 2026;                 // season 2026–27 (Aug 2026 – Jul 2027)
 const SEASON_LABEL = '2026–27';
 const CACHE_KEY = 'tf-cache-v1';
 
 const $ = (id) => document.getElementById(id);
-const ICON = {"home": "<path d=\"M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z\"></path>", "cal": "<rect x=\"3\" y=\"5\" width=\"18\" height=\"16\" rx=\"3\"></rect><path d=\"M3 10h18M8 3v4M16 3v4\"></path>", "shield": "<path d=\"M12 3l8 3v6c0 4.5-3.4 8.2-8 9-4.6-.8-8-4.5-8-9V6z\"></path>", "chart": "<path d=\"M4 20V10M10 20V4M16 20v-7M22 20H2\"></path>", "refresh": "<path d=\"M20 11a8 8 0 1 0-2.3 5.7\"></path><path d=\"M20 5v6h-6\"></path>", "search": "<circle cx=\"11\" cy=\"11\" r=\"7\"></circle><path d=\"M20 20l-4-4\"></path>", "filter": "<path d=\"M4 6h16M7 12h10M10 18h4\"></path>", "back": "<path d=\"M15 5l-7 7 7 7\"></path>", "chev": "<path d=\"M9 6l6 6-6 6\"></path>", "doc": "<path d=\"M14 3H6a1 1 0 0 0-1 1v16a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V8z\"></path><path d=\"M14 3v5h5M9 13h6M9 17h6\"></path>", "close": "<path d=\"M6 6l12 12M18 6 6 18\"></path>", "xcircle": "<circle cx=\"12\" cy=\"12\" r=\"9\"></circle><path d=\"M9 9l6 6M15 9l-6 6\"></path>", "check": "<path d=\"M5 12.5l4.5 4.5L19 7.5\"></path>", "ticket": "<path d=\"M4 6h16v4a2 2 0 0 0 0 4v4H4v-4a2 2 0 0 0 0-4z\"></path><path d=\"M14 7v2M14 11v2M14 15v2\"></path>", "trend": "<path d=\"M4 16l5-5 4 4 7-7\"></path><path d=\"M15 8h5v5\"></path>", "alert": "<circle cx=\"12\" cy=\"12\" r=\"9\"></circle><path d=\"M12 7.5v5M12 16h.01\"></path>", "pound": "<path d=\"M16 6.5A3.5 3.5 0 0 0 9.5 8v4.5c0 3-1.5 5-3 6.5H17\"></path><path d=\"M7 12.5h7\"></path>", "bag": "<path d=\"M5 8h14l-1 12H6z\"></path><path d=\"M9 8V6a3 3 0 0 1 6 0v2\"></path>", "copy": "<rect x=\"9\" y=\"9\" width=\"11\" height=\"11\" rx=\"2.5\"></rect><path d=\"M5 15V6a2 2 0 0 1 2-2h8\"></path>", "share": "<path d=\"M12 3v12M8 7l4-4 4 4\"></path><path d=\"M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7\"></path>", "sun": "<circle cx=\"12\" cy=\"12\" r=\"4\"></circle><path d=\"M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4\"></path>", "moon": "<path d=\"M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z\"></path>", "auto": "<circle cx=\"12\" cy=\"12\" r=\"9\"></circle><path d=\"M12 3a9 9 0 0 1 0 18z\" fill=\"currentColor\"></path>", "wifioff": "<path d=\"M2 8.5a15 15 0 0 1 4-2.6M9.5 5.2A15 15 0 0 1 22 8.5M5 12a10 10 0 0 1 3.5-2.2M15 10a10 10 0 0 1 4 2M8.5 15.5a5 5 0 0 1 7 0M12 19h.01M3 3l18 18\"></path>", "backarrow": "<path d=\"M19 12H5M11 6l-6 6 6 6\"></path>"};
+const ICON = {"home": "<path d=\"M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z\"></path>", "cal": "<rect x=\"3\" y=\"5\" width=\"18\" height=\"16\" rx=\"3\"></rect><path d=\"M3 10h18M8 3v4M16 3v4\"></path>", "shield": "<path d=\"M12 3l8 3v6c0 4.5-3.4 8.2-8 9-4.6-.8-8-4.5-8-9V6z\"></path>", "chart": "<path d=\"M4 20V10M10 20V4M16 20v-7M22 20H2\"></path>", "refresh": "<path d=\"M20 11a8 8 0 1 0-2.3 5.7\"></path><path d=\"M20 5v6h-6\"></path>", "search": "<circle cx=\"11\" cy=\"11\" r=\"7\"></circle><path d=\"M20 20l-4-4\"></path>", "filter": "<path d=\"M4 6h16M7 12h10M10 18h4\"></path>", "back": "<path d=\"M15 5l-7 7 7 7\"></path>", "chev": "<path d=\"M9 6l6 6-6 6\"></path>", "doc": "<path d=\"M14 3H6a1 1 0 0 0-1 1v16a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V8z\"></path><path d=\"M14 3v5h5M9 13h6M9 17h6\"></path>", "close": "<path d=\"M6 6l12 12M18 6 6 18\"></path>", "xcircle": "<circle cx=\"12\" cy=\"12\" r=\"9\"></circle><path d=\"M9 9l6 6M15 9l-6 6\"></path>", "check": "<path d=\"M5 12.5l4.5 4.5L19 7.5\"></path>", "ticket": "<path d=\"M4 6h16v4a2 2 0 0 0 0 4v4H4v-4a2 2 0 0 0 0-4z\"></path><path d=\"M14 7v2M14 11v2M14 15v2\"></path>", "trend": "<path d=\"M4 16l5-5 4 4 7-7\"></path><path d=\"M15 8h5v5\"></path>", "alert": "<circle cx=\"12\" cy=\"12\" r=\"9\"></circle><path d=\"M12 7.5v5M12 16h.01\"></path>", "pound": "<path d=\"M16 6.5A3.5 3.5 0 0 0 9.5 8v4.5c0 3-1.5 5-3 6.5H17\"></path><path d=\"M7 12.5h7\"></path>", "bag": "<path d=\"M5 8h14l-1 12H6z\"></path><path d=\"M9 8V6a3 3 0 0 1 6 0v2\"></path>", "copy": "<rect x=\"9\" y=\"9\" width=\"11\" height=\"11\" rx=\"2.5\"></rect><path d=\"M5 15V6a2 2 0 0 1 2-2h8\"></path>", "share": "<path d=\"M12 3v12M8 7l4-4 4 4\"></path><path d=\"M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7\"></path>", "sun": "<circle cx=\"12\" cy=\"12\" r=\"4\"></circle><path d=\"M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4\"></path>", "moon": "<path d=\"M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z\"></path>", "auto": "<circle cx=\"12\" cy=\"12\" r=\"9\"></circle><path d=\"M12 3a9 9 0 0 1 0 18z\" fill=\"currentColor\"></path>", "wifioff": "<path d=\"M2 8.5a15 15 0 0 1 4-2.6M9.5 5.2A15 15 0 0 1 22 8.5M5 12a10 10 0 0 1 3.5-2.2M15 10a10 10 0 0 1 4 2M8.5 15.5a5 5 0 0 1 7 0M12 19h.01M3 3l18 18\"></path>", "backarrow": "<path d=\"M19 12H5M11 6l-6 6 6 6\"></path>", "link": "<path d=\"M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1\"></path><path d=\"M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1\"></path>"};
 function ic(name, size = 20, w = 2) {
   return `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="${w}" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICON[name]}</svg>`;
 }
@@ -2027,32 +2048,6 @@ async function openMatchPopup(teamName, matchName, matchDate) {
   }
 }
 
-function displayMatchDetails(matchData, matchName) {
-  const { tickets, summary } = matchData;
-  currentMatch = { name: formatMatchName(matchName), date: lastMatchArgs ? lastMatchArgs[2] : '', tickets, summary };
-  const total = summary.totalTickets, sold = summary.soldTickets, avail = summary.availableTickets;
-  $('matchShareBtn').disabled = false;
-  $('copySeatsBtn').disabled = !avail;
-  const availT = tickets.map((t, i) => ({ t, i })).filter((x) => x.t.status !== 'Sold');
-  const soldT = tickets.map((t, i) => ({ t, i })).filter((x) => x.t.status === 'Sold');
-  $('matchPopupContent').innerHTML = `
-    <div class="card cardpad" style="gap:8px">
-      <div class="meta"><span class="hero-l">Profit</span><span>${sold} of ${total} sold</span></div>
-      <div class="hero-v" style="font-size:30px;color:${pcol(summary.profit)}">${signed(summary.profit)}</div>
-      <div class="bar" style="height:8px;margin-top:2px"><i style="width:${total ? Math.round(sold / total * 100) : 0}%;background:var(--green)"></i></div>
-      <div class="stats4" style="margin-top:8px">
-        <div><div class="v" style="color:var(--green)">${sold}</div><div class="l">Sold</div></div>
-        <div><div class="v" style="color:var(--orange)">${avail}</div><div class="l">Available</div></div>
-        <div><div class="v">${formatCurrency(summary.totalFV)}</div><div class="l">Total FV</div></div>
-        <div><div class="v">${formatCurrency(summary.totalSales)}</div><div class="l">Sold for</div></div>
-      </div>
-    </div>
-    ${availT.length ? `<div class="shead"><h2>Available · ${availT.length}</h2></div>
-    <div class="list">${availT.map(({ t, i }) => `<div class="row plain" style="min-height:50px;padding:10px 16px"><span class="main num" style="font-size:15px;font-weight:500">${esc(seatLabel(t, i))}</span><span class="num" style="color:var(--orange);font-weight:600;font-size:15px">FV ${formatCurrency(t.fv)}</span></div>`).join('')}</div>` : ''}
-    ${soldT.length ? `<div class="shead"><h2>Sold · ${soldT.length}</h2></div>
-    <div class="list">${soldT.map(({ t, i }) => `<div class="row plain" style="min-height:54px;padding:10px 16px"><span class="main num" style="font-size:15px;font-weight:500">${esc(seatLabel(t, i))}</span><div class="right num"><b style="color:var(--green);font-size:16px">${formatCurrency(t.soldFor)}</b><small>FV ${formatCurrency(t.fv)}</small></div></div>`).join('')}</div>` : ''}`;
-}
-
 function showMonthlyReportOptions() {
   if (!needData()) return;
   selectedMonth = null;
@@ -2255,20 +2250,107 @@ function closeMatchPopup(event) {
   if (event && event.target !== event.currentTarget) return;
   closeLayer('matchPopupOverlay');
 }
-function seatsText(list) { return list.map(({ t, i }) => `${seatLabel(t, i)} (FV ${formatCurrency(t.fv)})`).join('\n'); }
+/* ---------- Packs: tickets in sheet order, grouped by purchase ---------- */
+function seatNum(s) { const n = parseInt(String(s == null ? '' : s).replace(/[^0-9]/g, ''), 10); return isNaN(n) ? null : n; }
+function buildPacks(tickets) {
+  const packs = []; let cur = null;
+  const marked = tickets.some((t) => t.packStart);
+  tickets.forEach((t, i) => {
+    let start = !cur;
+    if (cur) {
+      const prev = cur.items[cur.items.length - 1].t;
+      if (marked) start = !!t.packStart && !(cur.declared > cur.items.length);   // a new purchase row, unless the last pack isn't full yet
+      else {                                                                    // no purchase rows: same block, same row, next seat
+        const a = seatNum(prev.seat), b = seatNum(t.seat);
+        start = t.block !== prev.block || t.row !== prev.row || a === null || b === null || Math.abs(b - a) !== 1;
+      }
+    }
+    if (start) { cur = { items: [], declared: t.packSize || 0 }; packs.push(cur); }
+    cur.items.push({ t, i });
+  });
+  return packs.map((p) => {
+    const ts = p.items.map((x) => x.t);
+    const sold = ts.filter((t) => t.status === 'Sold').length;
+    const blocks = [...new Set(ts.map((t) => String(t.block || '')).filter(Boolean))];
+    const rows = [...new Set(ts.map((t) => String(t.row || '')).filter(Boolean))];
+    const nums = ts.map((t) => seatNum(t.seat));
+    const sorted = nums.every((n) => n !== null) ? [...nums].sort((a, b) => a - b) : null;
+    const together = ts.length > 1 && blocks.length <= 1 && rows.length <= 1 && !!sorted && sorted.every((n, k) => k === 0 || n - sorted[k - 1] === 1);
+    return { ...p, ts, sold, avail: ts.length - sold, blocks, rows, together, sales: ts.reduce((s, t) => s + (t.soldFor || 0), 0) };
+  });
+}
+function packTitle(p) {
+  const size = p.ts.length;
+  const parts = [size === 1 ? 'Single' : `${size}-pack`];
+  if (p.blocks.length === 1) parts.push(`Block ${p.blocks[0]}`);
+  if (p.rows.length === 1) parts.push(`Row ${p.rows[0]}`);
+  else if (p.rows.length > 1) parts.push(`Rows ${p.rows.join(', ')}`);
+  return parts.join(' · ');
+}
+function packSeatsText(p, onlyAvail) {
+  const ts = p.items.filter((x) => !onlyAvail || x.t.status !== 'Sold');
+  const loc = [p.blocks.length === 1 && `Block ${p.blocks[0]}`, p.rows.length === 1 && `Row ${p.rows[0]}`].filter(Boolean).join(' · ');
+  const seats = ts.map((x) => x.t.seat ? (p.rows.length > 1 ? `${x.t.seat} (Row ${x.t.row})` : x.t.seat) : `ticket ${x.i + 1}`).join(', ');
+  return `${loc ? loc + ' · ' : ''}Seat${ts.length === 1 ? '' : 's'} ${seats} — ${ts.length} of ${p.ts.length} (${p.ts.length === 1 ? 'single' : p.ts.length + '-pack'})${p.together ? ', together' : ''}`;
+}
+function packCard(p) {
+  const chip = p.avail === 0
+    ? `<span class="pchip" style="background:var(--green-bg);color:var(--green)">Sold · ${formatCurrency(p.sales)}</span>`
+    : p.sold === 0
+      ? `<span class="pchip" style="background:var(--orange-bg);color:var(--orange)">${p.avail} available</span>`
+      : `<span class="pchip" style="background:var(--orange-bg);color:var(--orange)">${p.avail} of ${p.ts.length} available</span>`;
+  const bits = [];
+  if (p.ts.length > 1) bits.push(p.together ? `<span style="display:inline-flex;align-items:center;gap:4px;color:var(--blue);font-weight:600">${ic('link', 13, 2.4)}Seats together</span>` : 'Seats not all together');
+  if (p.sold && p.avail) bits.push(`<span style="color:var(--green);font-weight:600">${p.sold} sold for ${formatCurrency(p.sales)}</span>`);
+  const by = p.ts[0].boughtBy && p.ts[0].boughtBy !== 'Unknown' ? p.ts[0].boughtBy : '';
+  if (by) bits.push(`Bought by ${esc(by)}${p.ts[0].paidVia ? ` · ${esc(p.ts[0].paidVia)}` : ''}`);
+  const seats = p.items.map(({ t, i }) => {
+    const label = t.seat ? `Seat ${esc(t.seat)}${p.rows.length > 1 && t.row ? ` · Row ${esc(t.row)}` : ''}` : `Ticket ${i + 1}`;
+    const right = t.status === 'Sold'
+      ? `<b style="color:var(--green)">${formatCurrency(t.soldFor)}</b><small>FV ${formatCurrency(t.fv)}</small>`
+      : `<b style="color:var(--orange)">Available</b><small>FV ${formatCurrency(t.fv)}</small>`;
+    return `<div class="seat" style="--c:${t.status === 'Sold' ? 'var(--green)' : 'var(--orange)'}"><span class="num">${label}</span><div class="st num">${right}</div></div>`;
+  }).join('');
+  return `<div class="pack"><div class="pack-h"><div style="flex:1;min-width:0"><div class="pt">${esc(packTitle(p))}</div>${bits.length ? `<div class="ps">${bits.join(' · ')}</div>` : ''}</div>${chip}</div>
+    <div class="seats${p.ts.length === 1 ? ' one' : ''}">${seats}</div></div>`;
+}
+
+function displayMatchDetails(matchData, matchName) {
+  const { tickets, summary } = matchData;
+  const packs = buildPacks(tickets);
+  currentMatch = { name: formatMatchName(matchName), date: lastMatchArgs ? lastMatchArgs[2] : '', tickets, summary, packs };
+  const total = summary.totalTickets, sold = summary.soldTickets, avail = summary.availableTickets;
+  $('matchShareBtn').disabled = false;
+  $('copySeatsBtn').disabled = !avail;
+  $('matchPopupContent').innerHTML = `
+    <div class="card cardpad" style="gap:8px">
+      <div class="meta"><span class="hero-l">Profit</span><span>${sold} of ${total} sold</span></div>
+      <div class="hero-v" style="font-size:30px;color:${pcol(summary.profit)}">${signed(summary.profit)}</div>
+      <div class="bar" style="height:8px;margin-top:2px"><i style="width:${total ? Math.round(sold / total * 100) : 0}%;background:var(--green)"></i></div>
+      <div class="stats4" style="margin-top:8px">
+        <div><div class="v" style="color:var(--green)">${sold}</div><div class="l">Sold</div></div>
+        <div><div class="v" style="color:var(--orange)">${avail}</div><div class="l">Available</div></div>
+        <div><div class="v">${formatCurrency(summary.totalFV)}</div><div class="l">Total FV</div></div>
+        <div><div class="v">${formatCurrency(summary.totalSales)}</div><div class="l">Sold for</div></div>
+      </div>
+    </div>
+    <div class="shead"><h2>Tickets · ${total} in ${plural(packs.length, 'pack')}</h2></div>
+    ${packs.map(packCard).join('')}`;
+}
 async function copySeats() {
   if (!currentMatch) return;
-  const list = currentMatch.tickets.map((t, i) => ({ t, i })).filter((x) => x.t.status !== 'Sold');
+  const packs = (currentMatch.packs || buildPacks(currentMatch.tickets)).filter((p) => p.avail > 0);
   const d = parseDMY(currentMatch.date);
-  const ok = await copyText(`${currentMatch.name}${d ? ' – ' + dayShort(d) : ''}\n${seatsText(list)}`);
-  toast(ok ? `Copied ${plural(list.length, 'seat')}` : 'Couldn’t copy');
+  const n = packs.reduce((s, p) => s + p.avail, 0);
+  const ok = await copyText(`${currentMatch.name}${d ? ' – ' + dayShort(d) : ''}\n${packs.map((p) => packSeatsText(p, true)).join('\n')}`);
+  toast(ok ? `Copied ${plural(n, 'seat')}` : 'Couldn’t copy');
 }
 async function shareMatch() {
   if (!currentMatch) return;
   const s = currentMatch.summary, d = parseDMY(currentMatch.date);
-  const list = currentMatch.tickets.map((t, i) => ({ t, i })).filter((x) => x.t.status !== 'Sold');
+  const packs = (currentMatch.packs || buildPacks(currentMatch.tickets)).filter((p) => p.avail > 0);
   const text = `${currentMatch.name}${d ? ' – ' + dayShort(d) : ''}\nSold ${s.soldTickets} of ${s.totalTickets} · Profit ${signed(s.profit)}` +
-    (list.length ? `\n\nAvailable:\n${seatsText(list)}` : '');
+    (packs.length ? `\n\nAvailable:\n${packs.map((p) => packSeatsText(p, true)).join('\n')}` : '');
   if (navigator.share) { try { await navigator.share({ title: currentMatch.name, text }); return; } catch (e) { if (e && e.name === 'AbortError') return; } }
   toast((await copyText(text)) ? 'Summary copied' : 'Couldn’t share');
 }

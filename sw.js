@@ -9,7 +9,7 @@
  *     byte change, installs this worker, and the page reloads itself onto it.
  *   • Google Sheets data is never cached.
  */
-const VERSION = '2026.09.24-4';
+const VERSION = '2026.09.24-5';
 const CACHE = `ticket-father-${VERSION}`;
 const SHELL = ['./', './index.html', './manifest.json', './icon-192.png', './icon-512.png'];
 
