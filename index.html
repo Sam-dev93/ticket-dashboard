@@ -247,10 +247,10 @@ button.row:active, .row.tap:active { background: var(--fill); }
 .cols { display: flex; align-items: stretch; }
 .cols > div + div { border-left: 1px solid var(--sep); padding-left: 12px; margin-left: 12px; }
 .cols .l { font-size: 15px; font-weight: 600; }
-.cols .v { font-family: var(--rounded); font-size: 22px; font-weight: 600; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.cols .v {  font-size: 22px; font-weight: 600; font-variant-numeric: tabular-nums; white-space: nowrap; }
 .cols.sm .l { font-size: 13px; }
 .cols.sm .v { font-size: 17px; }
-.big { font-family: var(--rounded); font-size: 36px; font-weight: 600; letter-spacing: -0.6px; font-variant-numeric: tabular-nums; line-height: 1.15; }
+.big {  font-size: 36px; font-weight: 600; letter-spacing: -0.6px; font-variant-numeric: tabular-nums; line-height: 1.15; }
 .muted { font-size: 15px; color: var(--sec); }
 .split { display: flex; align-items: flex-end; justify-content: space-between; gap: 12px; }
 
@@ -363,6 +363,22 @@ body.offline .offline-pill { display: flex; }
 .install.show { display: flex; }
 .install p { flex: 1; color: var(--sec); }
 .install b { color: var(--label); }
+
+/* ---------- iOS typography: SF Pro with Apple's tracking per point size ---------- */
+body { font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro", system-ui, "Helvetica Neue", sans-serif; font-optical-sizing: auto; text-rendering: optimizeLegibility; font-kerning: normal; letter-spacing: -0.43px; }
+h1.large, .big { letter-spacing: 0.37px; }
+.team-hero h1 { letter-spacing: 0.36px; }
+.shead h2, .cols .v { letter-spacing: -0.26px; }
+.day, .sheet .shead h2 { letter-spacing: -0.45px; }
+.row .t, .row .v, .row .right b, .chead .ct, .shead .r, .shead .link, .sh-title b, .menu button, .btn-primary, .search input, .toast { letter-spacing: -0.43px; }
+.months button { letter-spacing: -0.31px; }
+.sub, .muted, .chead .cr, .cols .l, .soldout, .banner, .install { letter-spacing: -0.23px; }
+.row .s, .seg button { letter-spacing: -0.15px; }
+.row .right small, .progress p, .sh-title span, .cols.sm .l, .cols.sm .v { letter-spacing: -0.08px; }
+.chart span, .badge { letter-spacing: 0; }
+.tab { letter-spacing: 0.12px; }
+.row .s + .s { margin-top: 1px; }
+.row .right small .soldout, .row .right .soldout + small { display: block; text-align: right; }
 </style>
 </head>
 <body>
@@ -1151,137 +1167,129 @@ body.offline .offline-pill { display: flex; }
         }
 
 
+        // ---- Faster loading ----
+        // Each club sheet is read with ONE request (title + DASHBOARD values together) and
+        // several sheets load at the same time. Every sheet is still loaded in full.
+        const LOAD_CONCURRENCY = 6;
+        const DASH_FIELDS = 'properties.title,sheets.data.rowData.values(formattedValue,effectiveValue,effectiveFormat.numberFormat.type)';
+
+        // Turn a grid cell into the same value the values API gives with
+        // UNFORMATTED_VALUE + dateTimeRenderOption=FORMATTED_STRING
+        function cellValue(c) {
+            if (!c) return '';
+            const ev = c.effectiveValue;
+            const nf = c.effectiveFormat && c.effectiveFormat.numberFormat && c.effectiveFormat.numberFormat.type;
+            if (ev && ev.numberValue !== undefined) {
+                if (nf === 'DATE' || nf === 'DATE_TIME' || nf === 'TIME') return c.formattedValue != null ? c.formattedValue : '';
+                return ev.numberValue;
+            }
+            if (ev && ev.boolValue !== undefined) return ev.boolValue;
+            if (ev && ev.stringValue !== undefined) return ev.stringValue;
+            return c.formattedValue != null ? c.formattedValue : '';
+        }
+
+        async function fetchTeamDashboard(sheetId) {
+            const url = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}?key=${API_KEY}` +
+                `&includeGridData=true&ranges=${encodeURIComponent('DASHBOARD!A1:H50')}&fields=${encodeURIComponent(DASH_FIELDS)}`;
+            const data = await fastFetch(url, 9000, 3);
+            const sheet = (data.sheets || [])[0] || {};
+            const grid = (sheet.data || [])[0] || {};
+            const rows = (grid.rowData || []).map(r => (r.values || []).map(cellValue));
+            // drop trailing empty cells/rows like the values API does
+            rows.forEach(r => { while (r.length && (r[r.length - 1] === '' || r[r.length - 1] == null)) r.pop(); });
+            while (rows.length && !rows[rows.length - 1].length) rows.pop();
+            return { title: data.properties.title, rows };
+        }
+
+        async function loadOneSheet(sheetId, i) {
+            let sheetName = `Sheet ${i + 1}`;
+            try {
+                let res;
+                try {
+                    res = await fetchTeamDashboard(sheetId);
+                } catch (err) {
+                    // e.g. no DASHBOARD tab (HTTP 400) — still learn the sheet's name for the report
+                    try {
+                        const info = await fastFetch(`https://sheets.googleapis.com/v4/spreadsheets/${sheetId}?key=${API_KEY}&fields=properties.title`, 5000, 1);
+                        sheetName = info.properties.title;
+                    } catch (e2) {}
+                    throw err;
+                }
+                sheetName = res.title;
+                if (!res.rows.length) return { kind: 'empty', name: sheetName };
+                const teamData = parseSheetData(res.rows, 'DASHBOARD', res.title);
+                if (teamData && teamData.totalTickets > 0) {
+                    teamSheetCache.set(teamData.name, sheetId);
+                    return { kind: 'ok', team: teamData };
+                }
+                return { kind: 'empty', name: sheetName };
+            } catch (error) {
+                console.log(`❌ Error processing sheet ${i + 1}: ${error.message}`);
+                const m = error.message || '';
+                if (m.includes('HTTP') || m.includes('timeout') || m.includes('fetch') || m.includes('abort') ||
+                    m.includes('403') || m.includes('429') || m.includes('404')) {
+                    return { kind: 'error', name: sheetName, id: sheetId, reason: m };
+                }
+                return { kind: 'empty', name: sheetName };
+            }
+        }
+
         async function refreshData() {
             // Saved data stays on screen while the fresh copy loads
             clearAllStatusMessages();
             setLoading(true);
-            
+            const started = Date.now();
+
             try {
                 await loadClubList(); // refresh the club list from the master (single source of truth)
 
-                const allTeams = [];
-                let successCount = 0;
-                const errorSheets = [];
-                const emptySheets = [];
-                
-                console.log(`🚀 Starting to load ${SHEET_IDS.length} sheets...`);
-                
-                for (let i = 0; i < SHEET_IDS.length; i++) {
-                    const sheetId = SHEET_IDS[i];
-                    let sheetName = `Sheet ${i + 1}`;
-                    
-                    try {
-                        console.log(`\n📊 Processing sheet ${i + 1}/${SHEET_IDS.length}: ${sheetId}`);
-                        
-                        setProgress(i + 1, SHEET_IDS.length);
-                        
-                        const documentInfo = await fastFetch(
-                            `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}?key=${API_KEY}&fields=properties.title`,
-                            5000,
-                            1
-                        );
-                        
-                        const documentTitle = documentInfo.properties.title;
-                        sheetName = documentTitle;
-                        console.log(`✅ Document title: "${documentTitle}"`);
-                        
-                        await new Promise(resolve => setTimeout(resolve, 400));
-                        
-                        const response = await fastFetch(
-                            `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/DASHBOARD!A1:H50?key=${API_KEY}&valueRenderOption=UNFORMATTED_VALUE&dateTimeRenderOption=FORMATTED_STRING`,
-                            6000,
-                            1
-                        );
-                        const sheetData = response.values || [];
-                        console.log(`✅ Retrieved ${sheetData.length} rows of data`);
-                        
-                        if (sheetData && sheetData.length > 0) {
-                            const teamData = parseSheetData(sheetData, 'DASHBOARD', documentTitle);
-                            
-                            if (teamData && teamData.totalTickets > 0) {
-                                allTeams.push(teamData);
-                                successCount++;
-                                console.log(`✅ Successfully loaded: "${teamData.name}" (${teamData.totalTickets} tickets, £${teamData.totalSpent} spent)`);
-                                
-                                teamSheetCache.set(teamData.name, sheetId);
-                            } else {
-                                console.log(`🔍 Sheet has no ticket data yet: "${sheetName}"`);
-                                emptySheets.push(sheetName);
-                            }
-                        } else {
-                            console.log(`🔍 No DASHBOARD data found: "${sheetName}"`);
-                            emptySheets.push(sheetName);
-                        }
-                        
-                    } catch (error) {
-                        console.log(`❌ Error processing sheet ${i + 1}: ${error.message}`);
-                        
-                        if (error.message.includes('HTTP') || 
-                            error.message.includes('timeout') || 
-                            error.message.includes('fetch') ||
-                            error.message.includes('403') ||
-                            error.message.includes('429') ||
-                            error.message.includes('404')) {
-                            errorSheets.push({
-                                name: sheetName,
-                                id: sheetId,
-                                reason: error.message
-                            });
-                        } else {
-                            emptySheets.push(sheetName);
-                        }
+                const ids = SHEET_IDS.slice();
+                const results = new Array(ids.length);
+                let next = 0, done = 0;
+                setProgress(0, ids.length);
+                const lane = async () => {
+                    while (next < ids.length) {
+                        const i = next++;
+                        results[i] = await loadOneSheet(ids[i], i);
+                        done++;
+                        setProgress(done, ids.length);
                     }
-                    
-                    if (i < SHEET_IDS.length - 1) {
-                        await new Promise(resolve => setTimeout(resolve, 800));
-                    }
+                };
+                await Promise.all(Array.from({ length: Math.min(LOAD_CONCURRENCY, ids.length) }, lane));
+
+                const allTeams = results.filter(r => r.kind === 'ok').map(r => r.team);
+                const emptySheets = results.filter(r => r.kind === 'empty').map(r => r.name);
+                const errorSheets = results.filter(r => r.kind === 'error');
+
+                console.log(`📊 Loaded ${allTeams.length} teams in ${((Date.now() - started) / 1000).toFixed(1)}s ` +
+                    `(${emptySheets.length} empty, ${errorSheets.length} errors)`);
+
+                if (allTeams.length === 0 && errorSheets.length === ids.length) {
+                    throw new Error(`No teams loaded successfully. All ${ids.length} sheets had errors. Please check your internet connection and try again.`);
                 }
-                
-                console.log(`\n📊 FINAL RESULTS:`);
-                console.log(`✅ Successfully loaded: ${successCount} teams`);
-                console.log(`🔍 Empty sheets (no data yet): ${emptySheets.length}`);
-                console.log(`❌ Actual errors: ${errorSheets.length} sheets`);
-                console.log(`📋 Teams loaded: ${allTeams.map(t => t.name).join(', ')}`);
-                
-                if (emptySheets.length > 0) {
-                    console.log(`🔍 Empty sheets: ${emptySheets.join(', ')}`);
-                }
-                if (errorSheets.length > 0) {
-                    console.log(`💥 Error sheets:`, errorSheets.map(f => f.name).join(', '));
-                }
-                
-                if (allTeams.length === 0 && errorSheets.length === SHEET_IDS.length) {
-                    throw new Error(`No teams loaded successfully. All ${SHEET_IDS.length} sheets had errors. Please check your internet connection and try again.`);
-                }
-                
-                dashboardData.teams = allTeams;
-                dashboardData.totalTickets = allTeams.reduce((sum, team) => sum + team.totalTickets, 0);
-                dashboardData.totalSpent = allTeams.reduce((sum, team) => sum + team.totalSpent, 0);
-                dashboardData.totalSales = allTeams.reduce((sum, team) => sum + team.totalSales, 0);
-                dashboardData.netProfit = allTeams.reduce((sum, team) => sum + team.netProfit, 0);
-                dashboardData.availableTickets = allTeams.reduce((sum, team) => {
-                    return sum + team.matches.reduce((matchSum, match) => matchSum + match.tickets, 0);
-                }, 0);
-                
+
+                dashboardData = {
+                    teams: allTeams,
+                    totalTickets: allTeams.reduce((sum, team) => sum + team.totalTickets, 0),
+                    totalSpent: allTeams.reduce((sum, team) => sum + team.totalSpent, 0),
+                    totalSales: allTeams.reduce((sum, team) => sum + team.totalSales, 0),
+                    netProfit: allTeams.reduce((sum, team) => sum + team.netProfit, 0),
+                    availableTickets: allTeams.reduce((sum, team) => sum + team.matches.reduce((s, m) => s + m.tickets, 0), 0)
+                };
+
                 lastUpdated = new Date();
                 updateDashboard();
                 saveCache();
-                
+
                 let successMessage = `Loaded ${allTeams.length} teams`;
-                
                 if (errorSheets.length > 0) {
                     showStatusMessage(successMessage, 'success', true);
-                    
                     const errorList = errorSheets.map(f => `• ${esc(f.name)}: ${esc(f.reason)}`).join('<br>');
-                    const errorMessage = `<b>${errorSheets.length} sheet${errorSheets.length === 1 ? '' : 's'} couldn’t load</b><br>${errorList}`;
-                    showStatusMessage(errorMessage, 'error', true);
+                    showStatusMessage(`<b>${errorSheets.length} sheet${errorSheets.length === 1 ? '' : 's'} couldn’t load</b><br>${errorList}`, 'error', true);
                 } else {
-                    if (emptySheets.length > 0) {
-                        successMessage += ` · ${emptySheets.length} with no data yet`;
-                    }
+                    if (emptySheets.length > 0) successMessage += ` · ${emptySheets.length} with no data yet`;
                     showStatusMessage(successMessage, 'success', true);
                 }
-                
             } catch (error) {
                 console.error('❌ Critical error during refresh:', error);
                 showStatusMessage(`<b>Couldn’t refresh</b><br>${esc(error.message)}`, 'error', true);
@@ -1290,7 +1298,7 @@ body.offline .offline-pill { display: flex; }
                 if (!hasData()) renderHome();
             }
         }
-        
+
 
         // Season 2026–27: August 2026 – July 2027
         function getSeasonMonths() {
@@ -1666,7 +1674,7 @@ body.offline .offline-pill { display: flex; }
    Data loading, parsing and PDF generation further down are unchanged
    from the previous version (apart from the season label).
    ===================================================================== */
-const APP_VERSION = '2026.09.24-2';
+const APP_VERSION = '2026.09.24-3';
 const SEASON_START = 2026;                 // season 2026–27 (Aug 2026 – Jul 2027)
 const SEASON_LABEL = '2026–27';
 const CACHE_KEY = 'tf-cache-v1';
@@ -1720,6 +1728,15 @@ function updatedLabel() {
 }
 function signed(v) { return (v >= 0 ? '+' : '−') + formatCurrency(v); }
 function pcol(v) { return v >= 0 ? 'var(--green)' : 'var(--red)'; }
+function soldLine(m) {
+  if (!m.sold) return `<div class="s">None sold yet</div>`;
+  return `<div class="s" style="color:var(--green);font-weight:600">${m.sold} sold for ${formatCurrency(m.sales)}</div>`;
+}
+function availRight(m) {
+  return m.tickets > 0
+    ? `<div class="right num"><b style="color:var(--orange)">${m.tickets}<span style="color:var(--sec);font-weight:400">/${m.total}</span></b><small>available</small></div>`
+    : `<div class="right num"><b style="color:var(--green)">Sold out</b><small>all ${m.total}</small></div>`;
+}
 function plural(n, w) { return `${n} ${w}${n === 1 ? '' : (/(ch|sh|s|x)$/.test(w) ? 'es' : 's')}`; }
 
 /* ---------- Club badges (replace the old emojis in the UI) ---------- */
@@ -1827,7 +1844,7 @@ function renderHome() {
   let soonHTML;
   if (!loaded) soonHTML = `<div class="empty">${document.body.classList.contains('loading') ? 'Loading your sheets…' : 'No data yet — tap refresh to load your sheets.'}</div>`;
   else if (!soon.length) soonHTML = `<div class="row plain"><span class="tile" style="--c:var(--green)">${ic('check', 17, 2.6)}</span><div class="main"><div class="t">All sold</div><div class="s">Nothing left to sell in the next 7 days</div></div></div>`;
-  else soonHTML = soon.map((x) => `<button class="row" onclick="openMatchRef(${reg(x.team.name, x.m)})">${badge(x.team.name)}<div class="main"><div class="t">${esc(formatMatchName(x.m.name))}</div><div class="s">${dayShort(x.d)} · ${relDay(x.d)}</div></div><div class="right num"><b style="color:var(--orange)">${x.m.tickets} left</b><small>of ${x.m.total}</small></div>${chev()}</button>`).join('');
+  else soonHTML = soon.map((x) => `<button class="row" onclick="openMatchRef(${reg(x.team.name, x.m)})">${badge(x.team.name)}<div class="main"><div class="t">${esc(formatMatchName(x.m.name))}</div><div class="s">${dayShort(x.d)} · ${relDay(x.d)}</div>${soldLine(x.m)}</div>${availRight(x.m)}${chev()}</button>`).join('');
 
   $('homeBody').innerHTML = `
     <div class="shead"><h2>Season ${SEASON_LABEL}</h2></div>
@@ -1854,11 +1871,8 @@ function setMatchFilter(f) { matchFilter = f; closeMenus(); renderMatches(); }
 function setMatchQuery(q) { matchQuery = q; renderMatches(); }
 
 function matchRow(x, showDate) {
-  const right = x.m.tickets > 0
-    ? `<div class="right num"><b>${x.m.tickets}<span style="color:var(--sec);font-weight:400">/${x.m.total}</span></b><small>available</small></div>`
-    : `<span class="soldout">${ic('check', 15, 2.8)}Sold out</span>`;
   const sub = showDate ? `${dayShort(x.d)} · ${esc(x.team.name)}` : esc(x.team.name);
-  return `<button class="row" onclick="openMatchRef(${reg(x.team.name, x.m)})">${badge(x.team.name)}<div class="main"><div class="t">${esc(formatMatchName(x.m.name))}</div><div class="s">${sub}</div></div>${right}${chev()}</button>`;
+  return `<button class="row" onclick="openMatchRef(${reg(x.team.name, x.m)})">${badge(x.team.name)}<div class="main"><div class="t">${esc(formatMatchName(x.m.name))}</div><div class="s">${sub}</div>${soldLine(x.m)}</div>${availRight(x.m)}${chev()}</button>`;
 }
 function renderMatches() {
   const q = matchQuery.trim().toLowerCase();
@@ -1946,8 +1960,8 @@ function teamMatchCard(team, m) {
   const played = d && daysFromToday(d) < 0;
   return `<button class="card cardpad press" style="gap:12px;padding:14px 16px 16px" onclick="openMatchRef(${reg(team.name, m)})">
     <div style="display:flex;align-items:center;gap:8px;width:100%"><div style="flex:1;min-width:0"><div style="font-size:17px;font-weight:600">${esc(formatMatchName(m.name))}</div>
-    <div class="muted" style="font-size:14px">${d ? dayShort(d) : esc(m.date)} · ${played ? 'played' : `${m.tickets}/${m.total} available`}</div></div>${chev(13)}</div>
-    ${cols([['Sold', 'green', String(m.sold)], ['Spent', 'orange', formatCurrency(m.spent)], ['Sales', 'blue', formatCurrency(m.sales)], ['Profit', m.profit >= 0 ? 'green' : 'red', signed(m.profit)]], true)}
+    <div class="muted" style="font-size:14px">${d ? dayShort(d) : esc(m.date)} · ${played ? 'played' : (m.tickets ? `${m.tickets} of ${m.total} available` : `sold out`)}</div></div>${chev(13)}</div>
+    ${cols([['Sold', 'green', `${m.sold} of ${m.total}`], ['Spent', 'orange', formatCurrency(m.spent)], ['Sold for', 'blue', formatCurrency(m.sales)], ['Profit', m.profit >= 0 ? 'green' : 'red', signed(m.profit)]], true)}
   </button>`;
 }
 function renderTeamDetail() {
