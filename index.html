@@ -421,6 +421,8 @@ body.offline .offline-pill { display: flex; }
         <button data-days="7" onclick="setUpcomingPeriod(7)" aria-pressed="true">7 days</button>
         <button data-days="14" onclick="setUpcomingPeriod(14)" aria-pressed="false">14 days</button>
         <button data-days="30" onclick="setUpcomingPeriod(30)" aria-pressed="false">30 days</button>
+        <button data-days="all" onclick="setUpcomingPeriod('all')" aria-pressed="false">All upcoming</button>
+        <button data-days="played" onclick="setUpcomingPeriod('played')" aria-pressed="false">Played</button>
       </div>
       <div id="upcomingMatches" style="display:flex;flex-direction:column;gap:10px"></div>
     </div></div>
@@ -571,7 +573,8 @@ body.offline .offline-pill { display: flex; }
             return new Intl.NumberFormat('en-GB', {
                 style: 'currency',
                 currency: 'GBP',
-                minimumFractionDigits: 0
+                minimumFractionDigits: Math.round(Math.abs(amount) * 100) % 100 === 0 ? 0 : 2,
+                maximumFractionDigits: 2
             }).format(Math.abs(amount));
         }
         
@@ -725,6 +728,8 @@ body.offline .offline-pill { display: flex; }
                 }
             }
             
+            netProfit = Math.round((totalSales - totalSpent) * 100) / 100; // NET PROFIT (sales − spent), not MAS PROFIT
+
             if (totalTickets === 0 && totalSpent === 0) {
                 return null;
             }
@@ -757,7 +762,7 @@ body.offline .offline-pill { display: flex; }
                     
                     const spent = parseFloat(row[4]?.toString().replace(/[£,]/g, '')) || 0;
                     const sales = parseFloat(row[5]?.toString().replace(/[£,]/g, '')) || 0;
-                    const profit = parseFloat(row[7]?.toString().replace(/[£,]/g, '')) || (sales - spent);
+                    const profit = Math.round((sales - spent) * 100) / 100; // net profit (sales − spent)
                     
                     if (totalTickets > 0 || spent > 0) {
                         const soldTickets = totalTickets - availableTickets;
@@ -1661,7 +1666,7 @@ body.offline .offline-pill { display: flex; }
    Data loading, parsing and PDF generation further down are unchanged
    from the previous version (apart from the season label).
    ===================================================================== */
-const APP_VERSION = '2026.09.24-7';
+const APP_VERSION = '2026.09.27-1';
 const SEASON_START = 2026;                 // season 2026–27 (Aug 2026 – Jul 2027)
 const SEASON_LABEL = '2026–27';
 const CACHE_KEY = 'tf-cache-v1';
@@ -1828,7 +1833,7 @@ function ringSVG(pct) {
 
 function setUpcomingPeriod(days) {
   selectedUpcomingPeriod = days;
-  document.querySelectorAll('#periodSeg button').forEach((b) => b.setAttribute('aria-pressed', String(+b.dataset.days === days)));
+  document.querySelectorAll('#periodSeg button').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.days === String(days))));
   renderMatches();
 }
 function setMatchFilter(f) { matchFilter = f; closeMenus(); renderMatches(); }
@@ -1838,13 +1843,17 @@ function renderMatches() {
   const q = matchQuery.trim().toLowerCase();
   let items = allMatches().filter((x) => x.d);
   if (q) items = items.filter((x) => (x.m.name + ' ' + x.team.name).toLowerCase().includes(q));
+  else if (selectedUpcomingPeriod === 'all') items = items.filter((x) => daysFromToday(x.d) >= 0);
+  else if (selectedUpcomingPeriod === 'played') items = items.filter((x) => daysFromToday(x.d) < 0);
   else items = items.filter((x) => isWithinPeriod(x.m.date, selectedUpcomingPeriod));
   if (matchFilter === 'unsold') items = items.filter((x) => x.m.tickets > 0);
   if (matchFilter === 'soldout') items = items.filter((x) => x.m.tickets === 0);
-  items.sort((a, b) => a.d - b.d || a.team.name.localeCompare(b.team.name));
+  const newestFirst = !q && selectedUpcomingPeriod === 'played';
+  items.sort((a, b) => (newestFirst ? b.d - a.d : a.d - b.d) || a.team.name.localeCompare(b.team.name));
+  const periodName = selectedUpcomingPeriod === 'all' ? 'All upcoming' : selectedUpcomingPeriod === 'played' ? 'Played' : `Next ${selectedUpcomingPeriod} days`;
 
   const filterName = { all: '', unsold: ' · unsold', soldout: ' · sold out' }[matchFilter];
-  $('matchesSub').textContent = q ? `${plural(items.length, 'result')}${filterName}` : `Next ${selectedUpcomingPeriod} days · ${plural(items.length, 'match')}${filterName}`;
+  $('matchesSub').textContent = q ? `${plural(items.length, 'result')}${filterName}` : `${periodName} · ${plural(items.length, 'match')}${filterName}`;
   $('periodSeg').classList.toggle('hidden', !!q);
   document.querySelectorAll('.filterBtn').forEach((b) => b.classList.toggle('on', matchFilter !== 'all'));
   $('filterMenu').innerHTML = [['all', 'All matches'], ['unsold', 'Unsold'], ['soldout', 'Sold out']].map(([k, l]) =>
@@ -1853,7 +1862,7 @@ function renderMatches() {
   const box = $('upcomingMatches');
   if (!hasData()) { box.innerHTML = `<div class="card empty">No data yet.</div>`; return; }
   if (!items.length) {
-    box.innerHTML = `<div class="card empty">${q ? 'No matches found.' : `No matches in the next ${selectedUpcomingPeriod} days.`}</div>`;
+    box.innerHTML = `<div class="card empty">${q ? 'No matches found.' : (selectedUpcomingPeriod === 'all' ? 'No upcoming matches.' : selectedUpcomingPeriod === 'played' ? 'No played matches yet.' : `No matches in the next ${selectedUpcomingPeriod} days.`)}</div>`;
     return;
   }
   if (q) { box.innerHTML = `<div class="list">${items.map((x) => matchRow(x, true)).join('')}</div>`; return; }
@@ -1959,7 +1968,7 @@ function teamMatchCard(team, m) {
   return `<button class="card cardpad press" style="gap:12px;padding:14px 14px 14px 16px" onclick="openMatchRef(${reg(team.name, m)})">
     <div style="display:flex;align-items:center;gap:8px;width:100%"><div style="flex:1;min-width:0"><div style="font-size:16px;font-weight:700">${esc(formatMatchName(m.name))}</div>
     <div style="font-size:13px;color:var(--sec);margin-top:2px">${d ? dayShort(d) : esc(m.date)} · ${played ? 'played' : (m.tickets ? `${m.tickets} of ${m.total} available` : 'sold out')}</div></div>${chev(14)}</div>
-    ${cells([['Sold', `${m.sold} of ${m.total}`], ['Spent', formatCurrency(m.spent)], ['Sold for', formatCurrency(m.sales)], ['Profit', signed(m.profit), pcol(m.profit)]])}
+    ${cells([['Sold', `${m.sold} of ${m.total}`], ['Spent', formatCurrency(m.spent)], ['Sold for', formatCurrency(m.sales)], ['Net profit', signed(m.profit), pcol(m.profit)]])}
   </button>`;
 }
 
@@ -1979,7 +1988,7 @@ function renderTeamDetail() {
       ${statTile('pound', 'orange', 'Spent', formatCurrency(team.totalSpent), '', true)}
       ${statTile('bag', 'blue', 'Sales', formatCurrency(team.totalSales), '', true)}
       ${statTile('ticket', 'purple', 'Available', `${left} of ${totalM}`, '', true)}
-      ${statTile('trend', team.netProfit >= 0 ? 'green' : 'red', 'Profit', signed(team.netProfit), '', true, pcol(team.netProfit))}
+      ${statTile('trend', team.netProfit >= 0 ? 'green' : 'red', 'Net profit', signed(team.netProfit), '', true, pcol(team.netProfit))}
     </div>
     ${upcoming.length ? `<div class="shead"><h2>Upcoming</h2><span class="r">${upcoming.length}</span></div>${upcoming.map((x) => teamMatchCard(team, x.m)).join('')}` : ''}
     ${played.length ? `<div class="shead"><h2>Played</h2><span class="r">${played.length}</span></div>${played.map((x) => teamMatchCard(team, x.m)).join('')}` : ''}
@@ -2001,7 +2010,7 @@ function renderReports() {
   const pref = getThemePref() || 'auto';
   const modes = [['auto', 'System default'], ['light', 'Light'], ['dark', 'Dark']];
   $('reportsBody').innerHTML = `
-    <div class="card cardpad" style="gap:6px"><div class="hero-l">Profit by month</div>
+    <div class="card cardpad" style="gap:6px"><div class="hero-l">Net profit by month</div>
       <div style="display:flex;align-items:baseline;gap:8px;flex-wrap:wrap">${head}</div>
       <div class="chart">${bars}</div></div>
     <div class="shead"><h2>Export PDF</h2></div>
@@ -2065,7 +2074,7 @@ function renderMonthly() {
     ${sel ? `<div class="list">
       <div class="row plain" style="min-height:48px"><span class="main t" style="font-weight:500">Matches</span><span class="v num">${sel.count}</span></div>
       <div class="row plain" style="min-height:48px"><span class="main t" style="font-weight:500">Tickets</span><span class="v num">${sel.tickets}</span></div>
-      <div class="row plain" style="min-height:48px"><span class="main t" style="font-weight:500">Profit</span><span class="v num" style="color:${pcol(sel.profit)};font-weight:700">${signed(sel.profit)}</span></div></div>` : ''}`;
+      <div class="row plain" style="min-height:48px"><span class="main t" style="font-weight:500">Net profit</span><span class="v num" style="color:${pcol(sel.profit)};font-weight:700">${signed(sel.profit)}</span></div></div>` : ''}`;
   $('exportFoot').innerHTML = `<button class="btn tint press" onclick="closePDFExportModal()">Cancel</button>
     <button class="btn fill press" onclick="generateMonthlyReport()" id="generateMonthlyBtn" ${sel ? '' : 'disabled'}>${sel ? `Export ${sel.label.split(' ')[0]}` : 'Export'}</button>`;
 }
@@ -2325,7 +2334,7 @@ function displayMatchDetails(matchData, matchName) {
   $('copySeatsBtn').disabled = !avail;
   $('matchPopupContent').innerHTML = `
     <div class="card cardpad" style="gap:8px">
-      <div class="meta"><span class="hero-l">Profit</span><span>${sold} of ${total} sold</span></div>
+      <div class="meta"><span class="hero-l">Net profit</span><span>${sold} of ${total} sold</span></div>
       <div class="hero-v" style="font-size:30px;color:${pcol(summary.profit)}">${signed(summary.profit)}</div>
       <div class="bar" style="height:8px;margin-top:2px"><i style="width:${total ? Math.round(sold / total * 100) : 0}%;background:var(--green)"></i></div>
       <div class="stats4" style="margin-top:8px">
