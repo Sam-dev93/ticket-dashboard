@@ -249,12 +249,12 @@ button.row:active, a.row:active { background: var(--fill); }
 .hero-v { font-size: 32px; font-weight: 800; letter-spacing: -0.6px; line-height: 1.15; font-variant-numeric: tabular-nums; }
 .meta { display: flex; justify-content: space-between; gap: 12px; font-size: 13px; color: var(--sec); }
 .meta b { color: var(--label); }
-.cells { display: flex; gap: 6px; }
-.cells > div { flex: 1; min-width: 0; background: var(--sub2); border-radius: 14px; padding: 8px 10px; }
+.cells { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px; }
+.cells > div { min-width: 0; background: var(--sub2); border-radius: 14px; padding: 8px 10px; }
 .cells .l { font-size: 11px; font-weight: 700; color: var(--sec); }
 .cells .v { font-size: 15px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-variant-numeric: tabular-nums; }
-.stats4 { display: flex; }
-.stats4 > div { flex: 1; text-align: center; min-width: 0; }
+.stats4 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+.stats4 > div { min-width: 0; background: var(--card); border-radius: 16px; padding: 10px 12px; text-align: left; display: flex; flex-direction: column-reverse; gap: 1px; }
 .stats4 .v { font-size: 19px; font-weight: 800; white-space: nowrap; font-variant-numeric: tabular-nums; }
 .stats4 .l { font-size: 12px; font-weight: 600; color: var(--sec); }
 
@@ -1666,7 +1666,7 @@ body.offline .offline-pill { display: flex; }
    Data loading, parsing and PDF generation further down are unchanged
    from the previous version (apart from the season label).
    ===================================================================== */
-const APP_VERSION = '2026.09.27-1';
+const APP_VERSION = '2026.09.27-2';
 const SEASON_START = 2026;                 // season 2026–27 (Aug 2026 – Jul 2027)
 const SEASON_LABEL = '2026–27';
 const CACHE_KEY = 'tf-cache-v1';

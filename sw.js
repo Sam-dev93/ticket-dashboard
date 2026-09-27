@@ -9,7 +9,7 @@
  *     page switches over quietly the next time the app goes to the background.
  *   • Google Sheets data is never cached.
  */
-const VERSION = '2026.09.27-1';
+const VERSION = '2026.09.27-2';
 const CACHE = `ticket-father-${VERSION}`;
 const SHELL = ['./', './index.html', './manifest.json', './icon-192.png', './icon-512.png'];
 
