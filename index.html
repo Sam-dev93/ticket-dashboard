@@ -712,6 +712,7 @@ body.offline .offline-pill { display: flex; }
             let totalSpent = 0;
             let totalSales = 0;
             let netProfit = 0;
+            let masProfit = 0;
             
             for (let i = 0; i < Math.min(rows.length, 10); i++) {
                 const row = rows[i];
@@ -727,7 +728,7 @@ body.offline .offline-pill { display: flex; }
                 } else if (cell === 'TOTAL SALES') {
                     totalSales = parseFloat(value.replace(/[£,]/g, '')) || 0;
                 } else if (cell === 'MAS PROFIT') {
-                    netProfit = parseFloat(value.replace(/[£,]/g, '')) || 0;
+                    masProfit = parseFloat(value.replace(/[£,]/g, '')) || 0;
                 }
             }
             
@@ -795,6 +796,7 @@ body.offline .offline-pill { display: flex; }
                 totalSpent: totalSpent,
                 totalSales: totalSales,
                 netProfit: netProfit,
+                masProfit: Math.round(masProfit * 100) / 100,
                 matches: matches
             };
         }
@@ -1291,6 +1293,7 @@ body.offline .offline-pill { display: flex; }
                     totalSpent: allTeams.reduce((sum, team) => sum + team.totalSpent, 0),
                     totalSales: allTeams.reduce((sum, team) => sum + team.totalSales, 0),
                     netProfit: allTeams.reduce((sum, team) => sum + team.netProfit, 0),
+                    masProfit: Math.round(allTeams.reduce((sum, team) => sum + (team.masProfit || 0), 0) * 100) / 100,
                     availableTickets: allTeams.reduce((sum, team) => sum + team.matches.reduce((s, m) => s + m.tickets, 0), 0)
                 };
 
@@ -1984,14 +1987,15 @@ function renderHome() {
 }
 
 function membershipCard(D, loaded) {
-  const mem = Number(D.memberships) || 0;
-  if (!loaded || !mem) return '';
-  const after = Math.round((D.netProfit - mem) * 100) / 100;
+  if (!loaded || D.masProfit === undefined) return '';   // old saved data — shows after the next refresh
+  const mas = Number(D.masProfit) || 0, mem = Number(D.memberships) || 0;
+  const after = Math.round((mas - mem) * 100) / 100;
   return `<div class="card cardpad" style="gap:12px">
-      <div style="display:flex;align-items:center;gap:14px">${ico('pound', 'purple', 44)}
-        <div><div class="hero-l">Memberships</div><div class="hero-v" style="font-size:28px">${formatCurrency(mem)}</div>
-        ${D.membershipsUpdated ? `<div class="muted" style="font-size:13px;margin-top:2px">Last updated ${esc(D.membershipsUpdated)}</div>` : ''}</div></div>
-      ${cells([['Net profit', signed(D.netProfit), pcol(D.netProfit)], ['After memberships', signed(after), pcol(after)]])}
+      <div style="display:flex;align-items:center;gap:14px">${ico('trend', after < 0 ? 'red' : 'green', 44)}
+        <div><div class="hero-l">Mas profit · after memberships</div>
+        <div class="hero-v" style="font-size:28px;color:${pcol(after)}">${signed(after)}</div></div></div>
+      ${cells([['Mas profit', signed(mas), pcol(mas)], ['Memberships', '−' + formatCurrency(mem), 'var(--red)']])}
+      ${D.membershipsUpdated ? `<div class="muted" style="font-size:13px">Memberships last updated ${esc(D.membershipsUpdated)}</div>` : ''}
     </div>`;
 }
 
