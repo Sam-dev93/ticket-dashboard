@@ -516,6 +516,8 @@ body.offline .offline-pill { display: flex; }
             totalSpent: 0,
             totalSales: 0,
             netProfit: 0,
+            memberships: 0,          // from the master's MEMBERSHIP tab
+            membershipsUpdated: '',
             teams: []
         };
         
@@ -566,6 +568,7 @@ body.offline .offline-pill { display: flex; }
         // Left as the placeholder → the app just uses the built-in fallback list above.
         const MASTER_SHEET_ID = '1LchmXSQDM4_g6AnFcXZ8DdY7LhRjtE7-HMybW3Z6QIA';
         const CLUBS_TAB = 'CLUBS';
+        const MEMBERSHIP_RANGE = 'MEMBERSHIP!H5:H6';   // H5 = total spent · H6 = last updated
 
         const API_KEY = 'AIzaSyDb5oijZ2Zo-XG1YNKQygWDzJqZ7hkySrI';
         
@@ -1159,6 +1162,24 @@ body.offline .offline-pill { display: flex; }
         }
 
 
+        // Membership spend is kept separately on the master (never split across clubs).
+        async function loadMemberships() {
+            if (!MASTER_SHEET_ID || MASTER_SHEET_ID.indexOf('PASTE') !== -1) return null;
+            try {
+                const url = `https://sheets.googleapis.com/v4/spreadsheets/${MASTER_SHEET_ID}/values/${encodeURIComponent(MEMBERSHIP_RANGE)}` +
+                    `?key=${API_KEY}&valueRenderOption=UNFORMATTED_VALUE&dateTimeRenderOption=FORMATTED_STRING`;
+                const data = await fastFetch(url, 6000, 2);
+                const v = data.values || [];
+                const total = Number((v[0] || [])[0]) || 0;
+                const updated = String((v[1] || [])[0] || '').trim();
+                return { total: Math.round(total * 100) / 100, updated };
+            } catch (e) {
+                console.warn('Could not read memberships from the master:', e);
+                return null;
+            }
+        }
+
+
         // ---- Faster loading ----
         // Each club sheet is read with ONE request (title + DASHBOARD values together) and
         // several sheets load at the same time. Every sheet is still loaded in full.
@@ -1234,6 +1255,7 @@ body.offline .offline-pill { display: flex; }
 
             try {
                 await loadClubList(); // refresh the club list from the master (single source of truth)
+                const membershipsP = loadMemberships(); // runs alongside the club sheets
 
                 const ids = SHEET_IDS.slice();
                 const results = new Array(ids.length);
@@ -1260,7 +1282,10 @@ body.offline .offline-pill { display: flex; }
                     throw new Error(`No teams loaded successfully. All ${ids.length} sheets had errors. Please check your internet connection and try again.`);
                 }
 
+                const mem = await membershipsP;
                 dashboardData = {
+                    memberships: mem ? mem.total : (dashboardData.memberships || 0),            // keep the last known figure if the read fails
+                    membershipsUpdated: mem ? mem.updated : (dashboardData.membershipsUpdated || ''),
                     teams: allTeams,
                     totalTickets: allTeams.reduce((sum, team) => sum + team.totalTickets, 0),
                     totalSpent: allTeams.reduce((sum, team) => sum + team.totalSpent, 0),
@@ -1947,6 +1972,7 @@ function renderHome() {
         <div class="bar big"><i style="width:${pct}%;background:var(--green)"></i></div></div>
       <div class="meta" style="justify-content:flex-start;gap:16px"><span>${loaded ? formatCurrency(D.totalSales) : '—'} sales</span><span>${loaded ? formatCurrency(D.totalSpent) : '—'} spent</span></div>
     </button>
+    ${membershipCard(D, loaded)}
     <div class="tiles">
       ${statTile('ticket', 'blue', 'Total tickets', loaded ? total : '—', "switchTab('matches')")}
       ${statTile('alert', 'orange', 'Available', loaded ? avail : '—', "switchTab('matches')")}
@@ -1955,6 +1981,18 @@ function renderHome() {
     </div>
     <div class="shead"><h2>Still to sell · next 7 days</h2><button class="link" onclick="setUpcomingPeriod(7);switchTab('matches')">See all</button></div>
     <div class="list">${soonHTML}</div>`;
+}
+
+function membershipCard(D, loaded) {
+  const mem = Number(D.memberships) || 0;
+  if (!loaded || !mem) return '';
+  const after = Math.round((D.netProfit - mem) * 100) / 100;
+  return `<div class="card cardpad" style="gap:12px">
+      <div style="display:flex;align-items:center;gap:14px">${ico('pound', 'purple', 44)}
+        <div><div class="hero-l">Memberships</div><div class="hero-v" style="font-size:28px">${formatCurrency(mem)}</div>
+        ${D.membershipsUpdated ? `<div class="muted" style="font-size:13px;margin-top:2px">Last updated ${esc(D.membershipsUpdated)}</div>` : ''}</div></div>
+      ${cells([['Net profit', signed(D.netProfit), pcol(D.netProfit)], ['After memberships', signed(after), pcol(after)]])}
+    </div>`;
 }
 
 function matchRow(x, showDate) {
